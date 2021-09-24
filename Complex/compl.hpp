@@ -3,17 +3,23 @@
 
 //=======================================================
 
+#include <iostream>
+
+//=======================================================
+
 class complex
 {
     private:
-        double Re;
-        double Im;
+        double Re_;
+        double Im_;
 
     public:
         complex ();
+        complex (double Re, double Im);
         ~complex () {};
 
-        abs ();
+        double abs ();
+        void   print ();
 };
 
 //=======================================================

@@ -4,8 +4,12 @@
 
 int main ()
 {
-    complex compl_;
-    
+    complex cmpl {4.0, 3.0};
+
+    double x = cmpl.abs ();
+
+    cmpl.print ();
+
     return 0;
 }
 
