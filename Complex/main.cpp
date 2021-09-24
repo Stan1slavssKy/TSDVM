@@ -4,11 +4,12 @@
 
 int main ()
 {
-    complex cmpl {4.0, 3.0};
+    complex z1 {4.4, -1.7};
+    complex z2 {4.0, 3.0};
 
-    double x = cmpl.abs ();
-
-    cmpl.print ();
+    // complex z = z1 + z2;
+    // z.print (z)
+    z1.print ();
 
     return 0;
 }
