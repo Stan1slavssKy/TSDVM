@@ -2,6 +2,13 @@
 
 //====================================================================================
 
+complex::complex () :
+    Re_(0),
+    Im_(0)
+    {}
+
+//====================================================================================
+
 complex::complex (double Re, double Im) :
     Re_(Re),
     Im_(Im)
@@ -11,7 +18,7 @@ complex::complex (double Re, double Im) :
 
 double complex::abs () const
 {
-    return Re_ * Re_ - Im_ * Im_;
+    return Re_ * Re_ + Im_ * Im_;
 }
 
 //====================================================================================
@@ -33,9 +40,14 @@ void complex::print () const
 
 //====================================================================================
 
-complex complex::operator+ () const
+complex complex::operator+ (const complex& nmb) const
 {   
-    
+    complex sum;
+
+    sum.Re_ = Re_ + nmb.Re_;
+    sum.Im_ = Im_ + nmb.Im_;
+
+    return sum;
 }
 
 //====================================================================================

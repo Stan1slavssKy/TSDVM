@@ -22,7 +22,7 @@ class complex
         double abs () const;
         void   print () const;
 
-        complex operator+ () const;
+        complex operator+ (const complex& nmb) const;
 };
 
 //====================================================================================

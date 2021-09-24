@@ -7,9 +7,10 @@ int main ()
     complex z1 {4.4, -1.7};
     complex z2 {4.0, 3.0};
 
-    // complex z = z1 + z2;
-    // z.print (z)
+    complex z = z1 + z2;
     z1.print ();
+    z2.print ();
+    z.print ();
 
     return 0;
 }
