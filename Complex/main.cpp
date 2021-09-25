@@ -4,13 +4,15 @@
 
 int main ()
 {
-    complex z1 {4.4, -1.7};
-    complex z2 {4.0, 3.0};
+    complex z1 {2, -3};
+    complex z2 {5, 2};
 
-    complex z = z1 + z2;
     z1.print ();
     z2.print ();
-    z.print ();
+
+    z1 /= z2;
+
+    z1.print ();
 
     return 0;
 }

@@ -20,9 +20,20 @@ class complex
         ~complex () {};
 
         double abs () const;
-        void   print () const;
+        void print () const;
 
         complex operator+ (const complex& nmb) const;
+        complex operator- (const complex& nmb) const;
+        complex operator* (const complex& nmb) const;
+        complex operator/ (const complex& nmb) const;
+
+        bool operator== (const complex& nmb) const;
+        bool operator!= (const complex& nmb) const;
+
+        complex& operator+= (const complex& nmb);
+        complex& operator-= (const complex& nmb);
+        complex& operator*= (const complex& nmb);
+        complex& operator/= (const complex& nmb);
 };
 
 //====================================================================================
