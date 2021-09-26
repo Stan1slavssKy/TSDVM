@@ -10,17 +10,17 @@
 
 class complex
 {
-    private:
+    public:
         double Re_;
         double Im_;
 
-    public:
         complex ();
         complex (double Re, double Im);
         ~complex () {};
-
-        double abs () const;
+        
         void print () const;
+        double abs () const;
+        double arg () const;
 
         complex operator+ (const complex& nmb) const;
         complex operator- (const complex& nmb) const;
@@ -43,9 +43,12 @@ const int ZERO = 0;
 
 //====================================================================================
 
-int is_equal (double fir_nmb, double sec_nmb);
+bool is_equal (double fir_nmb, double sec_nmb);
+
+void unit_test ();
+
+void testing_complex (const complex& z1, const complex& z2, double res_Re, double res_Im, complex (*operator_func)(const complex&));
 
 //====================================================================================
-
 
 #endif

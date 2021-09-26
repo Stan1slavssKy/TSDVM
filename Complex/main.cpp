@@ -4,14 +4,11 @@
 
 int main ()
 {
-    complex z1 {2, -3};
-    complex z2 {5, 2};
+   // unit_test ();
 
-    z1.print ();
-    z2.print ();
-
+    complex z1 {2, 3}, z2 {-2, 7}, z;
+    
     z1 /= z2;
-
     z1.print ();
 
     return 0;
