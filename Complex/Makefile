@@ -6,7 +6,10 @@ RELEASE_MODE = -g0 -O3
 
 VALGRIND_FLAGS = --leak-check=full --show-leak-kinds=all
 
-SOURCE = compl.cpp main.cpp compl_test.cpp
+CMPL_DIR = ./complex
+TEST_DIR = ./test
+
+SOURCE = $(CMPL_DIR)/compl.cpp $(CMPL_DIR)/main.cpp $(TEST_DIR)/compl_test.cpp
 OBJECT = $(SOURCE:.cpp=.o)
 OUTPUT = compl_output
  
@@ -21,13 +24,13 @@ launch: $(OUTPUT)
 $(OUTPUT): $(OBJECT)
 	$(CXX) $(WARNINGS) $(DEBUG_MODE) $^ -o $(OUTPUT)
 
-main.o: main.cpp
+main.o: $(CMPL_DIR)/main.cpp
 	$(CXX) -c $^
 
-compl.o: compl.cpp
+compl.o: $(CMPL_DIR)/compl.cpp
 	$(CXX) -c $^
 
-compl_test.o: compl_test.cpp
+compl_test.o: $(TEST_DIR)/compl_test.cpp
 	$(CXX) -c $^
 
 clean:

@@ -10,6 +10,8 @@ struct complex
 
     complex ();
     complex (double Re, double Im);
+    complex (const complex& nmb);
+
     ~complex () {};
     
     void print () const;
@@ -17,6 +19,8 @@ struct complex
     double arg () const;
 
     complex& operator= (const complex& nmb);
+
+    complex operator- () const;
 
     complex operator+ (const complex& nmb) const;
     complex operator- (const complex& nmb) const;
@@ -32,12 +36,6 @@ struct complex
     complex& operator/= (const complex& nmb);
 };
 
-//====================================================================================
-
-void unit_test ();
-
-void testing_arifm (const complex& z1, const complex& z2, double res_Re, double res_Im,
-                            complex (*operator_func)(const complex&), int* test_number);
 //====================================================================================
 
 #endif

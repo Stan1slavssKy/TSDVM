@@ -1,4 +1,4 @@
-#include "compl.hpp"
+#include "../complex/compl.hpp"
 #include <iostream>
 #include <cmath>
 
@@ -27,6 +27,11 @@ complex::complex (double Re, double Im) :
     Im(Im)
     {}
 
+complex::complex (const complex& nmb) :
+    Re(nmb.Re),
+    Im(nmb.Im)
+    {}
+
 double complex::abs () const
 {
     return Re * Re + Im * Im;
@@ -52,12 +57,24 @@ void complex::print () const
         std::cout << Re << " + i * " << Im << std::endl;
 }
 
+//====================================================================================
+
 complex& complex::operator= (const complex& nmb)
 {
-    this -> Im = nmb.Re;
-    this -> Re = nmb.Im;
+    Re = nmb.Re;
+    Im = nmb.Im;
 
     return *this;
+}
+
+complex complex::operator- () const
+{
+    complex temp;
+    
+    temp.Re = -Re;
+    temp.Im = -Im;
+
+    return temp;
 }
 
 complex complex::operator+ (const complex& nmb) const

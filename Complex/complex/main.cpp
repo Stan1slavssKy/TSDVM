@@ -1,15 +1,11 @@
 #include "compl.hpp"
+#include "../test/compl_test.hpp"
 
 //==========================================================
 
 int main ()
 {
-   // unit_test ();
-
-    complex z1 {2, 3}, z2 {-2, 7}, z;
-    
-    z1 = z2;
-    z1.print ();
+    unit_test ();
 
     return 0;
 }
