@@ -8,7 +8,7 @@ int main ()
 
     complex z1 {2, 3}, z2 {-2, 7}, z;
     
-    z1 /= z2;
+    z1 = z2;
     z1.print ();
 
     return 0;

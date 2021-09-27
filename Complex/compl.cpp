@@ -1,18 +1,14 @@
 #include "compl.hpp"
+#include <iostream>
+#include <cmath>
 
 //====================================================================================
 
-complex::complex () :
-    Re_(0),
-    Im_(0)
-    {}
+const double INACCURACY = 1E-6;
 
 //====================================================================================
 
-complex::complex (double Re, double Im) :
-    Re_(Re),
-    Im_(Im)
-    {}
+bool is_equal (double fir_nmb, double sec_nmb);
 
 //====================================================================================
 
@@ -21,147 +17,139 @@ bool is_equal (double fir_nmb, double sec_nmb)
     return (fabs (fir_nmb - sec_nmb) <= INACCURACY);
 }
 
-//====================================================================================
+complex::complex () :
+    Re(0),
+    Im(0)
+    {}
+
+complex::complex (double Re, double Im) :
+    Re(Re),
+    Im(Im)
+    {}
 
 double complex::abs () const
 {
-    return Re_ * Re_ + Im_ * Im_;
+    return Re * Re + Im * Im;
 }
-
-//====================================================================================
 
 double complex::arg () const
 {
-    return atan (Im_/Re_);
+    return atan (Im/Re);
 }
-
-//====================================================================================
 
 void complex::print () const
 {
-    if (is_equal (Im_, ZERO) && is_equal (Re_, ZERO))
+    if (is_equal (Im, 0) && is_equal (Re, 0))
         std::cout << "0" << std::endl;
 
-    else if (is_equal (Im_, ZERO))
-        std::cout << Re_ << std::endl;    
+    else if (is_equal (Im, 0))
+        std::cout << Re << std::endl;    
 
-    else if (is_equal (Re_, ZERO))
-        std::cout << "i * " << Im_ << std::endl;    
+    else if (is_equal (Re, 0))
+        std::cout << "i * " << Im << std::endl;    
 
     else 
-        std::cout << Re_ << " + i * " << Im_ << std::endl;
+        std::cout << Re << " + i * " << Im << std::endl;
 }
 
-//====================================================================================
+complex& complex::operator= (const complex& nmb)
+{
+    this -> Im = nmb.Re;
+    this -> Re = nmb.Im;
+
+    return *this;
+}
 
 complex complex::operator+ (const complex& nmb) const
 {   
     complex sum;
 
-    sum.Re_ = Re_ + nmb.Re_;
-    sum.Im_ = Im_ + nmb.Im_;
+    sum.Re = Re + nmb.Re;
+    sum.Im = Im + nmb.Im;
 
     return sum;
 }
-
-//====================================================================================
 
 complex complex::operator- (const complex& nmb) const
 {   
     complex sub;
 
-    sub.Re_ = Re_ - nmb.Re_;
-    sub.Im_ = Im_ - nmb.Im_;
+    sub.Re = Re - nmb.Re;
+    sub.Im = Im - nmb.Im;
 
     return sub;
 }
-
-//====================================================================================
 
 complex complex::operator* (const complex& nmb) const
 {   
     complex mul;
 
-    mul.Re_ = Re_ * nmb.Re_ - Im_ * nmb.Im_;
-    mul.Im_ = Re_ * nmb.Im_ + nmb.Re_ * Im_;
+    mul.Re = Re * nmb.Re - Im * nmb.Im;
+    mul.Im = Re * nmb.Im + nmb.Re * Im;
 
     return mul;
 }
-
-//====================================================================================
 
 complex complex::operator/ (const complex& nmb) const
 {   
     complex div;
 
-    div.Re_ = (Re_ * nmb.Re_ + Im_ * nmb.Im_) / (nmb.Im_ * nmb.Im_ + nmb.Re_ * nmb.Re_);
-    div.Im_ = (nmb.Re_ * Im_ - Re_ * nmb.Im_) / (nmb.Im_ * nmb.Im_ + nmb.Re_ * nmb.Re_);
+    div.Re = (Re * nmb.Re + Im * nmb.Im) / (nmb.Im * nmb.Im + nmb.Re * nmb.Re);
+    div.Im = (nmb.Re * Im - Re * nmb.Im) / (nmb.Im * nmb.Im + nmb.Re * nmb.Re);
 
     return div;
 }
 
-//====================================================================================
-
 bool complex::operator== (const complex& nmb) const
 {
-    return (Re_ == nmb.Re_ && Im_ == nmb.Im_);
+    return (Re == nmb.Re && Im == nmb.Im);
 }
-
-//====================================================================================
 
 bool complex::operator!= (const complex& nmb) const
 {
-    return !(Re_ == nmb.Re_ && Im_ == nmb.Im_); 
+    return !(Re == nmb.Re && Im == nmb.Im); 
 }
-
-//====================================================================================
 
 complex& complex::operator+= (const complex& nmb)
 {
-    double temp_Re = Re_;
-    double temp_Im = Im_;
+    double temp_Re = Re;
+    double temp_Im = Im;
 
-    Re_ = temp_Re + nmb.Re_;
-    Im_ = temp_Im + nmb.Im_;
+    Re = temp_Re + nmb.Re;
+    Im = temp_Im + nmb.Im;
 
     return *this;
 }
-
-//====================================================================================
 
 complex& complex::operator-= (const complex& nmb)
 {
-    double temp_Re = Re_;
-    double temp_Im = Im_;
+    double temp_Re = Re;
+    double temp_Im = Im;
 
-    Re_ = temp_Re - nmb.Re_;
-    Im_ = temp_Im - nmb.Im_;
+    Re = temp_Re - nmb.Re;
+    Im = temp_Im - nmb.Im;
 
     return *this;
 }
-
-//====================================================================================
 
 complex& complex::operator*= (const complex& nmb)
 {
-    double temp_Re = Re_;
-    double temp_Im = Im_;
+    double temp_Re = Re;
+    double temp_Im = Im;
 
-    Re_ = temp_Re * nmb.Re_ - temp_Im * nmb.Im_;
-    Im_ = temp_Re * nmb.Im_ + nmb.Re_ * temp_Im;
+    Re = temp_Re * nmb.Re - temp_Im * nmb.Im;
+    Im = temp_Re * nmb.Im + nmb.Re * temp_Im;
 
     return *this;
 }
 
-//====================================================================================
-
 complex& complex::operator/= (const complex& nmb)
 {
-    double temp_Re = Re_;
-    double temp_Im = Im_;
+    double temp_Re = Re;
+    double temp_Im = Im;
 
-    Re_ = (temp_Re * nmb.Re_ + temp_Im * nmb.Im_) / (nmb.Im_ * nmb.Im_ + nmb.Re_ * nmb.Re_);
-    Im_ = (nmb.Re_ * temp_Im - temp_Re * nmb.Im_) / (nmb.Im_ * nmb.Im_ + nmb.Re_ * nmb.Re_);
+    Re = (temp_Re * nmb.Re + temp_Im * nmb.Im) / (nmb.Im * nmb.Im + nmb.Re * nmb.Re);
+    Im = (nmb.Re * temp_Im - temp_Re * nmb.Im) / (nmb.Im * nmb.Im + nmb.Re * nmb.Re);
 
     return *this;
 }
