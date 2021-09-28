@@ -26,13 +26,16 @@ void unit_test ()
         std::cout << "bad test unary -" << std::endl;
     }
 
-    z2.Re = -7.2;
+    z2.Re = -16,4;
     z2.Im = 8.0;
     z = +z2;
     if ((z.Re != z2.Re) || (z.Im != z2.Im))
     {
         std::cout << "bad test unary +" << std::endl;
     }
+
+    z = z2 / 4;
+    z.print (); 
 }
 
 //====================================================================================
