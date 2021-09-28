@@ -67,7 +67,7 @@ complex& complex::operator= (const complex& nmb)
     return *this;
 }
 
-complex complex::operator- ()
+complex complex::operator- () const
 {
     complex temp;
     
@@ -77,11 +77,10 @@ complex complex::operator- ()
     return temp;
 }
 
-complex& complex::operator+ ()
+complex complex::operator+ () const
 {
     return *this;
 }
-// z1 = + z2;
 
 complex complex::operator- (double nmb) const 
 {

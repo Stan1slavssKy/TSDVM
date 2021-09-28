@@ -20,8 +20,8 @@ struct complex
 
     complex& operator= (const complex& nmb);
 
-    complex  operator- ();
-    complex& operator+ ();
+    complex operator- () const;
+    complex operator+ () const;
 
     complex operator+ (const complex& nmb) const;
     complex operator- (const complex& nmb) const;
