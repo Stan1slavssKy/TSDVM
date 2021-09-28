@@ -34,7 +34,7 @@ complex::complex (const complex& nmb) :
 
 double complex::abs () const
 {
-    return Re * Re + Im * Im;
+    return sqrt (Re * Re + Im * Im);
 }
 
 double complex::arg () const
@@ -73,6 +73,46 @@ complex complex::operator- () const
     
     temp.Re = -Re;
     temp.Im = -Im;
+
+    return temp;
+}
+
+complex complex::operator- (double nmb) const 
+{
+    complex temp;
+
+    temp.Re = Re - nmb;
+    temp.Im = Im;
+
+    return temp;
+}
+
+complex complex::operator+ (double nmb) const 
+{
+    complex temp;
+
+    temp.Re = Re + nmb;
+    temp.Im = Im;
+
+    return temp;
+}
+
+complex complex::operator* (double nmb) const 
+{
+    complex temp;
+
+    temp.Re = Re * nmb;
+    temp.Im = Im * nmb;
+
+    return temp;
+}
+
+complex complex::operator/ (double nmb) const 
+{
+    complex temp;
+
+    temp.Re = Re / nmb;
+    temp.Im = Im / nmb;
 
     return temp;
 }

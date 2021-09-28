@@ -34,6 +34,11 @@ struct complex
     complex& operator-= (const complex& nmb);
     complex& operator*= (const complex& nmb);
     complex& operator/= (const complex& nmb);
+
+    complex operator- (double nmb) const;
+    complex operator+ (double nmb) const;
+    complex operator* (double nmb) const;
+    complex operator/ (double nmb) const;
 };
 
 //====================================================================================
