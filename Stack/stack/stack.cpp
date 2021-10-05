@@ -79,3 +79,22 @@ stack& stack::operator= (stack&& other)
 }
 
 //----------------------------------------------------------------------------------------------
+
+void stack::push (const double value)
+{
+    if (capacity_ == size_)
+    {
+        data_ = (double*) realloc (data_, capacity_ * STACK_INCREASE);
+        assert (data_);
+    }
+    
+    data_[size_++] = value;
+}
+
+void stack::pop ()
+{
+    if (size_ != 0)
+        data_[--size_] = 0;
+}
+
+//----------------------------------------------------------------------------------------------

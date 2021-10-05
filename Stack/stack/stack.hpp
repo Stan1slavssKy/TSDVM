@@ -8,6 +8,7 @@
 //----------------------------------------------------------------------------------------------
 
 const size_t INIT_CAPACITY = 16;
+const size_t STACK_INCREASE = 2;
 
 enum stack_error
 {
@@ -34,7 +35,7 @@ class stack
         stack& operator= (const stack& other);
         stack& operator= (stack&& other);
 
-        void push  ();
+        void push  (const double value);
         void pop   ();
         void print ();
 };
