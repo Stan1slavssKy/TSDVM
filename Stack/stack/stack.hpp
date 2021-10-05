@@ -25,11 +25,18 @@ class stack
         int     error_;
 
     public:
-        stack () {};
-        stack (double capacity, double size);
-        stack (const stack& other);
-        stack (stack&& other);
+        stack  ();
+        stack  (double capacity, double size);
+        stack  (const stack& other);
+        stack  (stack&& other);
         ~stack ();
+
+        stack& operator= (const stack& other);
+        stack& operator= (stack&& other);
+
+        void push  ();
+        void pop   ();
+        void print ();
 };
 
 //----------------------------------------------------------------------------------------------
