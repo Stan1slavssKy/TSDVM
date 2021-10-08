@@ -1,14 +1,11 @@
-#ifndef INCLUDES_STACK_H_INCLUDED
-#define INCLUDES_STACK_H_INCLUDED    
+#ifndef STACK_STACK_H_INCLUDED
+#define STACK_STACK_H_INCLUDED    
 
 //----------------------------------------------------------------------------------------------
 
 #include <cstdlib> // for size_t
 
 //----------------------------------------------------------------------------------------------
-
-const size_t INIT_CAPACITY = 16;
-const size_t STACK_INCREASE = 2;
 
 enum stack_error
 {
@@ -20,16 +17,12 @@ enum stack_error
 
 class stack
 {
-        size_t  capacity_; // max number of elements
-        size_t  size_;     // number of elements
-        double* data_;     // data
-        int     error_;
-
     public:
-        stack  ();
-        stack  (double capacity, double size);
-        stack  (const stack& other);
-        stack  (stack&& other);
+        stack ();
+        stack (double* data, size_t size);
+        stack (const stack& other);
+        stack (stack&& other);
+
         ~stack ();
 
         stack& operator= (const stack& other);
@@ -38,8 +31,18 @@ class stack
         void push  (const double value);
         void pop   ();
         void print ();
+        void expands_capacity ();
+
+    private:
+        const size_t init_capacity_  = 16;
+        const double stack_increase_ = 1.5;
+
+        size_t  capacity_;
+        size_t  size_;
+        double* data_;
+
 };
 
 //----------------------------------------------------------------------------------------------
 
-#endif
+#endif // STACK_STACK_H_INCLUDED 

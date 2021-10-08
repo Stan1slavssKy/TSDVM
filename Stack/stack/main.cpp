@@ -5,6 +5,18 @@
 
 int main ()
 {
+    stack a;
+    stack b;
+
+    for (int i = 0; i < 30; i++)
+    {
+        a.push (i);
+    }
+
+    b = a;
+
+    b.print ();
+    
     return 0;
 }
 

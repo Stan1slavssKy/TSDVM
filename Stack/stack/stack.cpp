@@ -1,45 +1,43 @@
-#include "stack.hpp"
 #include <cassert>
 #include <cstring>
+#include <iostream>
+
+#include "stack.hpp"
 
 //----------------------------------------------------------------------------------------------
 
 stack::stack ():
-capacity_(INIT_CAPACITY), size_(0)
+    capacity_(init_capacity_), size_(0)
 {
-    data_ = (double*) calloc (capacity_, sizeof (double));
+    data_ = new double[capacity_];
     assert (data_);
 }
 
-stack::stack (double capacity, double size): 
-capacity_ (capacity), size_ (size)
+stack::stack (double* data, size_t size): 
+    data_(data), size_ (size), capacity_(capacity_)
 {
-    data_ = (double*) calloc (capacity_, sizeof (double));
-    assert (data_);
 }
 
 stack::stack (const stack& other):
-capacity_ (other.capacity_), size_ (other.size_)
+    capacity_ (other.capacity_), size_ (other.size_)
 {
-    data_ = (double*) realloc (data_, capacity_);
+    delete[] data_;
+    new double[capacity_];
+
     assert (data_);
     memcpy (data_, other.data_, size_);
 
 }
 
 stack::stack (stack&& other):
-capacity_(other.capacity_), size_(other.size_), data_(other.data_) 
+    capacity_(other.capacity_), size_(other.size_), data_(other.data_) 
 {   
     other.data_ = nullptr;
-    other.size_ = 0;
-    other.capacity_ = 0;
 }
 
 stack::~stack ()
 {
-    free (data_);
-    size_ = 0;
-    capacity_ = 0;
+    delete[] data_;
 }
 
 //----------------------------------------------------------------------------------------------
@@ -48,15 +46,18 @@ stack& stack::operator= (const stack& other)
 {
     if (this == &other) return *this;
 
-    free (data_);
+    delete[] data_;
     
     size_ = other.size_;
     capacity_ = other.capacity_;
 
-    data_ = (double*) calloc (capacity_, sizeof (double));
+    data_ = new double[capacity_];
     assert (data_);
     
-    memcpy (data_, other.data_, size_);
+    for (size_t i = 0; i < size_; i++)
+    {
+        data_[i] = other.data_[i];
+    }
     
     return *this;
 }
@@ -72,8 +73,6 @@ stack& stack::operator= (stack&& other)
     capacity_ = other.capacity_;
     
     other.data_ = nullptr;
-    other.size_ = 0;
-    other.capacity_ = 0;
     
     return *this;
 }
@@ -82,10 +81,9 @@ stack& stack::operator= (stack&& other)
 
 void stack::push (const double value)
 {
-    if (capacity_ == size_)
+    if (size_ == capacity_)
     {
-        data_ = (double*) realloc (data_, capacity_ * STACK_INCREASE);
-        assert (data_);
+        expands_capacity ();
     }
     
     data_[size_++] = value;
@@ -94,7 +92,33 @@ void stack::push (const double value)
 void stack::pop ()
 {
     if (size_ != 0)
+    {
         data_[--size_] = 0;
+    }
+}
+
+void stack::print ()
+{
+    for (int i = 0; i < size_; i++)
+    {
+        std::cout << data_[i] << std::endl;
+    }
+}
+
+void stack::expands_capacity ()
+{
+    capacity_ = capacity_ * stack_increase_;
+
+    double* temp = new double[capacity_];
+    assert (temp);
+
+    for (size_t i = 0; i < size_; i++)
+    {
+        temp[i] = data_[i];
+    }
+
+    delete[] data_;
+    data_ = temp;
 }
 
 //----------------------------------------------------------------------------------------------
