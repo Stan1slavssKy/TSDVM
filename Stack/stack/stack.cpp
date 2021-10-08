@@ -54,10 +54,7 @@ stack& stack::operator= (const stack& other)
     data_ = new double[capacity_];
     assert (data_);
     
-    for (size_t i = 0; i < size_; i++)
-    {
-        data_[i] = other.data_[i];
-    }
+    memcpy(data_, other.data_, size_ * sizeof(double));
     
     return *this;
 }
@@ -112,10 +109,7 @@ void stack::expands_capacity ()
     double* temp = new double[capacity_];
     assert (temp);
 
-    for (size_t i = 0; i < size_; i++)
-    {
-        temp[i] = data_[i];
-    }
+    memcpy(temp, data_, size_ * sizeof(double));
 
     delete[] data_;
     data_ = temp;
