@@ -8,15 +8,13 @@ int main ()
     stack a;
     stack b;
 
-    for (int i = 0; i < 30; i++)
+    for (int i = 0; i < 17; i++)
     {
         a.push (i);
     }
 
-    b = a;
+    a.print ();
 
-    b.print ();
-    
     return 0;
 }
 

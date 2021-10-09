@@ -1,6 +1,6 @@
-#include <cassert>
-#include <cstring>
 #include <iostream>
+#include <cstring>
+#include <cassert>
 
 #include "stack.hpp"
 
@@ -74,6 +74,40 @@ stack& stack::operator= (stack&& other)
     return *this;
 }
 
+bool stack::operator==(const stack& other) const
+{
+    if (size_ != other.size_)
+    {
+        return false;
+    }
+    if (capacity_ != other.capacity_)
+    {
+        return false;
+    }
+    if (memcmp(data_, other.data_, size_ * sizeof (double)))
+    {
+        return false;
+    }
+    return true;
+}
+
+bool stack::operator!=(const stack& other) const
+{
+    if (size_ != other.size_)
+    {
+        return true;
+    }
+    if (capacity_ != other.capacity_)
+    {
+        return true;
+    }
+    if (memcmp(data_, other.data_, size_ * sizeof (double)))
+    {
+        return true;
+    }
+    return false;
+}
+
 //----------------------------------------------------------------------------------------------
 
 void stack::push (const double value)
@@ -88,13 +122,13 @@ void stack::push (const double value)
 
 void stack::pop ()
 {
-    if (size_ != 0)
+    if (!is_empty())
     {
         data_[--size_] = 0;
     }
 }
 
-void stack::print ()
+void stack::print () const
 {
     for (int i = 0; i < size_; i++)
     {
@@ -113,6 +147,24 @@ void stack::expands_capacity ()
 
     delete[] data_;
     data_ = temp;
+}
+
+bool stack::is_empty () const
+{
+    return size_ == 0;
+}
+
+double& stack::top () const
+{
+    if (is_empty())
+    {
+        std::cout << "stack is empty, cant return top" << std::endl;
+        return data_[0];
+    }
+    else
+    {
+        return data_[size_ - 1];
+    }
 }
 
 //----------------------------------------------------------------------------------------------

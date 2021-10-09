@@ -7,14 +7,6 @@
 
 //----------------------------------------------------------------------------------------------
 
-enum stack_error
-{
-    NEGATIVE_CAPACITY = -1,
-    
-};
-
-//----------------------------------------------------------------------------------------------
-
 class stack
 {
     public:
@@ -27,11 +19,15 @@ class stack
 
         stack& operator= (const stack& other);
         stack& operator= (stack&& other);
+        
+        bool operator==(const stack& other) const;
+        bool operator!=(const stack& other) const;
 
-        void push  (const double value);
-        void pop   ();
-        void print ();
-        void expands_capacity ();
+        void push (const double value);
+        void pop ();
+        void print () const;
+        bool is_empty () const;
+        double& top () const; 
 
     private:
         const size_t init_capacity_  = 16;
@@ -41,6 +37,7 @@ class stack
         size_t  size_;
         double* data_;
 
+        void expands_capacity ();
 };
 
 //----------------------------------------------------------------------------------------------
