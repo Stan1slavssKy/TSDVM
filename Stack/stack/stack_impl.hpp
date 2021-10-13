@@ -1,0 +1,232 @@
+#ifndef STACK_STACK_IMPL_HPP_INCLUDED
+#define STACK_STACK_IMPL_HPP_INCLUDED   
+
+//----------------------------------------------------------------------------------------------
+
+#include <iostream>
+#include <cstring>
+#include <cassert>
+#include <cstdlib> // for size_t
+
+//----------------------------------------------------------------------------------------------
+
+template <class T>
+class stack
+{
+    public:
+        stack ();
+        stack (T* data, size_t size);
+        stack (const stack& other);
+        stack (stack&& other);
+
+        ~stack ();
+
+        stack& operator= (const stack& other);
+        stack& operator= (stack&& other);
+        
+        bool operator==(const stack& other) const;
+        bool operator!=(const stack& other) const;
+
+        void push (const T value);
+        void pop ();
+        void print () const;
+        bool is_empty () const;
+        T& top (); 
+        const T& top () const; 
+        size_t size () const;
+
+    private:
+        const size_t init_capacity_  = 16;
+        const T stack_increase_ = 1.5;
+
+        size_t  capacity_;
+        size_t  size_;
+        T* data_;
+
+        void expands_capacity ();
+};
+
+//----------------------------------------------------------------------------------------------
+
+template <class T> stack<T>::stack::stack ():
+    capacity_(init_capacity_), size_(0)
+{
+    data_ = new T[capacity_];
+    assert (data_);
+}
+
+template <class T> stack<T>::stack::stack (T* data, size_t size): 
+    data_(data), size_ (size), capacity_(capacity_)
+{
+}
+
+template <class T> stack<T>::stack::stack (const stack& other):
+    capacity_ (other.capacity_), size_ (other.size_)
+{
+    delete[] data_;
+    new T[capacity_];
+
+    assert (data_);
+    memcpy (data_, other.data_, size_);
+
+}
+
+template <class T> stack<T>::stack (stack&& other):
+    capacity_(other.capacity_), size_(other.size_), data_(other.data_) 
+{   
+    other.data_ = nullptr;
+}
+
+template <class T> stack<T>::~stack ()
+{
+    delete[] data_;
+}
+
+//----------------------------------------------------------------------------------------------
+
+template <class T> stack<T>& stack<T>::operator= (const stack& other) 
+{
+    if (this == &other) return *this;
+
+    delete[] data_;
+    
+    size_ = other.size_;
+    capacity_ = other.capacity_;
+
+    data_ = new T[capacity_];
+    assert (data_);
+    
+    memcpy(data_, other.data_, size_ * sizeof(T));
+    
+    return *this;
+}
+
+template <class T> stack<T>& stack<T>::operator= (stack&& other)
+{
+    if (this == &other) return *this;
+
+    free (data_);
+
+    data_ = other.data_;
+    size_ = other.size_;
+    capacity_ = other.capacity_;
+    
+    other.data_ = nullptr;
+    
+    return *this;
+}
+
+template <class T> bool stack<T>::operator==(const stack& other) const
+{
+    if (size_ != other.size_)
+    {
+        return false;
+    }
+    if (capacity_ != other.capacity_)
+    {
+        return false;
+    }
+    if (memcmp(data_, other.data_, size_ * sizeof (T)))
+    {
+        return false;
+    }
+    return true;
+}
+
+template <class T> bool stack<T>::operator!=(const stack& other) const
+{
+    if (size_ != other.size_)
+    {
+        return true;
+    }
+    if (capacity_ != other.capacity_)
+    {
+        return true;
+    }
+    if (memcmp(data_, other.data_, size_ * sizeof (T)))
+    {
+        return true;
+    }
+    return false;
+}
+
+//----------------------------------------------------------------------------------------------
+
+template <class T> void stack<T>::push (const T value)
+{
+    if (size_ == capacity_)
+    {
+        expands_capacity ();
+    }
+    
+    data_[size_++] = value;
+}
+
+template <class T> void stack<T>::pop ()
+{
+    if (!is_empty())
+    {
+        data_[--size_] = 0;
+    }
+}
+
+template <class T> void stack<T>::print () const
+{
+    for (int i = 0; i < size_; i++)
+    {
+        std::cout << data_[i] << std::endl;
+    }
+}
+
+template <class T> void stack<T>::expands_capacity ()
+{
+    capacity_ = capacity_ * stack_increase_;
+
+    T* temp = new T[capacity_];
+    assert (temp);
+
+    memcpy(temp, data_, size_ * sizeof(T));
+
+    delete[] data_;
+    data_ = temp;
+}
+
+template <class T> bool stack<T>::is_empty () const
+{
+    return size_ == 0;
+}
+
+template <class T> T& stack<T>::top ()
+{
+    if (is_empty())
+    {
+        std::cout << "stack is empty, cant return top" << std::endl;
+        return data_[0];
+    }
+    else
+    {
+        return data_[size_ - 1];
+    }
+}
+
+template <class T> const T& stack<T>::top () const
+{
+    if (is_empty())
+    {
+        std::cout << "stack is empty, cant return top" << std::endl;
+        return data_[0];
+    }
+    else
+    {
+        return data_[size_ - 1];
+    }
+}
+
+template <class T> size_t stack<T>::stack::size () const
+{
+    return size_;
+}
+
+//----------------------------------------------------------------------------------------------
+
+#endif //STACK_STACK_IMPL_HPP_INCLUDED

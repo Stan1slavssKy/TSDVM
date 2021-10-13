@@ -15,7 +15,7 @@ VALGRIND_FLAGS = --leak-check=full --show-leak-kinds=all
 
 STACK_DIR = ./stack
 
-SOURCE = $(STACK_DIR)/main.cpp $(STACK_DIR)/stack.cpp
+SOURCE = $(STACK_DIR)/main.cpp
 OBJECT = $(SOURCE:.cpp=.o)
 OUTPUT = stack_output
  
@@ -31,9 +31,6 @@ $(OUTPUT): $(OBJECT)
 	$(CXX) $(WARNINGS) $(DEBUG_MODE) $^ -o $(OUTPUT)
 
 main.o: $(STACK_DIR)/main.cpp
-	$(CXX) -c $^
-
-stack.o: $(STACK_DIR)/diff.cpp
 	$(CXX) -c $^
 
 clean:

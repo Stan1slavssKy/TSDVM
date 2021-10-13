@@ -1,14 +1,13 @@
 #include <iostream>
-#include "stack.hpp"
+#include "stack_impl.hpp"
 
 //----------------------------------------------------------------------------------------------
 
 int main ()
 {
-    stack a;
-    stack b;
+    stack<double> a;
 
-    for (int i = 0; i < 17; i++)
+    for (int i = 0; i < 10; i++)
     {
         a.push (i);
     }
