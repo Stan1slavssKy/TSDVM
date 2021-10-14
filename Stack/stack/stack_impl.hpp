@@ -5,12 +5,11 @@
 
 #include <iostream>
 #include <cstring>
-#include <cassert>
-#include <cstdlib> // for size_t
+#include <cstdlib> 
 
 //----------------------------------------------------------------------------------------------
 
-template <class T>
+template <typename T>
 class stack
 {
     public:
@@ -48,19 +47,22 @@ class stack
 
 //----------------------------------------------------------------------------------------------
 
-template <class T> stack<T>::stack::stack ():
+template <typename T> 
+stack<T>::stack::stack ():
     capacity_(init_capacity_), size_(0)
 {
     data_ = new T[capacity_];
     assert (data_);
 }
 
-template <class T> stack<T>::stack::stack (T* data, size_t size): 
+template <typename T> 
+stack<T>::stack::stack (T* data, size_t size): 
     data_(data), size_ (size), capacity_(capacity_)
 {
 }
 
-template <class T> stack<T>::stack::stack (const stack& other):
+template <typename T> 
+stack<T>::stack::stack (const stack& other):
     capacity_ (other.capacity_), size_ (other.size_)
 {
     delete[] data_;
@@ -71,20 +73,22 @@ template <class T> stack<T>::stack::stack (const stack& other):
 
 }
 
-template <class T> stack<T>::stack (stack&& other):
+template <typename T> 
+stack<T>::stack (stack&& other):
     capacity_(other.capacity_), size_(other.size_), data_(other.data_) 
 {   
     other.data_ = nullptr;
 }
 
-template <class T> stack<T>::~stack ()
+template <typename T> stack<T>::~stack ()
 {
     delete[] data_;
 }
 
 //----------------------------------------------------------------------------------------------
 
-template <class T> stack<T>& stack<T>::operator= (const stack& other) 
+template <typename T> 
+stack<T>& stack<T>::operator= (const stack& other) 
 {
     if (this == &other) return *this;
 
@@ -101,7 +105,8 @@ template <class T> stack<T>& stack<T>::operator= (const stack& other)
     return *this;
 }
 
-template <class T> stack<T>& stack<T>::operator= (stack&& other)
+template <typename T> 
+stack<T>& stack<T>::operator= (stack&& other)
 {
     if (this == &other) return *this;
 
@@ -116,7 +121,8 @@ template <class T> stack<T>& stack<T>::operator= (stack&& other)
     return *this;
 }
 
-template <class T> bool stack<T>::operator==(const stack& other) const
+template <typename T> 
+bool stack<T>::operator==(const stack& other) const
 {
     if (size_ != other.size_)
     {
@@ -133,7 +139,8 @@ template <class T> bool stack<T>::operator==(const stack& other) const
     return true;
 }
 
-template <class T> bool stack<T>::operator!=(const stack& other) const
+template <typename T> 
+bool stack<T>::operator!=(const stack& other) const
 {
     if (size_ != other.size_)
     {
@@ -152,7 +159,8 @@ template <class T> bool stack<T>::operator!=(const stack& other) const
 
 //----------------------------------------------------------------------------------------------
 
-template <class T> void stack<T>::push (const T value)
+template <typename T> 
+void stack<T>::push (const T value)
 {
     if (size_ == capacity_)
     {
@@ -162,7 +170,8 @@ template <class T> void stack<T>::push (const T value)
     data_[size_++] = value;
 }
 
-template <class T> void stack<T>::pop ()
+template <typename T> 
+void stack<T>::pop ()
 {
     if (!is_empty())
     {
@@ -170,7 +179,8 @@ template <class T> void stack<T>::pop ()
     }
 }
 
-template <class T> void stack<T>::print () const
+template <typename T> 
+void stack<T>::print () const
 {
     for (int i = 0; i < size_; i++)
     {
@@ -178,7 +188,8 @@ template <class T> void stack<T>::print () const
     }
 }
 
-template <class T> void stack<T>::expands_capacity ()
+template <typename T> 
+void stack<T>::expands_capacity ()
 {
     capacity_ = capacity_ * stack_increase_;
 
@@ -191,12 +202,14 @@ template <class T> void stack<T>::expands_capacity ()
     data_ = temp;
 }
 
-template <class T> bool stack<T>::is_empty () const
+template <typename T> 
+bool stack<T>::is_empty () const
 {
     return size_ == 0;
 }
 
-template <class T> T& stack<T>::top ()
+template <typename T> 
+T& stack<T>::top ()
 {
     if (is_empty())
     {
@@ -209,7 +222,8 @@ template <class T> T& stack<T>::top ()
     }
 }
 
-template <class T> const T& stack<T>::top () const
+template <typename T> 
+const T& stack<T>::top () const
 {
     if (is_empty())
     {
@@ -222,7 +236,8 @@ template <class T> const T& stack<T>::top () const
     }
 }
 
-template <class T> size_t stack<T>::stack::size () const
+template <typename T> 
+size_t stack<T>::stack::size () const
 {
     return size_;
 }
