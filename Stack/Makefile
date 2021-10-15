@@ -1,6 +1,6 @@
 #==========================================================================================
 #
-# Makefile for stack++ project
+# Makefile for stack c++ project
 #		author: Kurnevich Stanislav
 #
 #==========================================================================================
@@ -18,20 +18,19 @@ STACK_DIR = ./stack
 SOURCE = $(STACK_DIR)/main.cpp
 OBJECT = $(SOURCE:.cpp=.o)
 OUTPUT = stack_output
- 
-default: valgrind
 
-valgrind: $(OUTPUT)
+default: debug
+
+debug: $(OUTPUT)
 	valgrind $(VALGRIND_FLAGS) ./$(OUTPUT)
 
 launch: $(OUTPUT)
 	./$(OUTPUT)
 
 $(OUTPUT): $(OBJECT)
-	$(CXX) $(WARNINGS) $(DEBUG_MODE) $^ -o $(OUTPUT)
+	$(CXX) $(DEBUG_MODE) $(OBJECT) -o $@
 
-main.o: $(STACK_DIR)/main.cpp
-	$(CXX) -c $^
+.cpp.o: $(CXX) -c $(WARNINGS) $< -o $@
 
 clean:
 	rm -f *.o *.a $(OBJECT) $(OUTPUT)

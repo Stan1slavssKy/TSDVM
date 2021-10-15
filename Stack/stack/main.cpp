@@ -12,7 +12,7 @@ int main ()
         a.push (i);
     }
 
-    a.print ();
+   a.print ();
 
     return 0;
 }

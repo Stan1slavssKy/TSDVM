@@ -5,8 +5,9 @@
 
 #include <iostream>
 #include <cstring>
+#include <cassert>
 #include <cstdlib> 
-
+void func ();
 //----------------------------------------------------------------------------------------------
 
 template <typename T>
@@ -80,7 +81,8 @@ stack<T>::stack (stack&& other):
     other.data_ = nullptr;
 }
 
-template <typename T> stack<T>::~stack ()
+template <typename T> 
+stack<T>::~stack ()
 {
     delete[] data_;
 }
