@@ -19,20 +19,20 @@ SOURCE = $(STACK_DIR)/main.cpp
 OBJECT = $(SOURCE:.cpp=.o)
 OUTPUT = stack_output
 
-default: debug
+default: valgrind
 
-debug: $(OUTPUT)
+valgrind: $(OUTPUT)
 	valgrind $(VALGRIND_FLAGS) ./$(OUTPUT)
 
 launch: $(OUTPUT)
 	./$(OUTPUT)
 
 $(OUTPUT): $(OBJECT)
-	$(CXX) $(DEBUG_MODE) $(OBJECT) -o $@
+	$(CXX) $(WARNINGS) $(DEBUG_MODE) $^ -o $(OUTPUT)
 
-.cpp.o: $(CXX) -c $(WARNINGS) $< -o $@
+main.o: $(STACK_DIR)/main.cpp
+	$(CXX) -c $^
 
 clean:
 	rm -f *.o *.a $(OBJECT) $(OUTPUT)
-
 #==========================================================================================
