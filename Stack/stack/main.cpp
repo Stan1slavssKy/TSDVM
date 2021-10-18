@@ -1,18 +1,18 @@
 #include <iostream>
-#include "stack_impl.hpp"
+#include "stack.hpp"
 
 //----------------------------------------------------------------------------------------------
 
 int main ()
 {
-    stack<double> a;
+    s1ky::stack<bool> a;
 
-    for (int i = 0; i < 10; i++)
+    for (int i = 0; i < 100; i++)
     {
-        a.push (i);
+        a.push (1);
     }
 
-   a.print ();
+    a.print ();
 
     return 0;
 }

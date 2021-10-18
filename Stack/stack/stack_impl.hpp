@@ -7,13 +7,14 @@
 #include <cstring>
 #include <cassert>
 
-#include "stack.hpp"
-
 //----------------------------------------------------------------------------------------------
+
+namespace s1ky
+{
 
 template <typename T> 
 stack<T>::stack::stack ():
-    capacity_(init_capacity_), size_(0)
+    capacity_(init_capacity), size_(0)
 {
     data_ = new T[capacity_];
     assert (data_);
@@ -34,7 +35,6 @@ stack<T>::stack::stack (const stack& other):
 
     assert (data_);
     memcpy (data_, other.data_, size_);
-
 }
 
 template <typename T> 
@@ -131,7 +131,7 @@ void stack<T>::push (const T value)
     {
         expands_capacity ();
     }
-    
+
     data_[size_++] = value;
 }
 
@@ -156,7 +156,7 @@ void stack<T>::print () const
 template <typename T> 
 void stack<T>::expands_capacity ()
 {
-    capacity_ = capacity_ * stack_increase_;
+    capacity_ = capacity_ * stack_increase;
 
     T* temp = new T[capacity_];
     assert (temp);
@@ -206,6 +206,8 @@ size_t stack<T>::stack::size () const
 {
     return size_;
 }
+
+}//namespace s1ky
 
 //----------------------------------------------------------------------------------------------
 

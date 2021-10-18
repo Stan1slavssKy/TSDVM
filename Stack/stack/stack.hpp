@@ -7,42 +7,47 @@
 
 //----------------------------------------------------------------------------------------------
 
-template <typename T>
-class stack
-{
-    public:
-        stack ();
-        stack (T* data, size_t size);
-        stack (const stack& other);
-        stack (stack&& other);
+namespace s1ky
+{  
+    template <typename T>
+    class stack
+    {
+        public:
+            stack ();
+            stack (T* data, size_t size);
+            stack (const stack& other);
+            stack (stack&& other);
 
-        ~stack ();
+            ~stack ();
 
-        stack& operator= (const stack& other);
-        stack& operator= (stack&& other);
-        
-        bool operator==(const stack& other) const;
-        bool operator!=(const stack& other) const;
+            stack& operator= (const stack& other);
+            stack& operator= (stack&& other);
+            
+            bool operator==(const stack& other) const;
+            bool operator!=(const stack& other) const;
 
-        void push (const T value);
-        void pop ();
-        void print () const;
-        bool is_empty () const;
-        
-        T& top (); 
-        const T& top () const; 
-        size_t size () const;
+            void push (const T value);
+            void pop ();
+            void print () const;
+            bool is_empty () const;
+            
+            T& top (); 
+            const T& top () const; 
+            size_t size () const;
 
-    private:
-        const size_t init_capacity_  = 16;
-        const T stack_increase_ = 1.5;
+            const size_t init_capacity  = 16;
+            const double stack_increase = 1.5;
 
-        size_t  capacity_;
-        size_t  size_;
-        T* data_;
+        private:
+            size_t capacity_;
+            size_t size_;
+            T* data_;
 
-        void expands_capacity ();
-};
+            void expands_capacity ();
+    };
+}//namespace s1ky
+
+#include "stack_impl.hpp"
 
 //----------------------------------------------------------------------------------------------
 
