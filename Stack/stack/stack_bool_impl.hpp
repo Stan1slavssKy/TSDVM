@@ -8,19 +8,19 @@ namespace s1ky
 
 //----------------------------------------------------------------------------------------------
 
-stack<bool>::stack ():
+template <> stack<bool>::stack ():
     capacity_(init_capacity), size_(0)
 {
     data_ = new bool[capacity_];
     assert (data_);
 }
 
-stack<bool>::stack (bool* data, size_t size): 
+template <> stack<bool>::stack (bool* data, size_t size): 
     data_(data), size_ (size), capacity_(capacity_)
 {
 }
 
-stack<bool>::stack (const stack& other):
+template <> stack<bool>::stack (const stack& other):
     capacity_ (other.capacity_), size_ (other.size_)
 {
     delete[] data_;
@@ -30,20 +30,20 @@ stack<bool>::stack (const stack& other):
     memcpy (data_, other.data_, size_);
 }
 
-stack<bool>::stack (stack&& other):
+template <> stack<bool>::stack (stack&& other):
     capacity_(other.capacity_), size_(other.size_), data_(other.data_) 
 {   
     other.data_ = nullptr;
 }
 
-stack<bool>::~stack ()
+template <> stack<bool>::~stack ()
 {
     delete[] data_;
 }
 
 //----------------------------------------------------------------------------------------------
 
-stack<bool>& stack<bool>::operator= (const stack& other) 
+template <> stack<bool>& stack<bool>::operator= (const stack& other) 
 {
     if (this == &other) return *this;
 
@@ -60,7 +60,7 @@ stack<bool>& stack<bool>::operator= (const stack& other)
     return *this;
 }
 
-stack<bool>& stack<bool>::operator= (stack&& other)
+template <> stack<bool>& stack<bool>::operator= (stack&& other)
 {
     if (this == &other) return *this;
 
@@ -75,7 +75,7 @@ stack<bool>& stack<bool>::operator= (stack&& other)
     return *this;
 }
 
-bool stack<bool>::operator==(const stack& other) const
+template <> bool stack<bool>::operator==(const stack& other) const
 {
     if (size_ != other.size_)
     {
@@ -92,7 +92,7 @@ bool stack<bool>::operator==(const stack& other) const
     return true;
 }
 
-bool stack<bool>::operator!=(const stack& other) const
+template <> bool stack<bool>::operator!=(const stack& other) const
 {
     if (size_ != other.size_)
     {
@@ -111,7 +111,7 @@ bool stack<bool>::operator!=(const stack& other) const
 
 //----------------------------------------------------------------------------------------------
  
-void stack<bool>::push (const bool value)
+template <> void stack<bool>::push (const bool value)
 {
     if (size_ == capacity_)
     {
@@ -121,7 +121,7 @@ void stack<bool>::push (const bool value)
     data_[size_++] = value;
 }
 
-void stack<bool>::pop ()
+template <> void stack<bool>::pop ()
 {
     if (!is_empty())
     {
@@ -129,7 +129,7 @@ void stack<bool>::pop ()
     }
 }
 
-void stack<bool>::print () const
+template <> void stack<bool>::print () const
 {
     for (int i = 0; i < size_; i++)
     {
@@ -137,9 +137,9 @@ void stack<bool>::print () const
     }
 }
 
-void stack<bool>::expands_capacity ()
+template <> void stack<bool>::expands_capacity ()
 {
-    capacity_ = capacity_ * stack_increase;
+    capacity_ = capacity_++;
 
     bool* temp = new bool[capacity_];
     assert (temp);
@@ -150,12 +150,12 @@ void stack<bool>::expands_capacity ()
     data_ = temp;
 }
 
-bool stack<bool>::is_empty () const
+template <> bool stack<bool>::is_empty () const
 {
     return size_ == 0;
 }
 
-bool& stack<bool>::top ()
+template <> bool& stack<bool>::top ()
 {
     if (is_empty())
     {
@@ -168,7 +168,7 @@ bool& stack<bool>::top ()
     }
 }
 
-const bool& stack<bool>::top () const
+template <> const bool& stack<bool>::top () const
 {
     if (is_empty())
     {
@@ -181,7 +181,7 @@ const bool& stack<bool>::top () const
     }
 }
 
-size_t stack<bool>::size () const
+template <> size_t stack<bool>::size () const
 {
     return size_;
 }
