@@ -1,20 +1,18 @@
 #ifndef STACK_STACK_IMPL_HPP_INCLUDED
 #define STACK_STACK_IMPL_HPP_INCLUDED   
 
-//===========================================================================================
-
 #include <iostream>
 #include <cstring>
 #include <cassert>
 
-//===========================================================================================
+#include "stack.hpp"
 
 namespace s1ky
 {
 
 template <typename T> 
 stack<T>::stack ():
-    capacity_(init_capacity), size_(0)
+    capacity_(INIT_CAPACITY), size_(0)
 {
     data_ = new T[capacity_];
     assert (data_);
@@ -24,13 +22,18 @@ template <typename T>
 stack<T>::stack (T* data, size_t size): 
     data_(data), size_ (size), capacity_(capacity_)
 {
+    T* temp = new T[capacity_];
+    assert (temp);
+
+    memcpy (temp, data_, size_ * sizeof(T));
+    data_ = temp;   
 }
+
 
 template <typename T> 
 stack<T>::stack (const stack& other):
     capacity_ (other.capacity_), size_ (other.size_)
 {
-    delete[] data_;
     new T[capacity_];
 
     assert (data_);
@@ -49,8 +52,6 @@ stack<T>::~stack ()
 {
     delete[] data_;
 }
-
-//===========================================================================================
 
 template <typename T> 
 stack<T>& stack<T>::operator= (const stack& other) 
@@ -122,8 +123,6 @@ bool stack<T>::operator!=(const stack& other) const
     return false;
 }
 
-//===========================================================================================
-
 template <typename T> 
 void stack<T>::push (const T value)
 {
@@ -156,7 +155,7 @@ void stack<T>::print () const
 template <typename T> 
 void stack<T>::expands_capacity ()
 {
-    capacity_ = capacity_ * stack_increase;
+    capacity_ = capacity_ * STACK_INCREASE;
 
     T* temp = new T[capacity_];
     assert (temp);
