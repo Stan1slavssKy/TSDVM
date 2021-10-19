@@ -1,0 +1,8 @@
+# ignore object files
+*.o
+
+# ignore TODO list
+TODO
+
+# ignore .vscode
+.vscode
