@@ -6,3 +6,6 @@ TODO
 
 # ignore .vscode
 .vscode
+
+# ignore output file
+stack_output
