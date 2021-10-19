@@ -7,7 +7,7 @@ int main ()
 {
     s1ky::stack<bool> a;
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < 10; i++)
     {
         a.push (1);
     }

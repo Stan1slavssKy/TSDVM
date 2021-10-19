@@ -42,12 +42,13 @@ namespace s1ky
             size_t capacity_;
             size_t size_;
             T* data_;
-
+                        
             void expands_capacity ();
     };
 }//namespace s1ky
 
 #include "stack_impl.hpp"
+#include "stack_bool_impl.hpp"
 
 //----------------------------------------------------------------------------------------------
 

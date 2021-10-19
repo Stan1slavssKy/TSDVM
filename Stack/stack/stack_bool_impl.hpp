@@ -1,59 +1,49 @@
-#ifndef STACK_STACK_IMPL_HPP_INCLUDED
-#define STACK_STACK_IMPL_HPP_INCLUDED   
-
-//----------------------------------------------------------------------------------------------
-
-#include <iostream>
-#include <cstring>
-#include <cassert>
+#ifndef STACK_STACK_BOOL_IMPL_HPP_INCLUDED
+#define STACK_STACK_BOOL_IMPL_HPP_INCLUDED
 
 //----------------------------------------------------------------------------------------------
 
 namespace s1ky
-{
+{  
 
-template <typename T> 
-stack<T>::stack ():
+//----------------------------------------------------------------------------------------------
+
+stack<bool>::stack ():
     capacity_(init_capacity), size_(0)
 {
-    data_ = new T[capacity_];
+    data_ = new bool[capacity_];
     assert (data_);
 }
 
-template <typename T> 
-stack<T>::stack (T* data, size_t size): 
+stack<bool>::stack (bool* data, size_t size): 
     data_(data), size_ (size), capacity_(capacity_)
 {
 }
 
-template <typename T> 
-stack<T>::stack (const stack& other):
+stack<bool>::stack (const stack& other):
     capacity_ (other.capacity_), size_ (other.size_)
 {
     delete[] data_;
-    new T[capacity_];
+    new bool[capacity_];
 
     assert (data_);
     memcpy (data_, other.data_, size_);
 }
 
-template <typename T> 
-stack<T>::stack (stack&& other):
+stack<bool>::stack (stack&& other):
     capacity_(other.capacity_), size_(other.size_), data_(other.data_) 
 {   
     other.data_ = nullptr;
 }
 
-template <typename T> 
-stack<T>::~stack ()
+stack<bool>::~stack ()
 {
     delete[] data_;
 }
 
 //----------------------------------------------------------------------------------------------
 
-template <typename T> 
-stack<T>& stack<T>::operator= (const stack& other) 
+stack<bool>& stack<bool>::operator= (const stack& other) 
 {
     if (this == &other) return *this;
 
@@ -62,16 +52,15 @@ stack<T>& stack<T>::operator= (const stack& other)
     size_ = other.size_;
     capacity_ = other.capacity_;
 
-    data_ = new T[capacity_];
+    data_ = new bool[capacity_];
     assert (data_);
     
-    memcpy(data_, other.data_, size_ * sizeof(T));
+    memcpy(data_, other.data_, size_ * sizeof(bool));
     
     return *this;
 }
 
-template <typename T> 
-stack<T>& stack<T>::operator= (stack&& other)
+stack<bool>& stack<bool>::operator= (stack&& other)
 {
     if (this == &other) return *this;
 
@@ -86,8 +75,7 @@ stack<T>& stack<T>::operator= (stack&& other)
     return *this;
 }
 
-template <typename T> 
-bool stack<T>::operator==(const stack& other) const
+bool stack<bool>::operator==(const stack& other) const
 {
     if (size_ != other.size_)
     {
@@ -97,15 +85,14 @@ bool stack<T>::operator==(const stack& other) const
     {
         return false;
     }
-    if (memcmp(data_, other.data_, size_ * sizeof (T)))
+    if (memcmp(data_, other.data_, size_ * sizeof (bool)))
     {
         return false;
     }
     return true;
 }
 
-template <typename T> 
-bool stack<T>::operator!=(const stack& other) const
+bool stack<bool>::operator!=(const stack& other) const
 {
     if (size_ != other.size_)
     {
@@ -115,7 +102,7 @@ bool stack<T>::operator!=(const stack& other) const
     {
         return true;
     }
-    if (memcmp(data_, other.data_, size_ * sizeof (T)))
+    if (memcmp(data_, other.data_, size_ * sizeof (bool)))
     {
         return true;
     }
@@ -123,9 +110,8 @@ bool stack<T>::operator!=(const stack& other) const
 }
 
 //----------------------------------------------------------------------------------------------
-
-template <typename T> 
-void stack<T>::push (const T value)
+ 
+void stack<bool>::push (const bool value)
 {
     if (size_ == capacity_)
     {
@@ -135,8 +121,7 @@ void stack<T>::push (const T value)
     data_[size_++] = value;
 }
 
-template <typename T> 
-void stack<T>::pop ()
+void stack<bool>::pop ()
 {
     if (!is_empty())
     {
@@ -144,8 +129,7 @@ void stack<T>::pop ()
     }
 }
 
-template <typename T> 
-void stack<T>::print () const
+void stack<bool>::print () const
 {
     for (int i = 0; i < size_; i++)
     {
@@ -153,28 +137,25 @@ void stack<T>::print () const
     }
 }
 
-template <typename T> 
-void stack<T>::expands_capacity ()
+void stack<bool>::expands_capacity ()
 {
     capacity_ = capacity_ * stack_increase;
 
-    T* temp = new T[capacity_];
+    bool* temp = new bool[capacity_];
     assert (temp);
 
-    memcpy(temp, data_, size_ * sizeof(T));
+    memcpy(temp, data_, size_ * sizeof(bool));
 
     delete[] data_;
     data_ = temp;
 }
 
-template <typename T> 
-bool stack<T>::is_empty () const
+bool stack<bool>::is_empty () const
 {
     return size_ == 0;
 }
 
-template <typename T> 
-T& stack<T>::top ()
+bool& stack<bool>::top ()
 {
     if (is_empty())
     {
@@ -187,8 +168,7 @@ T& stack<T>::top ()
     }
 }
 
-template <typename T> 
-const T& stack<T>::top () const
+const bool& stack<bool>::top () const
 {
     if (is_empty())
     {
@@ -201,8 +181,7 @@ const T& stack<T>::top () const
     }
 }
 
-template <typename T> 
-size_t stack<T>::size () const
+size_t stack<bool>::size () const
 {
     return size_;
 }
@@ -211,4 +190,4 @@ size_t stack<T>::size () const
 
 //----------------------------------------------------------------------------------------------
 
-#endif //STACK_STACK_IMPL_HPP_INCLUDED
+#endif //STACK_STACK_BOOL_IMPL_HPP_INCLUDED
