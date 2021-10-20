@@ -124,7 +124,7 @@ bool stack<T>::operator!=(const stack& other) const
 }
 
 template <typename T> 
-void stack<T>::push (const T value)
+void stack<T>::push (T value)
 {
     if (size_ == capacity_)
     {

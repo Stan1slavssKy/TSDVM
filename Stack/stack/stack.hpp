@@ -22,7 +22,7 @@ class stack
         bool operator==(const stack& other) const;
         bool operator!=(const stack& other) const;
 
-        void push (const T value);
+        void push (T value);
         void pop ();
         void print () const;
         bool is_empty () const;

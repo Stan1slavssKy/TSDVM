@@ -15,7 +15,7 @@ class stack<bool>
 {
     public:
         stack ();
-        stack (bool* data, size_t size);
+        stack (unsigned char* data, size_t size);
         stack (const stack& other);
         stack (stack&& other);
 
@@ -33,7 +33,7 @@ class stack<bool>
         bool is_empty () const;
         
         bool& top (); 
-        const bool& top () const; 
+        const unsigned char& top () const; 
         size_t size () const;
 
         const size_t INIT_CAPACITY  = 2;
@@ -42,7 +42,7 @@ class stack<bool>
     private:
         size_t capacity_;
         size_t size_;
-        bool* data_;
+        unsigned char* data_;
                     
         void expands_capacity ();
 };
@@ -50,17 +50,17 @@ class stack<bool>
 stack<bool>::stack ():
     capacity_(INIT_CAPACITY), size_(0)
 {
-    data_ = new bool[capacity_];
+    data_ = new unsigned char[capacity_];
     assert (data_);
 }
 
-stack<bool>::stack (bool* data, size_t size): 
+stack<bool>::stack (unsigned char* data, size_t size): 
     data_(data), size_ (size), capacity_(capacity_)
 {
-    bool* temp = new bool[capacity_];
+    unsigned char* temp = new unsigned char[capacity_];
     assert (temp);
 
-    memcpy (temp, data_, size_ * sizeof(bool));
+    memcpy (temp, data_, size_ * sizeof(unsigned char));
     data_ = temp;   
 }
 
@@ -86,7 +86,7 @@ stack<bool>::~stack ()
 
 void stack<bool>::print () const
 {
-    for (size_t i = 0; i < capacity_; i++)
+    for (size_t i = 0; i < size_ / 8 + 1; i++)
     {
         int buffer[8] = {0};
         unsigned char nmb = data_[i];
@@ -111,10 +111,10 @@ void stack<bool>::expands_capacity ()
 {
     capacity_ = capacity_ * STACK_INCREASE + 0.5;
 
-    bool* temp = new bool[capacity_];
+    unsigned char* temp = new unsigned char[capacity_];
     assert (temp);
 
-    memcpy(temp, data_, capacity_ * sizeof(bool));
+    memcpy(temp, data_, capacity_ * sizeof(unsigned char));
 
     delete[] data_;
     data_ = temp;
@@ -122,6 +122,8 @@ void stack<bool>::expands_capacity ()
 
 void stack<bool>::push (bool value)
 {
+    unsigned char input_nmb = value;
+
     if (size_ % 8 == 0 && size_ != 0)
     {
         expands_capacity ();
@@ -136,9 +138,9 @@ void stack<bool>::push (bool value)
         nmb_occupied_bits_in_byte = size_ - 8 * occupied_bytes_counter;
     }
 
-    value <<= (7 - nmb_occupied_bits_in_byte);
+    input_nmb <<= (7 - nmb_occupied_bits_in_byte);
 
-    data_[occupied_bytes_counter] |= value;
+    data_[occupied_bytes_counter] |= input_nmb;
 
     size_++;
 }

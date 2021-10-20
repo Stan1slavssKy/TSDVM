@@ -5,17 +5,14 @@ int main ()
 {
     s1ky::stack<bool> a;
 
-    a.push (false);
-    a.push (true);
-    a.push (false);
-    a.push (true);
-    a.push (true);
-    a.push (true);
-    a.push (false);
-    a.push (false);
-
-//pushing 01011100 in 1 byte === 92
-
+    for (int i = 0; i < 10; i++)
+    {
+        a.push (true);
+        a.push (true);
+        a.push (true);
+        a.push (false);
+    }
+    
     a.print ();
 
     return 0;
