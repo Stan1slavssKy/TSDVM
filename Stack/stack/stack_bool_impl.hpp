@@ -70,7 +70,7 @@ stack<bool>::stack (const stack& other):
     new bool[capacity_];
 
     assert (data_);
-    memcpy (data_, other.data_, size_);
+    memcpy (data_, other.data_, capacity_ * sizeof (bool));
 }
 
 stack<bool>::stack (stack&& other):
@@ -86,27 +86,35 @@ stack<bool>::~stack ()
 
 void stack<bool>::print () const
 {
-    for (int i = 0; i < size_; i++)
+    for (size_t i = 0; i < capacity_; i++)
     {
-        if (data_[i] == 1)
+        int buffer[8] = {0};
+        unsigned char nmb = data_[i];
+        unsigned char temp = 0;
+
+        for (int i = 0; i < 8; i++)
         {
-            std::cout << "true" << std::endl;
+            temp = nmb;
+            nmb = nmb % 2;
+            buffer [7 - i] = nmb;
+            nmb = temp / 2;
         }
-        else 
-        {
-            std::cout << "false" << std::endl;
-        }
+
+        for (int i = 0; i < 8; i++)
+            std::cout << buffer[i];
+
+        std::cout << std::endl;
     }
 }
 
 void stack<bool>::expands_capacity ()
 {
-    capacity_++;
+    capacity_ = capacity_ * STACK_INCREASE + 0.5;
 
     bool* temp = new bool[capacity_];
     assert (temp);
 
-    memcpy(temp, data_, size_);
+    memcpy(temp, data_, capacity_ * sizeof(bool));
 
     delete[] data_;
     data_ = temp;
@@ -114,25 +122,23 @@ void stack<bool>::expands_capacity ()
 
 void stack<bool>::push (bool value)
 {
-    if (size_ == 8 * capacity_)
+    if (size_ % 8 == 0 && size_ != 0)
     {
         expands_capacity ();
     }
 
-    size_t x = size_;
+    size_t nmb_occupied_bits_in_byte = size_;
+    size_t occupied_bytes_counter = 0;
 
     if (size_ >= 8)
     {
-        size_t x = size_ / 8;   
+        occupied_bytes_counter = size_ / 8;   
+        nmb_occupied_bits_in_byte = size_ - 8 * occupied_bytes_counter;
     }
 
-    value << (8 - size_);
-    data_[0] | value;
+    value <<= (7 - nmb_occupied_bits_in_byte);
 
-    if (size_ % 8 == 0)
-    {
-        //bytes_counter++;
-    }
+    data_[occupied_bytes_counter] |= value;
 
     size_++;
 }
