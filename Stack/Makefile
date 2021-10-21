@@ -6,12 +6,12 @@
 #==========================================================================================
 
 CXX       = g++
-WARNINGS  = -Wall -Wextra 
+WARNINGS  = -Werror -Wall -Wextra -Wpedantic -Wcast-align -Wcast-qual -Wconversion -Wctor-dtor-privacy -Wenum-compare -Wfloat-equal -Wnon-virtual-dtor -Wold-style-cast -Woverloaded-virtual -Wredundant-decls -Wsign-conversion -Wsign-promo
 
 DEBUG_MODE   = -g3 -O0 
 RELEASE_MODE = -g0 -O3
 
-VALGRIND_FLAGS = --leak-check=full --show-leak-kinds=all
+VALGRIND_FLAGS = --leak-check=full --show-leak-kinds=all --track-origins=yes
 
 STACK_DIR = ./stack
 

@@ -14,15 +14,15 @@ template <typename T>
 stack<T>::stack ():
     capacity_(INIT_CAPACITY), size_(0)
 {
-    data_ = new T[capacity_];
+    data_ = new T[capacity_] {};
     assert (data_);
 }
 
 template <typename T> 
 stack<T>::stack (T* data, size_t size): 
-    data_(data), size_ (size), capacity_(capacity_)
+    size_ (size), capacity_(size + INIT_CAPACITY)
 {
-    T* temp = new T[capacity_];
+    T* temp = new T[capacity_] {};
     assert (temp);
 
     memcpy (temp, data_, size_ * sizeof(T));
@@ -34,10 +34,10 @@ template <typename T>
 stack<T>::stack (const stack& other):
     capacity_ (other.capacity_), size_ (other.size_)
 {
-    new T[capacity_];
+    data_ = new T[capacity_] {};
 
     assert (data_);
-    memcpy (data_, other.data_, size_);
+    memcpy (data_, other.data_, size_ * sizeof (T));
 }
 
 template <typename T> 
@@ -63,7 +63,7 @@ stack<T>& stack<T>::operator= (const stack& other)
     size_ = other.size_;
     capacity_ = other.capacity_;
 
-    data_ = new T[capacity_];
+    data_ = new T[capacity_] {};
     assert (data_);
     
     memcpy(data_, other.data_, size_ * sizeof(T));
@@ -157,7 +157,7 @@ void stack<T>::expands_capacity ()
 {
     capacity_ = capacity_ * STACK_INCREASE;
 
-    T* temp = new T[capacity_];
+    T* temp = new T[capacity_] {};
     assert (temp);
 
     memcpy(temp, data_, size_ * sizeof(T));
@@ -207,7 +207,5 @@ size_t stack<T>::size () const
 }
 
 }//namespace s1ky
-
-//===========================================================================================
 
 #endif //STACK_STACK_IMPL_HPP_INCLUDED
