@@ -24,7 +24,9 @@ class stack<bool>
 
         void push (unsigned char value);
         void print () const;
-        
+        void pop ();
+        bool is_empty () const;
+
         const size_t INIT_CAPACITY  = 2; // static
         const double STACK_INCREASE = 1.5;
 
@@ -99,13 +101,14 @@ void stack<bool>::print () const
 
 void stack<bool>::expands_capacity ()
 {
+    size_t t = capacity_;
     capacity_ = capacity_ * STACK_INCREASE + 1;
 
     unsigned char* temp = new unsigned char[capacity_] {};
     assert (temp);
 
     size_t len_copied_data = (size_ / 8 + 1);
-    
+
     for (size_t i = 0; i < len_copied_data; i++)
     {
         if (capacity_ < len_copied_data)
@@ -113,7 +116,6 @@ void stack<bool>::expands_capacity ()
             std::cout << "Error" << std::endl;
             break;
         }
-
         temp[i] = data_ [i];
     }
 
@@ -142,6 +144,44 @@ void stack<bool>::push (unsigned char value)
     data_[occupied_bytes_counter] |= value;
 
     size_++;
+}
+
+void stack<bool>::pop ()
+{
+    if (!is_empty ())
+    {
+        size_t nmb_occupied_bits_in_byte = size_;
+        size_t occupied_bytes_counter = 0;
+
+        if (size_ >= 8)
+        {
+            occupied_bytes_counter = size_ / CHAR_BIT;   
+            nmb_occupied_bits_in_byte = size_ % CHAR_BIT;
+        }
+
+        unsigned char value = UCHAR_MAX - 1; // in binary 11111110
+        
+        if (nmb_occupied_bits_in_byte != 0)
+        {
+            value <<= (CHAR_BIT - nmb_occupied_bits_in_byte);
+            data_[occupied_bytes_counter] &= value;
+        }
+        else 
+        {
+            data_[occupied_bytes_counter - 1] &= value;
+        }
+
+        size_--;   
+    }
+    else
+    {
+        std::cout << "Cant push, size = 0" << std::endl;
+    }
+}
+
+bool stack<bool>::is_empty () const 
+{
+    return size_ == 0;
 }
 
 }//namespace s1ky
