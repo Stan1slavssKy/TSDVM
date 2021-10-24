@@ -5,17 +5,19 @@ int main ()
 {
     s1ky::stack<bool> a;
 
-    for (int i = 0; i < 1600000; i++)
-    {
-        a.push (true);
-    }
-
-    a.print ();
-
-    for (int i = 0; i < 1600000; i++)
-    {
-            a.pop ();
-    }
+    a.push (true);
+    a.push (false);
+    a.push (true);
+    a.push (true);
+    a.push (false);
+    a.push (true);
+    a.push (true);
+    a.push (true);
+    a.push (false);
+    a.push (true);
+    a.pop ();
+    
+    std::cout << "stack top = " << a.top () << std::endl;
 
     a.print ();
 

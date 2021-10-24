@@ -26,6 +26,9 @@ class stack<bool>
         void print () const;
         void pop ();
         bool is_empty () const;
+        bool top () const;
+
+        size_t size () const;
 
         const size_t INIT_CAPACITY  = 2; // static
         const double STACK_INCREASE = 1.5;
@@ -182,6 +185,49 @@ void stack<bool>::pop ()
 bool stack<bool>::is_empty () const 
 {
     return size_ == 0;
+}
+
+size_t stack<bool>::size () const
+{
+    return size_;
+}
+
+bool stack<bool>::top () const
+{
+    if (!is_empty ())
+    {
+        size_t nmb_occupied_bits_in_byte = size_;
+        size_t occupied_bytes_counter = 0;
+
+        if (size_ >= 8)
+        {
+            occupied_bytes_counter = size_ / CHAR_BIT;   
+            nmb_occupied_bits_in_byte = size_ % CHAR_BIT;
+        }
+        
+        unsigned char cur_data = 0;
+        unsigned char value = 1; // in binary 00000001
+        bool out_nmb = false;
+
+        if (nmb_occupied_bits_in_byte != 0)
+        {
+            cur_data = data_[occupied_bytes_counter];
+            value <<= (CHAR_BIT - nmb_occupied_bits_in_byte);
+            out_nmb = (cur_data &= value);
+        }
+        else 
+        {
+            cur_data = data_[occupied_bytes_counter - 1];
+            out_nmb = (cur_data &= value);
+        }
+
+        return out_nmb;
+    }
+    else
+    {
+        std::cout << "Cant return top of the stack, stack is empty" << std::endl;
+        return 0;
+    }
 }
 
 }//namespace s1ky
