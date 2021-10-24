@@ -22,6 +22,12 @@ class stack<bool>
 
         ~stack ();
 
+        stack& operator= (const stack& other);
+        stack& operator= (stack&& other);
+
+        bool operator== (const stack& other) const;
+        bool operator!= (const stack& other) const;
+
         void push (unsigned char value);
         void print () const;
         void pop ();
@@ -75,6 +81,57 @@ stack<bool>::stack (stack&& other):
 stack<bool>::~stack ()
 {
     delete[] data_;
+}
+
+stack<bool>& stack<bool>::operator=(const stack& other)
+{
+    if (this == &other) return *this;
+    
+    size_ = other.size_;
+    capacity_ = other.capacity_;
+
+    delete[] data_;
+    data_ = new unsigned char[capacity_] {};
+    assert (data_);
+    
+    memcpy (data_, other.data_, (size_ / 8 + 1) * sizeof(unsigned char));
+    
+    return *this;
+}
+
+
+bool stack<bool>::operator==(const stack& other) const
+{
+    if (size_ != other.size_)
+    {
+        return false;
+    }
+    if (capacity_ != other.capacity_)
+    {
+        return false;
+    }
+    if (memcmp (data_, other.data_, (size_ / 8 + 1) * sizeof (unsigned char)))
+    {
+        return false;
+    }
+    return true;
+}
+
+bool stack<bool>::operator!=(const stack& other) const
+{
+    if (size_ != other.size_)
+    {
+        return true;
+    }
+    if (capacity_ != other.capacity_)
+    {
+        return true;
+    }
+    if (memcmp (data_, other.data_, (size_ / 8 + 1) * sizeof (unsigned char)))
+    {
+        return true;
+    }
+    return false;
 }
 
 void stack<bool>::print () const

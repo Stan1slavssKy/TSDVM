@@ -67,7 +67,7 @@ stack<T>& stack<T>::operator= (const stack& other)
     assert (data_);
     
     memcpy(data_, other.data_, size_ * sizeof(T));
-    
+    stack& operator= (const stack& other);
     return *this;
 }
 
