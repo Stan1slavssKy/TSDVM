@@ -11,44 +11,8 @@
 namespace s1ky
 {
 
-template <>
-class stack<bool>
-{
-    public:
-        stack ();
-        stack (unsigned char* data, size_t size);
-        stack (const stack& other);
-        stack (stack&& other);
-
-        ~stack ();
-
-        stack& operator= (const stack& other);
-        stack& operator= (stack&& other);
-
-        bool operator== (const stack& other) const;
-        bool operator!= (const stack& other) const;
-
-        void push (unsigned char value);
-        void print () const;
-        void pop ();
-        bool is_empty () const;
-        bool top () const;
-
-        size_t size () const;
-
-        const size_t INIT_CAPACITY  = 2; // static
-        const double STACK_INCREASE = 1.5;
-
-    private:
-        size_t capacity_;
-        size_t size_;
-        unsigned char* data_;
-                    
-        void expands_capacity ();
-};
-
 stack<bool>::stack ():
-    capacity_(INIT_CAPACITY), size_(0) //using
+    capacity_(INIT_CAPACITY), size_(0)
 {
     data_ = new unsigned char[capacity_] {};
     assert (data_);
@@ -99,6 +63,20 @@ stack<bool>& stack<bool>::operator=(const stack& other)
     return *this;
 }
 
+stack<bool>& stack<bool>::operator= (stack&& other)
+{
+    if (this == &other) return *this;
+
+    delete[] data_;
+
+    data_ = other.data_;
+    size_ = other.size_;
+    capacity_ = other.capacity_;
+    
+    other.data_ = nullptr;
+    
+    return *this;
+}
 
 bool stack<bool>::operator==(const stack& other) const
 {
