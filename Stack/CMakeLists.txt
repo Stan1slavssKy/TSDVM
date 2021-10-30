@@ -15,8 +15,6 @@ set (STACK_HEADERS
         stack/stack_bool_impl.hpp
 )
 
-#=========================================================================
-
 set (SOURCES
         stack/main.cpp
 )
@@ -82,5 +80,3 @@ add_custom_target (
     -i
     ${ALL_SOURCE_FILES}
 )
-
-#=========================================================================
