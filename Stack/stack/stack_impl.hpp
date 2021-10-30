@@ -26,9 +26,7 @@ stack<T>::stack (T* data, size_t size):
     assert (data_);
 
     memcpy (data_, data, size_ * sizeof(T));
-    data_ = temp;   
 }
-
 
 template <typename T> 
 stack<T>::stack (const stack& other):
