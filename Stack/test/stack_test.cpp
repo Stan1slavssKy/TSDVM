@@ -92,6 +92,83 @@ TEST (stack_test, test_const_top)
     delete[] data;
 }
 
+TEST (stack_test, test_eq_op)
+{
+    stack<double> fir_stk;
+    stack<double> sec_stk;
+
+    for (int i = 0; i < 10000; i++)
+    {
+        fir_stk.push (i);
+    }
+
+    sec_stk = fir_stk;
+
+    ASSERT_EQ (fir_stk, sec_stk);
+}
+
+TEST (stack_test, test_iseq_op)
+{
+    stack<double> fir_stk;
+    stack<double> sec_stk;
+
+    for (int i = 0; i < 10000; i++)
+    {
+        fir_stk.push (i);
+    }
+
+    bool res = (sec_stk == fir_stk);
+    ASSERT_EQ (res, 0);
+
+    sec_stk = fir_stk;
+    res = (sec_stk == fir_stk);
+    ASSERT_EQ (res, 1);
+}
+
+TEST (stack_test, test_isneq_op)
+{
+    stack<double> fir_stk;
+    stack<double> sec_stk;
+
+    for (int i = 0; i < 10000; i++)
+    {
+        fir_stk.push (i);
+    }
+
+    bool res = (sec_stk != fir_stk);
+    ASSERT_EQ (res, 1);
+
+    sec_stk = fir_stk;
+    res = (sec_stk != fir_stk);
+    ASSERT_EQ (res, 0);
+}
+
+stack<double> get_stack ()
+{
+    stack<double> stk;
+
+    for (int i = 0; i < 100; i++)
+    {
+        stk.push (i);
+    }
+
+    return stk;
+}
+
+TEST (stack_test, test_move_eq_op)
+{
+    stack<double> fir_stack;
+    
+    for (int i = 0; i < 100; i++)
+    {
+        fir_stack.push (i);
+    }
+
+    stack<double> sec_stk = get_stack ();
+
+    ASSERT_EQ (fir_stack, sec_stk);
+}
+
 int main (int argc, char** argv)
 {
     testing::InitGoogleTest(&argc, argv);
