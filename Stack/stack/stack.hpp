@@ -59,7 +59,7 @@ class stack<bool>
         bool operator== (const stack& other) const;
         bool operator!= (const stack& other) const;
 
-        void push (unsigned char value);
+        void push (bool bool_value);
         void print () const;
         void pop ();
         bool is_empty () const;
@@ -68,7 +68,7 @@ class stack<bool>
         size_t size () const;
 
         const size_t INIT_CAPACITY  = 2;
-        const double STACK_INCREASE = 1.5;
+        const double STACK_INCREASE = 2;
 
     private:
         size_t capacity_;

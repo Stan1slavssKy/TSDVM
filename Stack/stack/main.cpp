@@ -7,21 +7,15 @@ int main ()
     s1ky::stack<bool> a;
     s1ky::stack<bool> b;
 
-    a.push (true);
-    a.push (false);
-    a.push (true);
-    a.push (true);
-    a.push (false);
-    a.push (true);
-    a.push (true);
-    a.push (true);
-    a.push (false);
-    a.push (true);
-    a.push (false);
+    for (int i = 0; i < 330000; i++) //330
+    {
+        a.push (false);
+        assert (false == a.top ());
+    }
 
+    //a.print ();
+    
     std::cout << "stack top = " << a.top () << std::endl;
-
-    a.print ();
-
+    
     return 0;
 }

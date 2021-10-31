@@ -139,8 +139,7 @@ void stack<bool>::print () const
 
 void stack<bool>::expands_capacity ()
 {
-    size_t t = capacity_;
-    capacity_ = capacity_ * STACK_INCREASE + 1;
+    capacity_ = capacity_ * STACK_INCREASE;
 
     unsigned char* temp = new unsigned char[capacity_] {};
     assert (temp);
@@ -161,11 +160,13 @@ void stack<bool>::expands_capacity ()
     data_ = temp;
 }
 
-void stack<bool>::push (unsigned char value)
+void stack<bool>::push (bool bool_value)
 {
+    unsigned char value = bool_value;
+
     if (size_ / 8 == capacity_)
     {
-        expands_capacity (); // realloc
+        expands_capacity ();
     }
 
     size_t nmb_occupied_bits_in_byte = size_;
@@ -176,11 +177,12 @@ void stack<bool>::push (unsigned char value)
         occupied_bytes_counter = size_ / CHAR_BIT;   
         nmb_occupied_bits_in_byte = size_ % CHAR_BIT;
     }
-
+    
     value <<= (CHAR_BIT - 1 - nmb_occupied_bits_in_byte);
 
+    //printf ("before = %d\n", data_[occupied_bytes_counter]);
     data_[occupied_bytes_counter] |= value;
-
+    //printf ("after  = %d\n", data_[occupied_bytes_counter]);
     size_++;
 }
 
