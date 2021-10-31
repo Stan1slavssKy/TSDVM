@@ -22,7 +22,7 @@ template <typename T>
 stack<T>::stack (T* data, size_t size): 
     size_ (size), capacity_(size + INIT_CAPACITY)
 {
-    T* data_ = new T[capacity_] {};
+    data_ = new T[capacity_] {};
     assert (data_);
 
     memcpy (data_, data, size_ * sizeof(T));
