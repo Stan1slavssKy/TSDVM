@@ -10,5 +10,5 @@ Currently this library is can be compiled by g++ for Linux.
 
 To use, enter the following commands:
 
-<cmake ..>
-<make>
+    *cmake ..*
+    *make*
