@@ -17,4 +17,8 @@ To use you need to download the folder with the code. Then go to the stack folde
 
 ## Stack Library
 
+If you need a stack library, then after compilation you can find it like that:
 
+    cd build/stack/
+
+There will be a file with the name "libstack.a"
