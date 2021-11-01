@@ -15,15 +15,22 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 add_executable(
-    stack_test
+    test
     stack_test.cpp
 )
 
 target_link_libraries(
-    stack_test
+    test
     gtest_main
 )
 
 include(GoogleTest)
-gtest_discover_tests(stack_test)
+gtest_discover_tests(test)
 
+
+add_custom_target(stack_test
+    COMMENT "Running tests to stack"
+    COMMAND ./test
+)   
+
+add_dependencies(stack_test test)

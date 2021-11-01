@@ -68,7 +68,7 @@ class stack<bool>
         size_t size () const;
 
         const size_t INIT_CAPACITY  = 2;
-        const double STACK_INCREASE = 2;
+        const size_t STACK_INCREASE = 2;
 
     private:
         size_t capacity_;

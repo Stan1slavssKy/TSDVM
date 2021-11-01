@@ -1,11 +1,7 @@
-# Cmake minimal version
+
 cmake_minimum_required(VERSION 3.8)
 
-# project characteristics
 project("StackLibrary" LANGUAGES CXX)
-
-#=========================================================================
-# executable file
 
 set(OUTPUT "stack_library_output")
 
@@ -21,15 +17,9 @@ set(SOURCES
 
 add_executable(${OUTPUT} ${SOURCES})
 
-#=========================================================================
-# static library
-
 set(LIBRARY_NAME "stack")
 
 add_library(${LIBRARY_NAME} STATIC ${SOURCES})
-
-#=========================================================================
-# assembly options
 
 set_target_properties(${OUTPUT} PROPERTIES
     CXX_STANDARD          20
@@ -57,14 +47,9 @@ add_compile_options(
     -Wsign-promo
 )
 
-#=========================================================================
-# add clang-format
+set_target_properties(${OUTPUT} PROPERTIES CXX_CLANG_TIDY "${CMAKE_CXX_CLANG_TIDY}")
 
-# file(GLOB_RECURSE ALL_SOURCE_FILES *.cpp *.h)
-# add_custom_target(
-#    clang_format
-#    COMMAND clang-format
-#    -i
-#    ${ALL_SOURCE_FILES}
-#)
-
+if(ADD_SANITIZERS)
+    target_compile_options(${OUTPUT} PUBLIC -fsanitize=address -g)
+    set_target_properties(${OUTPUT} PROPERTIES LINK_FLAGS "-fsanitize=address")
+endif()

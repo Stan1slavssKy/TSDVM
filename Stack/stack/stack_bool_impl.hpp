@@ -23,8 +23,9 @@ stack<bool>::stack (unsigned char* data, size_t size):
 {
     unsigned char* data_ = new unsigned char[capacity_] {};
     assert (data_);
-
+    
     memcpy (data_, data, size_ * sizeof(unsigned char));
+    printf ("const pointer = %p\n", data_);
 }
 
 stack<bool>::stack (const stack& other):
@@ -44,6 +45,7 @@ stack<bool>::stack (stack&& other):
 
 stack<bool>::~stack ()
 {
+    printf ("destr pointer = %p\n", data_);
     delete[] data_;
 }
 
@@ -177,13 +179,17 @@ void stack<bool>::push (bool bool_value)
         occupied_bytes_counter = size_ / CHAR_BIT;   
         nmb_occupied_bits_in_byte = size_ % CHAR_BIT;
     }
-    
+        
     value <<= (CHAR_BIT - 1 - nmb_occupied_bits_in_byte);
 
-    //printf ("before = %d\n", data_[occupied_bytes_counter]);
+    printf ("before = %d\n", data_[occupied_bytes_counter]);
     data_[occupied_bytes_counter] |= value;
-    //printf ("after  = %d\n", data_[occupied_bytes_counter]);
+
     size_++;
+
+    printf ("size = %d\n", size_);
+    printf ("capa = %d\n", capacity_);
+    printf ("data = %p\n", data_);
 }
 
 void stack<bool>::pop ()
