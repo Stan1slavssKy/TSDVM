@@ -46,10 +46,3 @@ add_compile_options(
     -Wsign-conversion
     -Wsign-promo
 )
-
-set_target_properties(${OUTPUT} PROPERTIES CXX_CLANG_TIDY "${CMAKE_CXX_CLANG_TIDY}")
-
-if(ADD_SANITIZERS)
-    target_compile_options(${OUTPUT} PUBLIC -fsanitize=address -g)
-    set_target_properties(${OUTPUT} PROPERTIES LINK_FLAGS "-fsanitize=address")
-endif()

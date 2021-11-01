@@ -5,9 +5,8 @@
 int main()
 {
     s1ky::stack<bool> a;
-    s1ky::stack<bool> b;
 
-    for (int i = 0; i < 1000000; i++)
+    for (int i = 0; i < 100; i++)
     {
         a.push(false);
         assert(false == a.top());
@@ -15,7 +14,7 @@ int main()
 
     // a.print ();
 
-    std::cout << "stack top = " << a.top() << std::endl;
+    //std::cout << "stack top = " << stk.top() << std::endl;
 
     return 0;
 }
