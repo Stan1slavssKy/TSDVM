@@ -2,27 +2,6 @@ cmake_minimum_required(VERSION 3.8)
 project("test" LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 
-add_compile_options(
-    -Werror
-
-    -Wall
-    -Wextra
-    -Wpedantic
-
-    -Wcast-align
-    -Wcast-qual
-    -Wconversion
-    -Wctor-dtor-privacy
-    -Wenum-compare
-    -Wfloat-equal
-    -Wnon-virtual-dtor
-    -Wold-style-cast
-    -Woverloaded-virtual
-    -Wredundant-decls
-    -Wsign-conversion
-    -Wsign-promo
-)
-
 set(ADD_TESTING ON)
 set(ADD_SANITIZERS ON)
 
@@ -59,5 +38,13 @@ if(ADD_TESTING)
         target_compile_options(${OUTPUT} PUBLIC -fsanitize=address -g)
         set_target_properties(${OUTPUT}  PROPERTIES LINK_FLAGS "-fsanitize=address")
     endif()
+
+    set_target_properties(${OUTPUT} PROPERTIES
+    CXX_STANDARD 11
+    CXX_STANDARD_REQUIRED ON
+    CXX_CLANG_TIDY        clang-tidy;
+                          -header-filter=.hpp;
+                          -checks=*;
+    )
 
 endif()

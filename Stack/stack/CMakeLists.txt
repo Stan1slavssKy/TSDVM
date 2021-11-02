@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.8)
 project("StackLibrary" LANGUAGES CXX)
 
-set(OUTPUT "stack_lib_output")
+set(OUTPUT stack_lib_output)
 
 set(HEADER_FILES
     stack.hpp
@@ -15,19 +15,15 @@ set(SOURCE_FILES
 
 add_executable(${OUTPUT} ${SOURCE_FILES})
 
-set(CMAKE_CXX_CLANG_TIDY
-    clang-tidy;
-    -header-filter=.hpp;
-    -checks=*;
-)
-
 set_target_properties(${OUTPUT} PROPERTIES
     CXX_STANDARD 11
     CXX_STANDARD_REQUIRED ON
-    CXX_CLANG_TIDY "${CMAKE_CXX_CLANG_TIDY}"
+    CXX_CLANG_TIDY        clang-tidy;
+                          -header-filter=.hpp;
+                          -checks=*;
 )
 
-set(LIBRARY_NAME "stack")
+set(LIBRARY_NAME stack)
 
 add_library(${LIBRARY_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
 
