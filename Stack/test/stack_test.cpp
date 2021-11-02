@@ -2,9 +2,8 @@
 
 #include <gtest/gtest.h>
 
-namespace s1ky
-{
-    
+namespace s1ky {
+
 // test for double stack
 
 TEST(DoubleTest, TestPush)
@@ -289,4 +288,4 @@ int main(int argc, char** argv)
     return RUN_ALL_TESTS();
 }
 
-} //namespace s1ky
+} // namespace s1ky
