@@ -128,7 +128,7 @@ void stack<bool>::print() const
         }
 
         for (size_t idx_2 = 0; idx_2 < 8; idx_2++) std::cout << static_cast<int>(buffer[idx_2]);
-        
+        for (size_t idx_2 = 0; idx_2 < 8; idx_2++) std::cout << (int)(buffer[idx_2]);
         std::cout << std::endl;
     }
 }
@@ -140,7 +140,7 @@ void stack<bool>::expands_capacity()
     unsigned char* temp = new unsigned char[capacity_] {};
     assert(temp);
 
-    size_t len_copied_data = (size_ / 8 + 1);
+    size_t len_copied_data = size_ / 8;
 
     for (size_t i = 0; i < len_copied_data; i++)
     {
