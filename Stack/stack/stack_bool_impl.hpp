@@ -128,7 +128,7 @@ void stack<bool>::print() const
         }
 
         for (size_t idx_2 = 0; idx_2 < 8; idx_2++) std::cout << static_cast<int>(buffer[idx_2]);
-        for (size_t idx_2 = 0; idx_2 < 8; idx_2++) std::cout << (int)(buffer[idx_2]);
+
         std::cout << std::endl;
     }
 }
