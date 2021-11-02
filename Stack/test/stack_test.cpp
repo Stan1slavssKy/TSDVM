@@ -2,11 +2,12 @@
 
 #include <gtest/gtest.h>
 
-using namespace s1ky;
-
+namespace s1ky
+{
+    
 // test for double stack
 
-TEST(double_test, test_push)
+TEST(DoubleTest, TestPush)
 {
     stack<double> test_stk;
     double        top_val = 0;
@@ -18,7 +19,7 @@ TEST(double_test, test_push)
     }
 }
 
-TEST(double_test, test_pop)
+TEST(DoubleTest, TestPop)
 {
     stack<double> test_stk;
 
@@ -34,7 +35,7 @@ TEST(double_test, test_pop)
     }
 }
 
-TEST(double_test, test_is_empty)
+TEST(DoubleTest, TestISempty)
 {
     stack<double> test_stk;
 
@@ -45,7 +46,7 @@ TEST(double_test, test_is_empty)
     ASSERT_EQ(0, test_stk.is_empty());
 }
 
-TEST(double_test, test_size)
+TEST(DoubleTest, TestSize)
 {
     stack<double> test_stk;
 
@@ -58,7 +59,7 @@ TEST(double_test, test_size)
     ASSERT_EQ(test_stk.size(), 11000);
 }
 
-TEST(double_test, test_top)
+TEST(DoubleTest, TestTop)
 {
     stack<double> test_stk;
 
@@ -69,11 +70,11 @@ TEST(double_test, test_top)
     }
 }
 
-TEST(double_test, test_const_top)
+TEST(DoubleTest, TestConstTop)
 {
     int number_of_iterations = 10;
 
-    double* data = new double[number_of_iterations] {};
+    auto* data = new double[number_of_iterations] {};
     assert(data);
 
     for (int i = 0; i < number_of_iterations; i++) { data[i] = i; }
@@ -85,7 +86,7 @@ TEST(double_test, test_const_top)
     delete[] data;
 }
 
-TEST(double_test, test_eq_op)
+TEST(DoubleTest, TestEQop)
 {
     stack<double> fir_stk;
     stack<double> sec_stk;
@@ -97,7 +98,7 @@ TEST(double_test, test_eq_op)
     ASSERT_EQ(fir_stk, sec_stk);
 }
 
-TEST(double_test, test_iseq_op)
+TEST(DoubleTest, TestISEQop)
 {
     stack<double> fir_stk;
     stack<double> sec_stk;
@@ -112,7 +113,7 @@ TEST(double_test, test_iseq_op)
     ASSERT_EQ(res, 1);
 }
 
-TEST(double_test, test_isneq_op)
+TEST(DoubleTest, TestISNEQop)
 {
     stack<double> fir_stk;
     stack<double> sec_stk;
@@ -136,7 +137,7 @@ stack<double> get_double_stack()
     return stk;
 }
 
-TEST(double_test, test_move_eq_op)
+TEST(DoubleTest, TestMoveEQop)
 {
     stack<double> fir_stack;
 
@@ -150,7 +151,7 @@ TEST(double_test, test_move_eq_op)
 //==================================================================
 // tests for bool stack
 
-TEST(bool_test, test_push)
+TEST(BoolTest, TestPush)
 {
     stack<bool> test_stk;
 
@@ -162,7 +163,7 @@ TEST(bool_test, test_push)
     }
 }
 
-TEST(bool_test, test_pop)
+TEST(BoolTest, TestPop)
 {
     stack<bool> test_stk;
 
@@ -178,7 +179,7 @@ TEST(bool_test, test_pop)
     }
 }
 
-TEST(bool_test, test_is_empty)
+TEST(BoolTest, TestISempty)
 {
     stack<bool> test_stk;
 
@@ -189,9 +190,9 @@ TEST(bool_test, test_is_empty)
     ASSERT_EQ(0, test_stk.is_empty());
 }
 
-TEST(bool_test, test_size)
+TEST(BoolTest, TestSize)
 {
-    stack<double> test_stk;
+    stack<bool> test_stk;
 
     for (int i = 0; i < 1000; i++) { test_stk.push(true); }
 
@@ -202,9 +203,9 @@ TEST(bool_test, test_size)
     ASSERT_EQ(test_stk.size(), 11000);
 }
 
-TEST(bool_test, test_top)
+TEST(BoolTest, TestTop)
 {
-    stack<double> test_stk;
+    stack<bool> test_stk;
 
     for (int i = 0; i < 100000; i++)
     {
@@ -219,10 +220,10 @@ TEST(bool_test, test_top)
     }
 }
 
-TEST(bool_test, test_eq_op)
+TEST(BoolTest, TestEQop)
 {
-    stack<double> fir_stk;
-    stack<double> sec_stk;
+    stack<bool> fir_stk;
+    stack<bool> sec_stk;
 
     for (int i = 0; i < 10000; i++) { fir_stk.push(true); }
 
@@ -231,10 +232,10 @@ TEST(bool_test, test_eq_op)
     ASSERT_EQ(fir_stk, sec_stk);
 }
 
-TEST(bool_test, test_iseq_op)
+TEST(BoolTest, TestISEQop)
 {
-    stack<double> fir_stk;
-    stack<double> sec_stk;
+    stack<bool> fir_stk;
+    stack<bool> sec_stk;
 
     for (int i = 0; i < 10000; i++) { fir_stk.push(false); }
 
@@ -246,10 +247,10 @@ TEST(bool_test, test_iseq_op)
     ASSERT_EQ(res, 1);
 }
 
-TEST(bool_test, test_isneq_op)
+TEST(BoolTest, TestISNEQop)
 {
-    stack<double> fir_stk;
-    stack<double> sec_stk;
+    stack<bool> fir_stk;
+    stack<bool> sec_stk;
 
     for (int i = 0; i < 10000; i++) { fir_stk.push(true); }
 
@@ -270,7 +271,7 @@ stack<bool> get_bool_stack()
     return stk;
 }
 
-TEST(bool_test, test_move_eq_op)
+TEST(BoolTest, TestMoveEQop)
 {
     stack<bool> fir_stack;
 
@@ -287,3 +288,5 @@ int main(int argc, char** argv)
 
     return RUN_ALL_TESTS();
 }
+
+} //namespace s1ky
