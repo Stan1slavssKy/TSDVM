@@ -22,10 +22,13 @@ add_compile_options(
     -Wsign-conversion
     -Wsign-promo
 )
+
 set(ADD_TESTING ON)
+set(ADD_SANITIZERS ON)
 
 if(ADD_TESTING)
-    set(TEST_TAGET_NAME stack_test)
+    set(OUTPUT test)
+    set(RUN_TEST_NAME run_${OUTPUT})
 
     include(FetchContent)
     FetchContent_Declare(
@@ -38,24 +41,23 @@ if(ADD_TESTING)
 
     enable_testing()
 
-    add_executable(
-        test
-        stack_test.cpp
-    )
+    add_executable(${OUTPUT} stack_test.cpp)
 
-    target_link_libraries(
-        test
-        gtest_main
-    )
+    target_link_libraries(${OUTPUT} gtest_main)
 
     include(GoogleTest)
-    gtest_discover_tests(test)
+    gtest_discover_tests(${OUTPUT})
 
-
-    add_custom_target(${TEST_TAGET_NAME}
+    add_custom_target(${RUN_TEST_NAME} 
         COMMENT "Running tests to stack"
-        COMMAND ./test
+        COMMAND ./${OUTPUT}
     )
 
-    add_dependencies(${TEST_TAGET_NAME} test)
+    add_dependencies(${RUN_TEST_NAME} ${OUTPUT})
+
+    if(ADD_SANITIZERS)
+        target_compile_options(${OUTPUT} PUBLIC -fsanitize=address -g)
+        set_target_properties(${OUTPUT}  PROPERTIES LINK_FLAGS "-fsanitize=address")
+    endif()
+
 endif()

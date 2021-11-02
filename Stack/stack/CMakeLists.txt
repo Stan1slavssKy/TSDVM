@@ -15,10 +15,21 @@ set(SOURCE_FILES
 
 add_executable(${OUTPUT} ${SOURCE_FILES})
 
-set_target_properties(${OUTPUT} PROPERTIES
-    CXX_STANDARD          20
-    CXX_STANDARD_REQUIRED ON
+set(CMAKE_CXX_CLANG_TIDY
+    clang-tidy;
+    -header-filter=.hpp;
+    -checks=*;
 )
+
+set_target_properties(${OUTPUT} PROPERTIES
+    CXX_STANDARD 11
+    CXX_STANDARD_REQUIRED ON
+    CXX_CLANG_TIDY "${CMAKE_CXX_CLANG_TIDY}"
+)
+
+set(LIBRARY_NAME "stack")
+
+add_library(${LIBRARY_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
 
 add_compile_options(
     -Werror
@@ -40,7 +51,3 @@ add_compile_options(
     -Wsign-conversion
     -Wsign-promo
 )
-
-set(LIBRARY_NAME "stack")
-
-add_library(${LIBRARY_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})

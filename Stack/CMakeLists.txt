@@ -26,13 +26,6 @@ add_compile_options(
     -Wsign-promo
 )
 
-#==========================================================================
-
-set(ADD_SANITIZERS ON)
-
-#==========================================================================
-
-# add target clang_format for all cpp and hpp files in the project
 file(GLOB_RECURSE ALL_SOURCES_FILES *.cpp *.hpp)
 add_custom_target(
     clang_format
@@ -40,11 +33,3 @@ add_custom_target(
     -i
     ${ALL_SOURCES_FILES}
 )
-
-set_target_properties(stack_test PROPERTIES CXX_CLANG_TIDY "${CMAKE_CXX_CLANG_TIDY}")
-
-
-if(ADD_SANITIZERS)
-    target_compile_options(${ALL_SOURCES_FILES} PUBLIC -fsanitize=address -g)
-    set_target_properties(${ALL_SOURCES_FILES} PROPERTIES LINK_FLAGS "-fsanitize=address")
-endif()
