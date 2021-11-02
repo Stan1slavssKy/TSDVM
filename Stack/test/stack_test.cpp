@@ -156,9 +156,9 @@ TEST(bool_test, test_push)
 
     for (int i = 0; i < 1000000; i++)
     {
-        test_stk.push (true);
-        test_stk.push (false);
-        ASSERT_EQ (false, test_stk.top ());
+        test_stk.push(true);
+        test_stk.push(false);
+        ASSERT_EQ(false, test_stk.top());
     }
 }
 
@@ -280,7 +280,6 @@ TEST(bool_test, test_move_eq_op)
 
     ASSERT_EQ(fir_stack, sec_stk);
 }
-
 
 int main(int argc, char** argv)
 {

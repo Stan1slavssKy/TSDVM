@@ -1,25 +1,19 @@
-
 cmake_minimum_required(VERSION 3.8)
-
 project("StackLibrary" LANGUAGES CXX)
 
-set(OUTPUT "stack_library_output")
+set(OUTPUT "stack_lib_output")
 
-set(STACK_HEADERS
-        stack.hpp
-        stack_impl.hpp
-        stack_bool_impl.hpp
+set(HEADER_FILES
+    stack.hpp
+    stack_impl.hpp
+    stack_bool_impl.hpp
 )
 
-set(SOURCES
-        main.cpp
+set(SOURCE_FILES
+    main.cpp
 )
 
-add_executable(${OUTPUT} ${SOURCES})
-
-set(LIBRARY_NAME "stack")
-
-add_library(${LIBRARY_NAME} STATIC ${SOURCES})
+add_executable(${OUTPUT} ${SOURCE_FILES})
 
 set_target_properties(${OUTPUT} PROPERTIES
     CXX_STANDARD          20
@@ -46,3 +40,7 @@ add_compile_options(
     -Wsign-conversion
     -Wsign-promo
 )
+
+set(LIBRARY_NAME "stack")
+
+add_library(${LIBRARY_NAME} STATIC ${HEADER_FILES} ${SOURCE_FILES})
