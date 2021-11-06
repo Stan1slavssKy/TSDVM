@@ -147,7 +147,7 @@ void stack<T>::print() const
 template<typename T>
 void stack<T>::expands_capacity()
 {
-    capacity_ = capacity_ * STACK_INCREASE;
+    capacity_ = static_cast<size_t>(static_cast<double>(capacity_) * STACK_INCREASE);
 
     T* temp = new T[capacity_] {};
     assert(temp);

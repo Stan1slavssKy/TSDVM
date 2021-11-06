@@ -1,6 +1,3 @@
-#ifndef STACK_STACK_BOOL_IMPL_HPP
-#define STACK_STACK_BOOL_IMPL_HPP
-
 #include "stack_impl.hpp"
 
 #include <cassert>
@@ -262,5 +259,3 @@ bool stack<bool>::top() const
 }
 
 } // namespace s1ky
-
-#endif // STACK_STACK_BOOL_IMPL_HPP
