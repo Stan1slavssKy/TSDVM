@@ -20,7 +20,7 @@ if(ADD_TESTING)
 
     enable_testing()
 
-    add_executable(${OUTPUT} stack_test.cpp)
+    add_executable(${OUTPUT} stack_test.cpp ../stack/stack_bool.cpp)
 
     target_link_libraries(${OUTPUT} gtest_main)
 
@@ -42,9 +42,6 @@ if(ADD_TESTING)
     set_target_properties(${OUTPUT} PROPERTIES
     CXX_STANDARD 11
     CXX_STANDARD_REQUIRED ON
-    CXX_CLANG_TIDY        clang-tidy;
-                          -header-filter=.hpp;
-                          -checks=*;
     )
 
 endif()
