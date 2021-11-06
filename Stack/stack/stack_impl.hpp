@@ -97,6 +97,7 @@ bool stack<T>::operator==(const stack& other) const
     {
         return false;
     }
+    
     return true;
 }
 
