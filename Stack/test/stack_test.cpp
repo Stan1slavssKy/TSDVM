@@ -1,4 +1,4 @@
-#include "../stack/stack_bool_impl.hpp"
+#include "../stack/stack_impl.hpp"
 
 #include <gtest/gtest.h>
 
@@ -9,7 +9,6 @@ namespace s1ky {
 TEST(DoubleTest, TestPush)
 {
     stack<double> test_stk;
-    double        top_val = 0;
 
     for (int i = 0; i < 10000000; i++)
     {
@@ -71,12 +70,12 @@ TEST(DoubleTest, TestTop)
 
 TEST(DoubleTest, TestConstTop)
 {
-    int number_of_iterations = 10;
+    size_t number_of_iterations = 10;
 
     auto* data = new double[number_of_iterations] {};
     assert(data);
 
-    for (int i = 0; i < number_of_iterations; i++) { data[i] = i; }
+    for (size_t i = 0; i < number_of_iterations; i++) { data[i] = static_cast<double>(i); }
 
     const stack<double> test_stk(data, number_of_iterations);
 
