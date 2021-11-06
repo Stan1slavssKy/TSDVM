@@ -3,7 +3,6 @@ project("test" LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 
 set(ADD_TESTING ON)
-set(ADD_SANITIZERS ON)
 
 if(ADD_TESTING)
     set(OUTPUT test)
@@ -35,6 +34,7 @@ if(ADD_TESTING)
     add_dependencies(${RUN_TEST_NAME} ${OUTPUT})
 
     if(ADD_SANITIZERS)
+        message("-- [Build with sanitizers]")
         target_compile_options(${OUTPUT} PUBLIC -fsanitize=address -g)
         set_target_properties(${OUTPUT}  PROPERTIES LINK_FLAGS "-fsanitize=address")
     endif()
