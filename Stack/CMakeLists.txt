@@ -24,8 +24,6 @@ add_compile_options(
     -Wsign-promo
 )
 
-add_subdirectory(test)
-
 file(GLOB_RECURSE ALL_SOURCES_FILES *.cpp *.hpp)
 add_custom_target(
     clang_format
@@ -36,6 +34,10 @@ add_custom_target(
 
 set(CMAKE_CXX_CLANG_TIDY
     clang-tidy;
+    #-checks=*;
     --format-style=file;
-    --header-filter=*.h;
+    --header-filter=.hpp;
+    -warnings-as-errors=*;
 )
+
+add_subdirectory(test)
