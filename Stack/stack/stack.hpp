@@ -5,21 +5,21 @@
 
 namespace s1ky {
 template<typename T>
-class stack
+class Stack
 {
 public:
-    stack();
-    stack(T* data, size_t size);
-    stack(const stack& other);
-    stack(stack&& other);
+    Stack();
+    Stack(T* data, size_t size);
+    Stack(const Stack& other);
+    Stack(Stack&& other) noexcept;
 
-    ~stack();
+    ~Stack();
 
-    stack& operator=(const stack& other);
-    stack& operator=(stack&& other);
+    Stack& operator=(const Stack& other);
+    Stack& operator=(Stack&& other) noexcept;
 
-    bool operator==(const stack& other) const;
-    bool operator!=(const stack& other) const;
+    bool operator==(const Stack& other) const;
+    bool operator!=(const Stack& other) const;
 
     void push(T value);
     void pop();
@@ -34,29 +34,29 @@ public:
     const double STACK_INCREASE = 1.5;
 
 private:
-    size_t capacity_;
-    size_t size_;
-    T*     data_;
+    size_t capacity_ = 0;
+    size_t size_     = 0;
+    T*     data_     = nullptr;
 
     void expands_capacity();
 };
 
 template<>
-class stack<bool>
+class Stack<bool>
 {
 public:
-    stack();
-    stack(unsigned char* data, size_t size);
-    stack(const stack& other);
-    stack(stack&& other);
+    Stack();
+    Stack(unsigned char* data, size_t size);
+    Stack(const Stack& other);
+    Stack(Stack&& other) noexcept;
 
-    ~stack();
+    ~Stack();
 
-    stack& operator=(const stack& other);
-    stack& operator=(stack&& other);
+    Stack& operator=(const Stack& other);
+    Stack& operator=(Stack&& other) noexcept;
 
-    bool operator==(const stack& other) const;
-    bool operator!=(const stack& other) const;
+    bool operator==(const Stack& other) const;
+    bool operator!=(const Stack& other) const;
 
     void push(bool bool_value);
     void print() const;
@@ -70,9 +70,9 @@ public:
     const size_t STACK_INCREASE = 2;
 
 private:
-    size_t         capacity_;
-    size_t         size_;
-    unsigned char* data_;
+    size_t         capacity_ = 0;
+    size_t         size_     = 0;
+    unsigned char* data_     = nullptr;
 
     void expands_capacity();
 };

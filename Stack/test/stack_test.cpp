@@ -4,11 +4,11 @@
 
 namespace s1ky {
 
-// test for double stack
+// test for double Stack
 
 TEST(DoubleTest, TestPush)
 {
-    stack<double> test_stk;
+    Stack<double> test_stk;
 
     for (int i = 0; i < 10000000; i++)
     {
@@ -19,7 +19,7 @@ TEST(DoubleTest, TestPush)
 
 TEST(DoubleTest, TestPop)
 {
-    stack<double> test_stk;
+    Stack<double> test_stk;
 
     for (int i = 1; i < 10000000; i++)
     {
@@ -35,7 +35,7 @@ TEST(DoubleTest, TestPop)
 
 TEST(DoubleTest, TestISempty)
 {
-    stack<double> test_stk;
+    Stack<double> test_stk;
 
     ASSERT_EQ(1, test_stk.is_empty());
 
@@ -46,7 +46,7 @@ TEST(DoubleTest, TestISempty)
 
 TEST(DoubleTest, TestSize)
 {
-    stack<double> test_stk;
+    Stack<double> test_stk;
 
     for (int i = 0; i < 1000; i++) { test_stk.push(i); }
 
@@ -59,7 +59,7 @@ TEST(DoubleTest, TestSize)
 
 TEST(DoubleTest, TestTop)
 {
-    stack<double> test_stk;
+    Stack<double> test_stk;
 
     for (int i = 0; i < 100000; i++)
     {
@@ -77,7 +77,7 @@ TEST(DoubleTest, TestConstTop)
 
     for (size_t i = 0; i < number_of_iterations; i++) { data[i] = static_cast<double>(i); }
 
-    const stack<double> test_stk(data, number_of_iterations);
+    const Stack<double> test_stk(data, number_of_iterations);
 
     ASSERT_EQ(number_of_iterations - 1, test_stk.top());
 
@@ -86,8 +86,8 @@ TEST(DoubleTest, TestConstTop)
 
 TEST(DoubleTest, TestEQop)
 {
-    stack<double> fir_stk;
-    stack<double> sec_stk;
+    Stack<double> fir_stk;
+    Stack<double> sec_stk;
 
     for (int i = 0; i < 10000; i++) { fir_stk.push(i); }
 
@@ -98,8 +98,8 @@ TEST(DoubleTest, TestEQop)
 
 TEST(DoubleTest, TestISEQop)
 {
-    stack<double> fir_stk;
-    stack<double> sec_stk;
+    Stack<double> fir_stk;
+    Stack<double> sec_stk;
 
     for (int i = 0; i < 10000; i++) { fir_stk.push(i); }
 
@@ -113,8 +113,8 @@ TEST(DoubleTest, TestISEQop)
 
 TEST(DoubleTest, TestISNEQop)
 {
-    stack<double> fir_stk;
-    stack<double> sec_stk;
+    Stack<double> fir_stk;
+    Stack<double> sec_stk;
 
     for (int i = 0; i < 10000; i++) { fir_stk.push(i); }
 
@@ -126,9 +126,9 @@ TEST(DoubleTest, TestISNEQop)
     ASSERT_EQ(res, 0);
 }
 
-stack<double> get_double_stack()
+Stack<double> get_double_Stack()
 {
-    stack<double> stk;
+    Stack<double> stk;
 
     for (int i = 0; i < 100; i++) { stk.push(i); }
 
@@ -137,21 +137,21 @@ stack<double> get_double_stack()
 
 TEST(DoubleTest, TestMoveEQop)
 {
-    stack<double> fir_stack;
+    Stack<double> fir_stack;
 
     for (int i = 0; i < 100; i++) { fir_stack.push(i); }
 
-    stack<double> sec_stk = get_double_stack();
+    Stack<double> sec_stk = get_double_Stack();
 
     ASSERT_EQ(fir_stack, sec_stk);
 }
 
 //==================================================================
-// tests for bool stack
+// tests for bool Stack
 
 TEST(BoolTest, TestPush)
 {
-    stack<bool> test_stk;
+    Stack<bool> test_stk;
 
     for (int i = 0; i < 1000000; i++)
     {
@@ -163,7 +163,7 @@ TEST(BoolTest, TestPush)
 
 TEST(BoolTest, TestPop)
 {
-    stack<bool> test_stk;
+    Stack<bool> test_stk;
 
     for (int i = 1; i < 1000000; i++)
     {
@@ -179,7 +179,7 @@ TEST(BoolTest, TestPop)
 
 TEST(BoolTest, TestISempty)
 {
-    stack<bool> test_stk;
+    Stack<bool> test_stk;
 
     ASSERT_EQ(1, test_stk.is_empty());
 
@@ -190,7 +190,7 @@ TEST(BoolTest, TestISempty)
 
 TEST(BoolTest, TestSize)
 {
-    stack<bool> test_stk;
+    Stack<bool> test_stk;
 
     for (int i = 0; i < 1000; i++) { test_stk.push(true); }
 
@@ -203,7 +203,7 @@ TEST(BoolTest, TestSize)
 
 TEST(BoolTest, TestTop)
 {
-    stack<bool> test_stk;
+    Stack<bool> test_stk;
 
     for (int i = 0; i < 100000; i++)
     {
@@ -220,8 +220,8 @@ TEST(BoolTest, TestTop)
 
 TEST(BoolTest, TestEQop)
 {
-    stack<bool> fir_stk;
-    stack<bool> sec_stk;
+    Stack<bool> fir_stk;
+    Stack<bool> sec_stk;
 
     for (int i = 0; i < 10000; i++) { fir_stk.push(true); }
 
@@ -232,8 +232,8 @@ TEST(BoolTest, TestEQop)
 
 TEST(BoolTest, TestISEQop)
 {
-    stack<bool> fir_stk;
-    stack<bool> sec_stk;
+    Stack<bool> fir_stk;
+    Stack<bool> sec_stk;
 
     for (int i = 0; i < 10000; i++) { fir_stk.push(false); }
 
@@ -247,8 +247,8 @@ TEST(BoolTest, TestISEQop)
 
 TEST(BoolTest, TestISNEQop)
 {
-    stack<bool> fir_stk;
-    stack<bool> sec_stk;
+    Stack<bool> fir_stk;
+    Stack<bool> sec_stk;
 
     for (int i = 0; i < 10000; i++) { fir_stk.push(true); }
 
@@ -260,9 +260,9 @@ TEST(BoolTest, TestISNEQop)
     ASSERT_EQ(res, 0);
 }
 
-stack<bool> get_bool_stack()
+Stack<bool> get_bool_Stack()
 {
-    stack<bool> stk;
+    Stack<bool> stk;
 
     for (int i = 0; i < 100; i++) { stk.push(true); }
 
@@ -271,11 +271,11 @@ stack<bool> get_bool_stack()
 
 TEST(BoolTest, TestMoveEQop)
 {
-    stack<bool> fir_stack;
+    Stack<bool> fir_stack;
 
     for (int i = 0; i < 100; i++) { fir_stack.push(true); }
 
-    stack<bool> sec_stk = get_bool_stack();
+    Stack<bool> sec_stk = get_bool_Stack();
 
     ASSERT_EQ(fir_stack, sec_stk);
 }

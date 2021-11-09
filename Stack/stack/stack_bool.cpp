@@ -7,13 +7,13 @@
 
 namespace s1ky {
 
-stack<bool>::stack() : capacity_(INIT_CAPACITY), size_(0)
+Stack<bool>::Stack() : capacity_(INIT_CAPACITY)
 {
     data_ = new unsigned char[capacity_] {};
     assert(data_);
 }
 
-stack<bool>::stack(unsigned char* data, size_t size) : capacity_(size + INIT_CAPACITY), size_(size)
+Stack<bool>::Stack(unsigned char* data, size_t size) : capacity_(size + INIT_CAPACITY), size_(size)
 {
     data_ = new unsigned char[capacity_] {};
     assert(data_);
@@ -21,7 +21,7 @@ stack<bool>::stack(unsigned char* data, size_t size) : capacity_(size + INIT_CAP
     memcpy(data_, data, size_ * sizeof(unsigned char));
 }
 
-stack<bool>::stack(const stack& other) : capacity_(other.capacity_), size_(other.size_)
+Stack<bool>::Stack(const Stack& other) : capacity_(other.capacity_), size_(other.size_)
 {
     data_ = new unsigned char[capacity_] {};
 
@@ -29,17 +29,17 @@ stack<bool>::stack(const stack& other) : capacity_(other.capacity_), size_(other
     memcpy(data_, other.data_, capacity_ * sizeof(unsigned char));
 }
 
-stack<bool>::stack(stack&& other) : capacity_(other.capacity_), size_(other.size_), data_(other.data_)
+Stack<bool>::Stack(Stack&& other) noexcept : capacity_(other.capacity_), size_(other.size_), data_(other.data_)
 {
     other.data_ = nullptr;
 }
 
-stack<bool>::~stack()
+Stack<bool>::~Stack()
 {
     delete[] data_;
 }
 
-stack<bool>& stack<bool>::operator=(const stack& other)
+Stack<bool>& Stack<bool>::operator=(const Stack& other)
 {
     if (this == &other)
         return *this;
@@ -56,7 +56,7 @@ stack<bool>& stack<bool>::operator=(const stack& other)
     return *this;
 }
 
-stack<bool>& stack<bool>::operator=(stack&& other)
+Stack<bool>& Stack<bool>::operator=(Stack&& other) noexcept
 {
     if (this == &other)
         return *this;
@@ -72,7 +72,7 @@ stack<bool>& stack<bool>::operator=(stack&& other)
     return *this;
 }
 
-bool stack<bool>::operator==(const stack& other) const
+bool Stack<bool>::operator==(const Stack& other) const
 {
     if (size_ != other.size_)
     {
@@ -82,14 +82,14 @@ bool stack<bool>::operator==(const stack& other) const
     {
         return false;
     }
-    if (memcmp(data_, other.data_, (size_ / 8 + 1) * sizeof(unsigned char)))
+    if (memcmp(data_, other.data_, (size_ / 8 + 1) * sizeof(unsigned char)) != 0)
     {
         return false;
     }
     return true;
 }
 
-bool stack<bool>::operator!=(const stack& other) const
+bool Stack<bool>::operator!=(const Stack& other) const
 {
     if (size_ != other.size_)
     {
@@ -99,14 +99,14 @@ bool stack<bool>::operator!=(const stack& other) const
     {
         return true;
     }
-    if (memcmp(data_, other.data_, (size_ / 8 + 1) * sizeof(unsigned char)))
+    if (memcmp(data_, other.data_, (size_ / 8 + 1) * sizeof(unsigned char)) != 0)
     {
         return true;
     }
     return false;
 }
 
-void stack<bool>::print() const
+void Stack<bool>::print() const
 {
     size_t nmb_occupied_bytes = size_ / 8 + 1;
 
@@ -124,17 +124,17 @@ void stack<bool>::print() const
             nmb               = nmb / 2;
         }
 
-        for (size_t idx_2 = 0; idx_2 < 8; idx_2++) std::cout << static_cast<int>(buffer[idx_2]);
+        for (unsigned char idx_print : buffer) std::cout << static_cast<int>(idx_print);
 
         std::cout << std::endl;
     }
 }
 
-void stack<bool>::expands_capacity()
+void Stack<bool>::expands_capacity()
 {
     capacity_ = capacity_ * STACK_INCREASE;
 
-    unsigned char* temp = new unsigned char[capacity_] {};
+    auto* temp = new unsigned char[capacity_] {};
     assert(temp);
 
     size_t len_copied_data = size_ / 8;
@@ -153,9 +153,9 @@ void stack<bool>::expands_capacity()
     data_ = temp;
 }
 
-void stack<bool>::push(bool bool_value)
+void Stack<bool>::push(bool bool_value)
 {
-    unsigned char value = bool_value;
+    auto value = static_cast<unsigned char>(bool_value);
 
     if (size_ / 8 == capacity_)
     {
@@ -177,7 +177,7 @@ void stack<bool>::push(bool bool_value)
     size_++;
 }
 
-void stack<bool>::pop()
+void Stack<bool>::pop()
 {
     if (!is_empty())
     {
@@ -210,17 +210,17 @@ void stack<bool>::pop()
     }
 }
 
-bool stack<bool>::is_empty() const
+bool Stack<bool>::is_empty() const
 {
     return size_ == 0;
 }
 
-size_t stack<bool>::size() const
+size_t Stack<bool>::size() const
 {
     return size_;
 }
 
-bool stack<bool>::top() const
+bool Stack<bool>::top() const
 {
     if (!is_empty())
     {
@@ -241,21 +241,19 @@ bool stack<bool>::top() const
         {
             cur_data = data_[occupied_bytes_counter];
             value <<= (CHAR_BIT - nmb_occupied_bits_in_byte);
-            out_nmb = (cur_data &= value);
+            out_nmb = static_cast<bool>(cur_data &= value);
         }
         else
         {
             cur_data = data_[occupied_bytes_counter - 1];
-            out_nmb  = (cur_data &= value);
+            out_nmb  = static_cast<bool>(cur_data &= value);
         }
 
         return out_nmb;
     }
-    else
-    {
-        std::cout << "Cant return top of the stack, stack is empty" << std::endl;
-        return 0;
-    }
+
+    std::cout << "Cant return top of the stack, stack is empty" << std::endl;
+    return false;
 }
 
 } // namespace s1ky

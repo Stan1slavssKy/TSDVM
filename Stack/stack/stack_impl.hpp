@@ -10,14 +10,14 @@
 namespace s1ky {
 
 template<typename T>
-stack<T>::stack() : capacity_(INIT_CAPACITY), size_(0)
+Stack<T>::Stack() : capacity_(INIT_CAPACITY)
 {
     data_ = new T[capacity_] {};
     assert(data_);
 }
 
 template<typename T>
-stack<T>::stack(T* data, size_t size) : capacity_(size + INIT_CAPACITY), size_(size)
+Stack<T>::Stack(T* data, size_t size) : capacity_(size + INIT_CAPACITY), size_(size)
 {
     data_ = new T[capacity_] {};
     assert(data_);
@@ -26,7 +26,7 @@ stack<T>::stack(T* data, size_t size) : capacity_(size + INIT_CAPACITY), size_(s
 }
 
 template<typename T>
-stack<T>::stack(const stack& other) : capacity_(other.capacity_), size_(other.size_)
+Stack<T>::Stack(const Stack& other) : capacity_(other.capacity_), size_(other.size_)
 {
     data_ = new T[capacity_] {};
 
@@ -35,19 +35,19 @@ stack<T>::stack(const stack& other) : capacity_(other.capacity_), size_(other.si
 }
 
 template<typename T>
-stack<T>::stack(stack&& other) : capacity_(other.capacity_), size_(other.size_), data_(other.data_)
+Stack<T>::Stack(Stack&& other) noexcept : capacity_(other.capacity_), size_(other.size_), data_(other.data_)
 {
     other.data_ = nullptr;
 }
 
 template<typename T>
-stack<T>::~stack()
+Stack<T>::~Stack()
 {
     delete[] data_;
 }
 
 template<typename T>
-stack<T>& stack<T>::operator=(const stack& other)
+Stack<T>& Stack<T>::operator=(const Stack& other)
 {
     if (this == &other)
         return *this;
@@ -66,7 +66,7 @@ stack<T>& stack<T>::operator=(const stack& other)
 }
 
 template<typename T>
-stack<T>& stack<T>::operator=(stack&& other)
+Stack<T>& Stack<T>::operator=(Stack&& other) noexcept
 {
     if (this == &other)
         return *this;
@@ -83,7 +83,7 @@ stack<T>& stack<T>::operator=(stack&& other)
 }
 
 template<typename T>
-bool stack<T>::operator==(const stack& other) const
+bool Stack<T>::operator==(const Stack& other) const
 {
     if (size_ != other.size_)
     {
@@ -93,16 +93,16 @@ bool stack<T>::operator==(const stack& other) const
     {
         return false;
     }
-    if (memcmp(data_, other.data_, size_ * sizeof(T)))
+    if (memcmp(data_, other.data_, size_ * sizeof(T)) != 0)
     {
         return false;
     }
-    
+
     return true;
 }
 
 template<typename T>
-bool stack<T>::operator!=(const stack& other) const
+bool Stack<T>::operator!=(const Stack& other) const
 {
     if (size_ != other.size_)
     {
@@ -112,7 +112,7 @@ bool stack<T>::operator!=(const stack& other) const
     {
         return true;
     }
-    if (memcmp(data_, other.data_, size_ * sizeof(T)))
+    if (memcmp(data_, other.data_, size_ * sizeof(T)) != 0)
     {
         return true;
     }
@@ -120,7 +120,7 @@ bool stack<T>::operator!=(const stack& other) const
 }
 
 template<typename T>
-void stack<T>::push(T value)
+void Stack<T>::push(T value)
 {
     if (size_ == capacity_)
     {
@@ -131,7 +131,7 @@ void stack<T>::push(T value)
 }
 
 template<typename T>
-void stack<T>::pop()
+void Stack<T>::pop()
 {
     if (!is_empty())
     {
@@ -140,13 +140,13 @@ void stack<T>::pop()
 }
 
 template<typename T>
-void stack<T>::print() const
+void Stack<T>::print() const
 {
-    for (int i = 0; i < size_; i++) { std::cout << data_[i] << std::endl; }
+    for (size_t i = 0; i < size_; i++) { std::cout << data_[i] << std::endl; }
 }
 
 template<typename T>
-void stack<T>::expands_capacity()
+void Stack<T>::expands_capacity()
 {
     capacity_ = static_cast<size_t>(static_cast<double>(capacity_) * STACK_INCREASE);
 
@@ -160,41 +160,37 @@ void stack<T>::expands_capacity()
 }
 
 template<typename T>
-bool stack<T>::is_empty() const
+bool Stack<T>::is_empty() const
 {
     return size_ == 0;
 }
 
 template<typename T>
-T& stack<T>::top()
+T& Stack<T>::top()
 {
     if (is_empty())
     {
-        std::cout << "stack is empty, cant return top" << std::endl;
+        std::cout << "Stack is empty, cant return top" << std::endl;
         return data_[0];
     }
-    else
-    {
-        return data_[size_ - 1];
-    }
+
+    return data_[size_ - 1];
 }
 
 template<typename T>
-const T& stack<T>::top() const
+const T& Stack<T>::top() const
 {
     if (is_empty())
     {
-        std::cout << "stack is empty, cant return top" << std::endl;
+        std::cout << "Stack is empty, cant return top" << std::endl;
         return data_[0];
     }
-    else
-    {
-        return data_[size_ - 1];
-    }
+
+    return data_[size_ - 1];
 }
 
 template<typename T>
-size_t stack<T>::size() const
+size_t Stack<T>::size() const
 {
     return size_;
 }
