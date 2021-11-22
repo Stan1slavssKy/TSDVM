@@ -3,8 +3,7 @@
 
 #include <cstdlib>
 
-namespace s1ky 
-{
+namespace s1ky {
 template<typename T>
 class Queue
 {
@@ -18,14 +17,14 @@ public:
     Queue<T>& operator=(const Queue& other);
     Queue<T>& operator=(Queue& other) noexcept;
 
-    bool empty()  const;
+    bool   empty() const;
     size_t size() const;
-    
+
     Queue<T>& front();
     Queue<T>& back();
 
     const Queue<T>& front() const;
-    const Queue<T>& back()  const;
+    const Queue<T>& back() const;
 
     void push(T value);
     void pop();
@@ -36,10 +35,12 @@ private:
         T     data_ = nullptr;
         Node* next_ = nullptr;
     };
-    
+
     size_t size_  = 0;
     Node*  front_ = nullptr;
     Node*  back_  = nullptr;
+
+    void delete_nodes();
 };
 } // namespace s1ky
 

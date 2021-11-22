@@ -3,16 +3,15 @@
 
 #include "queue.hpp"
 
-#include <iostream>
 #include <cassert>
 #include <cstring>
+#include <iostream>
 
-namespace s1ky 
-{
+namespace s1ky {
 template<typename T>
 Queue<T>::Queue()
 {
-    front_ = new Node{};
+    front_ = new Node {};
     assert(front_);
 
     size_ = 1;
@@ -25,29 +24,29 @@ Queue<T>::Queue(T data)
     assert(front_);
 
     front_->data_ = data;
-    size_        = 1;
+    size_         = 1;
 }
 
 template<typename T>
 Queue<T>::Queue(const Queue& other) : size_(other.size_)
 {
-    if(!empty())
+    if (!empty())
     {
         front_ = new Node {};
         assert(front_);
 
         Node* cur_node       = front_;
         Node* cur_other_node = other.front_;
-        
+
         cur_node->data_ = cur_other_node->data_;
 
-        for(size_t i = 0; i < size_ - 1; i++)
+        for (size_t i = 0; i < size_ - 1; i++)
         {
-            cur_node -> next = new Node {};
-            assert(cur_node -> next_);
-            
-            cur_node       = cur_node -> next_;
-            cur_other_node = cur_other_node -> next_;
+            cur_node->next = new Node {};
+            assert(cur_node->next_);
+
+            cur_node       = cur_node->next_;
+            cur_other_node = cur_other_node->next_;
 
             cur_node->data_ = cur_other_node->data_;
         }
@@ -69,39 +68,40 @@ Queue<T>::~Queue()
 }
 
 //==========================================================================================================
-/*
+
 template<typename T>
 Queue<T>& Queue<T>::operator=(const Queue& other)
 {
-    if(*this = &other) return *this;
+    if (*this = &other)
+        return *this;
 
     size_ = other.size_;
     delete_nodes();
 
-    if(!empty())
+    if (!empty())
     {
         front_ = new Node {};
         assert(front_);
 
         Node* cur_node       = front_;
         Node* cur_other_node = other.front_;
-        
-        memcpy(cur_node->data_, cur_other_node->data_, sizeof(T));
 
-        for(size_t i = 0; i < size_ - 1; i++)
+        cur_node->data_ = cur_other_node->data_;
+
+        for (size_t i = 0; i < size_ - 1; i++)
         {
-            cur_node -> next = new Node {};
-            assert(cur_node -> next_);
-            
-            cur_node       = cur_node -> next_;
-            cur_other_node = cur_other_node -> next_;
+            cur_node->next = new Node {};
+            assert(cur_node->next_);
 
-            memcpy(cur_node->data_, cur_other_node->data_, sizeof(T));
+            cur_node       = cur_node->next_;
+            cur_other_node = cur_other_node->next_;
+
+            cur_node->data_ = cur_other_node->data_;
         }
         back_ = cur_node;
     }
 }
-*/
+
 //==========================================================================================================
 
 template<typename T>
@@ -145,12 +145,12 @@ const Queue<T>& Queue<T>::back() const
 template<typename T>
 void Queue<T>::push(T value)
 {
-    if(!empty())
+    if (!empty())
     {
         back_->next_ = new Node {};
         assert(back_->next_);
 
-        back_ = back_->next_;
+        back_        = back_->next_;
         back_->data_ = value;
 
         size_++;
@@ -164,20 +164,21 @@ void Queue<T>::push(T value)
 template<typename T>
 void Queue<T>::pop()
 {
-    if(!empty())
+    if (!empty())
     {
-        if(size_ == 1)
+        if (size_ == 1)
         {
             delete front_;
             front_ = back_ = nullptr;
         }
+        else
+        {
+            Node* temp = front_;
+            front_     = front_->next_;
 
-        Node* temp = front_;
-        front_ = front_->next_;
-        
-        delete temp;
-        temp = nullptr;
-        
+            delete temp;
+            temp = nullptr;
+        }
         size_--;
     }
     else
@@ -186,6 +187,22 @@ void Queue<T>::pop()
     }
 }
 
-} //namespace s1ky
+template<typename T>
+void Queue<T>::delete_nodes()
+{
+    Node* cur_node  = front_;
+    Node* next_node = nullptr;
+
+    for (size_t i = 0; i < size_; i++)
+    {
+        next_node = cur_node->next_;
+
+        delete cur_node;
+        cur_node = nullptr;
+
+        cur_node = next_node;
+    }
+}
+} // namespace s1ky
 
 #endif // _QUEUE_LIST_IMPL_QUEUE_IMPL_HPP_INCLUDED
