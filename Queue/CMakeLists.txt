@@ -31,15 +31,5 @@ add_custom_target(
     ${ALL_SOURCES_FILES}
 )
 
-if(ADD_CLANG_TIDY)
-    message("-- [Build with clang tidy]")
-    set(CMAKE_CXX_CLANG_TIDY
-        clang-tidy;
-        --format-style=file;
-        --header-filter=*.hpp;
-)
-else()
-    message("-- [Build without clang tidy]")
-endif()
-
 add_subdirectory(test)
+add_subdirectory(list_impl)
