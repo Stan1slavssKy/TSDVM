@@ -1,6 +1,6 @@
 #include "queue_impl.hpp"
 
-int main()
+int main() // NOLINT
 {
     return 0;
 }
