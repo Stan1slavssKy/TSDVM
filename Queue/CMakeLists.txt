@@ -3,8 +3,7 @@ project(Queque)
 set(CMAKE_CXX_STANDART 11)
 
 add_compile_options(
-    -Werror
-
+    #-Werror
     -Wall
     -Wextra
     -Wpedantic
@@ -21,6 +20,8 @@ add_compile_options(
     -Wredundant-decls
     -Wsign-conversion
     -Wsign-promo
+
+    -fno-elide-constructors
 )
 
 file(GLOB_RECURSE ALL_SOURCES_FILES *.cpp *.hpp)
