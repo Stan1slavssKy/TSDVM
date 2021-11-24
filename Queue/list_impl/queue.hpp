@@ -14,11 +14,11 @@ public:
     Queue(Queue&& other) noexcept;
     ~Queue();
 
+    bool operator==(const Queue<T>& other) const;
+    bool operator!=(const Queue& other) const;
+
     Queue<T>& operator=(const Queue& other);
     Queue<T>& operator=(Queue&& other) noexcept;
-
-    bool operator==(const Queue& other) const;
-    bool operator!=(const Queue& other) const;
 
     bool   empty() const;
     size_t size() const;
