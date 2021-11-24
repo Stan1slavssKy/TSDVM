@@ -15,24 +15,28 @@ public:
     ~Queue();
 
     Queue<T>& operator=(const Queue& other);
-    Queue<T>& operator=(Queue& other) noexcept;
+    Queue<T>& operator=(Queue&& other) noexcept;
+
+    bool operator==(const Queue& other) const;
+    bool operator!=(const Queue& other) const;
 
     bool   empty() const;
     size_t size() const;
 
-    Queue<T>& front();
-    Queue<T>& back();
+    T& front();
+    T& back();
 
-    const Queue<T>& front() const;
-    const Queue<T>& back() const;
+    const T& front() const;
+    const T& back() const;
 
     void push(T value);
     void pop();
+    void swap(Queue* other);
 
 private:
     struct Node
     {
-        T     data_ = nullptr;
+        T     data_ = 0;
         Node* next_ = nullptr;
     };
 

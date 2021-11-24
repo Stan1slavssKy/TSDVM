@@ -10,12 +10,7 @@
 namespace s1ky {
 template<typename T>
 Queue<T>::Queue()
-{
-    front_ = new Node {};
-    assert(front_);
-
-    size_ = 1;
-}
+{}
 
 template<typename T>
 Queue<T>::Queue(T data)
@@ -25,6 +20,7 @@ Queue<T>::Queue(T data)
 
     front_->data_ = data;
     size_         = 1;
+    back_         = front_;
 }
 
 template<typename T>
@@ -42,7 +38,7 @@ Queue<T>::Queue(const Queue& other) : size_(other.size_)
 
         for (size_t i = 0; i < size_ - 1; i++)
         {
-            cur_node->next = new Node {};
+            cur_node->next_ = new Node {};
             assert(cur_node->next_);
 
             cur_node       = cur_node->next_;
@@ -64,7 +60,7 @@ Queue<T>::Queue(Queue&& other) noexcept : size_(other.size_), front_(other.front
 template<typename T>
 Queue<T>::~Queue()
 {
-    delete front_;
+    delete_nodes();
 }
 
 //==========================================================================================================
@@ -72,7 +68,7 @@ Queue<T>::~Queue()
 template<typename T>
 Queue<T>& Queue<T>::operator=(const Queue& other)
 {
-    if (*this = &other)
+    if (this == &other)
         return *this;
 
     size_ = other.size_;
@@ -88,9 +84,9 @@ Queue<T>& Queue<T>::operator=(const Queue& other)
 
         cur_node->data_ = cur_other_node->data_;
 
-        for (size_t i = 0; i < size_ - 1; i++)
+        for(size_t i = 0; i < size_ - 1; i++)
         {
-            cur_node->next = new Node {};
+            cur_node->next_ = new Node {};
             assert(cur_node->next_);
 
             cur_node       = cur_node->next_;
@@ -100,6 +96,98 @@ Queue<T>& Queue<T>::operator=(const Queue& other)
         }
         back_ = cur_node;
     }
+    else 
+    {
+        back_ = front_ = nullptr;
+    }
+
+    return *this;
+}
+
+template<typename T>
+Queue<T>& Queue<T>::operator=(Queue&& other) noexcept
+{
+    if(this == &other)
+    {
+        return *this;
+    }
+
+    delete_nodes();
+
+    size_  = other.size_;
+    front_ = other.front_;
+    back_  = other.back_;
+
+    other.front_ = nullptr;
+    other.back_  = nullptr;
+
+    return *this;
+}
+
+template<typename T>
+bool Queue<T>::operator==(const Queue& other) const
+{
+    if(this == &other)
+    {
+        return true;
+    }
+    if(empty() && other.empty())
+    {
+        return true;
+    }
+    if(size_ != other.size_)
+    {
+        return false;
+    }
+
+    Node* cur_node       = front_;
+    Node* other_cur_node = other.front_;
+
+    for(size_t i = 0; i < size_; i++)
+    {
+        if(cur_node->data_ != other_cur_node->data_)
+        {
+            return false;
+        }
+
+        cur_node       = cur_node->next_;
+        other_cur_node = other_cur_node->next_;
+    }
+
+    return true;
+}
+
+template<typename T>
+bool Queue<T>::operator!=(const Queue& other) const
+{
+    if(this == &other)
+    {
+        return false;
+    }
+    if(empty() && other.empty())
+    {
+        return false;
+    }
+    if(size_ != other.size_)
+    {
+        return true;
+    }
+    
+    Node* cur_node       = front_;
+    Node* other_cur_node = other.front_;
+
+    for(size_t i = 0; i < size_; i++)
+    {
+        if(cur_node->data_ != other_cur_node->data_)
+        {
+            return true;
+        }
+
+        cur_node       = cur_node->next_;
+        other_cur_node = other_cur_node->next_;
+    }
+
+    return false;
 }
 
 //==========================================================================================================
@@ -117,27 +205,27 @@ size_t Queue<T>::size() const
 }
 
 template<typename T>
-Queue<T>& Queue<T>::front()
+T& Queue<T>::front()
 {
-    return front_;
+    return front_->data_;
 }
 
 template<typename T>
-Queue<T>& Queue<T>::back()
+T& Queue<T>::back()
 {
-    return back_;
+    return back_->data_;
 }
 
 template<typename T>
-const Queue<T>& Queue<T>::front() const
+const T& Queue<T>::front() const
 {
-    return front_;
+    return front_->data_;
 }
 
 template<typename T>
-const Queue<T>& Queue<T>::back() const
+const T& Queue<T>::back() const
 {
-    return back_;
+    return back_->data_;
 }
 
 //==========================================================================================================
@@ -150,15 +238,15 @@ void Queue<T>::push(T value)
         back_->next_ = new Node {};
         assert(back_->next_);
 
-        back_        = back_->next_;
-        back_->data_ = value;
-
-        size_++;
+        back_ = back_->next_;
     }
     else
     {
-        std::cout << "push error, stack is empty!" << std::endl;
+        back_ = front_ = new Node {};
+        assert(front_);
     }
+    back_->data_ = value;
+    size_++;
 }
 
 template<typename T>
@@ -185,6 +273,15 @@ void Queue<T>::pop()
     {
         std::cout << "pop error, stack is empty!" << std::endl;
     }
+}
+
+template<typename T>
+void Queue<T>::swap(Queue* other)
+{
+    Queue<T> temp = std::move(*this);
+    
+    *this  = std::move(*other);
+    *other = std::move(temp);
 }
 
 template<typename T>
