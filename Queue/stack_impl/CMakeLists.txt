@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.8)
 set(CMAKE_CXX_STANDART 11)
 
-add_executable(queue main.cpp)
+set(TARGET_NAME stack_implt_queue)
+
+add_executable(${TARGET_NAME} queue/main.cpp stack/stack_bool.cpp)
 
 set(CLANG_TIDY_PROPERTIES 
     clang-tidy;
@@ -13,7 +15,7 @@ set(CLANG_TIDY_PROPERTIES
 if(ADD_CLANG_TIDY)
     message("-- [Build with clang tidy]")
     
-    set_target_properties(queue
+    set_target_properties(${TARGET_NAME}
         PROPERTIES
         CXX_CLANG_TIDY "${CLANG_TIDY_PROPERTIES}"
 )
