@@ -70,7 +70,7 @@ Queue<T>& Queue<T>::operator=(const Queue& other)
 }
 
 template<typename T>
-Queue<T>& Queue<T>::operator=(Queue&& other) 
+Queue<T>& Queue<T>::operator=(Queue&& other) noexcept
 {
     size_         = other.size_;
     input_stack_  = std::move(other.input_stack_);

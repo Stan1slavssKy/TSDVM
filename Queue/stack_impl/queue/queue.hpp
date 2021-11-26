@@ -18,7 +18,7 @@ public:
     bool operator!=(const Queue& other) const;
 
     Queue<T>& operator=(const Queue& other);
-    Queue<T>& operator=(Queue&& other);
+    Queue<T>& operator=(Queue&& other) noexcept;
 
     bool   empty() const;
     size_t size() const;
