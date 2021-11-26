@@ -1,4 +1,5 @@
-#include "../list_impl/queue_impl.hpp"
+//#include "../list_impl/queue_impl.hpp"
+#include "../stack_impl/queue/queue_impl.hpp"
 
 #include <gtest/gtest.h>
 
@@ -106,7 +107,8 @@ TEST(DoubleQueueTest, Front)
 TEST(DoubleQueueTest, Back)
 {
     Queue<double> qu;
-    double        value = 0;
+
+    double value = 0;
 
     for (int i = 1; i < 1000000; i++)
     {
@@ -114,6 +116,11 @@ TEST(DoubleQueueTest, Back)
         qu.push(value);
 
         ASSERT_EQ(qu.back(), value);
+
+        if (i % 5 == 0)
+        {
+            qu.pop();
+        }
     }
 }
 
