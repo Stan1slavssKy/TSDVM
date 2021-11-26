@@ -145,7 +145,7 @@ void Queue<T>::move_from_input_stack()
 template<typename T>
 void Queue<T>::push(T value)
 {
-    input_stack_.push(value + 10);
+    input_stack_.push(value);
     size_++;
 
     back_ = &input_stack_.top();
