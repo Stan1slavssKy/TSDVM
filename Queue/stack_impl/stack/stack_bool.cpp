@@ -51,7 +51,7 @@ Stack<bool>& Stack<bool>::operator=(const Stack& other)
     data_ = new unsigned char[capacity_] {};
     assert(data_);
 
-    memcpy(data_, other.data_, (size_ / 8 + 1) * sizeof(unsigned char));
+    memcpy(data_, other.data_, (size_ / CHAR_BIT + 1) * sizeof(unsigned char));
 
     return *this;
 }
@@ -82,7 +82,7 @@ bool Stack<bool>::operator==(const Stack& other) const
     {
         return false;
     }
-    if (memcmp(data_, other.data_, (size_ / 8 + 1) * sizeof(unsigned char)) != 0)
+    if (memcmp(data_, other.data_, (size_ / CHAR_BIT + 1) * sizeof(unsigned char)) != 0)
     {
         return false;
     }
@@ -99,7 +99,7 @@ bool Stack<bool>::operator!=(const Stack& other) const
     {
         return true;
     }
-    if (memcmp(data_, other.data_, (size_ / 8 + 1) * sizeof(unsigned char)) != 0)
+    if (memcmp(data_, other.data_, (size_ / CHAR_BIT + 1) * sizeof(unsigned char)) != 0)
     {
         return true;
     }
@@ -108,7 +108,7 @@ bool Stack<bool>::operator!=(const Stack& other) const
 
 void Stack<bool>::print() const
 {
-    size_t nmb_occupied_bytes = size_ / 8 + 1;
+    size_t nmb_occupied_bytes = size_ / CHAR_BIT + 1;
 
     for (size_t idx = 0; idx < nmb_occupied_bytes; idx++)
     {
@@ -116,7 +116,7 @@ void Stack<bool>::print() const
         unsigned char nmb       = data_[idx];
         unsigned char temp      = 0;
 
-        for (size_t idx_1 = 0; idx_1 < 8; idx_1++)
+        for (size_t idx_1 = 0; idx_1 < CHAR_BIT; idx_1++)
         {
             temp              = nmb;
             temp              = temp % 2;
@@ -137,7 +137,7 @@ void Stack<bool>::expands_capacity()
     auto* temp = new unsigned char[capacity_] {};
     assert(temp);
 
-    size_t len_copied_data = size_ / 8;
+    size_t len_copied_data = size_ / CHAR_BIT;
 
     for (size_t i = 0; i < len_copied_data; i++)
     {
@@ -157,7 +157,7 @@ void Stack<bool>::push(bool bool_value)
 {
     auto value = static_cast<unsigned char>(bool_value);
 
-    if (size_ / 8 == capacity_)
+    if (size_ / CHAR_BIT == capacity_)
     {
         expands_capacity();
     }
@@ -165,7 +165,7 @@ void Stack<bool>::push(bool bool_value)
     size_t nmb_occupied_bits_in_byte = size_;
     size_t occupied_bytes_counter    = 0;
 
-    if (size_ >= 8)
+    if (size_ >= CHAR_BIT)
     {
         occupied_bytes_counter    = size_ / CHAR_BIT;
         nmb_occupied_bits_in_byte = size_ % CHAR_BIT;
@@ -184,7 +184,7 @@ void Stack<bool>::pop()
         size_t nmb_occupied_bits_in_byte = size_;
         size_t occupied_bytes_counter    = 0;
 
-        if (size_ >= 8)
+        if (size_ >= CHAR_BIT)
         {
             occupied_bytes_counter    = size_ / CHAR_BIT;
             nmb_occupied_bits_in_byte = size_ % CHAR_BIT;
@@ -227,7 +227,7 @@ bool Stack<bool>::top() const
         size_t nmb_occupied_bits_in_byte = size_;
         size_t occupied_bytes_counter    = 0;
 
-        if (size_ >= 8)
+        if (size_ >= CHAR_BIT)
         {
             occupied_bytes_counter    = size_ / CHAR_BIT;
             nmb_occupied_bits_in_byte = size_ % CHAR_BIT;
