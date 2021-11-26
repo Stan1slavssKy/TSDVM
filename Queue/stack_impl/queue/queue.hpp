@@ -7,6 +7,7 @@ namespace s1ky {
 template<typename T>
 class Queue
 {
+public:
     Queue();
     Queue(T data);
     Queue(const Queue& other);
@@ -17,7 +18,7 @@ class Queue
     bool operator!=(const Queue& other) const;
 
     Queue<T>& operator=(const Queue& other);
-    Queue<T>& operator=(Queue&& other) noexcept;
+    Queue<T>& operator=(Queue&& other);
 
     bool   empty() const;
     size_t size() const;
@@ -33,7 +34,9 @@ class Queue
     void swap(Queue* other);
 
 private:
-    size_t   size_;
+    size_t size_;
+    T*     back_ = nullptr;
+
     Stack<T> input_stack_;
     Stack<T> output_stack_;
 
