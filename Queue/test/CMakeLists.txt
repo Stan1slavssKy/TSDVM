@@ -28,10 +28,17 @@ target_link_libraries(${OUTPUT} gtest_main)
 include(GoogleTest)
 gtest_discover_tests(${OUTPUT})
 
-add_custom_target(${RUN_TEST_NAME} 
-    COMMENT "Running tests to queue"
-    COMMAND ./${OUTPUT}
-)
+if(ADD_STACK_IMPL_TESTING)
+    add_custom_target(${RUN_TEST_NAME} 
+        COMMENT "Running tests to stack queue"
+        COMMAND ./${OUTPUT}
+    )
+elseif(ADD_LIST_IMPL_TESTING)
+    add_custom_target(${RUN_TEST_NAME} 
+        COMMENT "Running tests to list queue"
+        COMMAND ./${OUTPUT}
+    )
+endif()
 
 add_dependencies(${RUN_TEST_NAME} ${OUTPUT})
 
