@@ -1,3 +1,6 @@
+# To use cmake for queue project with all flags use this command:
+# cmake .. -DADD_SANITIZERS=ON -DADD_CLANG_TIDY=ON -DADD_BENCHMARK=ON -DADD_STACK_IMPL_TESTING=OFF -DADD_LIST_IMPL_TESTING=OFF
+
 cmake_minimum_required(VERSION 3.8)
 project(Queque)
 set(CMAKE_CXX_STANDART 11)
@@ -49,4 +52,8 @@ if(ADD_STACK_IMPL_TESTING OR ADD_LIST_IMPL_TESTING)
     endif()
 
     add_subdirectory(test)
+endif()
+
+if(ADD_BENCHMARK)
+    add_subdirectory(benchmark)
 endif()
