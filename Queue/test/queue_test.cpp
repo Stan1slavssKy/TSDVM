@@ -1,9 +1,9 @@
 #ifdef STACK_IMPL
-    #include "../list_impl/queue_impl.hpp"
+#include "../list_impl/queue_impl.hpp"
 #endif
 
 #ifdef LIST_IMPL
-    #include "../stack_impl/queue/queue_impl.hpp"
+#include "../stack_impl/queue/queue_impl.hpp"
 #endif
 
 #include <gtest/gtest.h>
