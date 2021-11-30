@@ -39,7 +39,7 @@ bool Queue<T>::operator==(const Queue<T>& other) const
     {
         return true;
     }
-    
+
     return (input_stack_ == other.input_stack_) && (output_stack_ == other.output_stack_);
 }
 
@@ -61,7 +61,7 @@ Queue<T>& Queue<T>::operator=(const Queue& other)
     {
         return *this;
     }
-    
+
     size_         = other.size_;
     input_stack_  = other.input_stack_;
     output_stack_ = other.output_stack_;
