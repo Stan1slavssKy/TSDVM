@@ -1,31 +1,32 @@
-#ifdef STACK_IMPL
 #include "../list_impl/queue_impl.hpp"
+#include "../stack_impl/queue/queue_impl.hpp"
+
+#include <gtest/gtest.h> // NOLINT
+
+#ifdef STACK_IMPL
+using namespace s1ky::stack_queue;
 #endif
 
 #ifdef LIST_IMPL
-#include "../stack_impl/queue/queue_impl.hpp"
+using namespace s1ky::list_queue;
 #endif
 
-#include <gtest/gtest.h>
-
-namespace s1ky {
-
-TEST(DoubleQueueTest, ParameterConstructTest)
+TEST(DoubleQueueTest, ParameterConstructTest) // NOLINT
 {
     for (size_t i = 0; i < 100000; i++)
     {
         Queue<double> qu(0.7 * static_cast<double>(i));
-        ASSERT_EQ(0.7 * static_cast<double>(i), qu.front());
+        ASSERT_EQ(0.7 * static_cast<double>(i), qu.front()); // NOLINT
     }
 }
 
-TEST(DoubleQueueTest, CopyConstructTest)
+TEST(DoubleQueueTest, CopyConstructTest) // NOLINT
 {
     for (size_t i = 0; i < 100000; i++)
     {
         Queue<double> qu(0.7 * static_cast<double>(i));
         Queue<double> qu2 = qu;
-        ASSERT_EQ(qu2.front(), qu.front());
+        ASSERT_EQ(qu2.front(), qu.front()); // NOLINT
     }
 }
 
@@ -35,14 +36,14 @@ Queue<double> get_queue_for_constr()
     return qu;
 }
 
-TEST(DoubleQueueTest, MoveConstructor)
+TEST(DoubleQueueTest, MoveConstructor) // NOLINT
 {
     Queue<double> qu1(get_queue_for_constr());
 
-    ASSERT_EQ(27.3, qu1.front());
+    ASSERT_EQ(27.3, qu1.front()); // NOLINT
 }
 
-TEST(DoubleQueueTest, Push)
+TEST(DoubleQueueTest, Push) // NOLINT
 {
     Queue<double> qu;
 
@@ -50,11 +51,11 @@ TEST(DoubleQueueTest, Push)
     {
         double value = 0.7 * static_cast<double>(i);
         qu.push(value);
-        ASSERT_EQ(qu.back(), value);
+        ASSERT_EQ(qu.back(), value); // NOLINT
     }
 }
 
-TEST(DoubleQueueTest, Pop)
+TEST(DoubleQueueTest, Pop) // NOLINT
 {
     Queue<double> qu;
     double        value = 0;
@@ -66,33 +67,33 @@ TEST(DoubleQueueTest, Pop)
         value = 0.8 * i;
         qu.push(value);
         qu.pop();
-        ASSERT_EQ(value, qu.front());
+        ASSERT_EQ(value, qu.front()); // NOLINT
     }
 }
 
-TEST(DoubleQueueTest, Emty)
+TEST(DoubleQueueTest, Emty) // NOLINT
 {
     Queue<double> qu;
-    ASSERT_EQ(true, qu.empty());
+    ASSERT_EQ(true, qu.empty()); // NOLINT
 
     qu.push(47.65);
-    ASSERT_EQ(false, qu.empty());
+    ASSERT_EQ(false, qu.empty()); // NOLINT
 
     qu.pop();
-    ASSERT_EQ(true, qu.empty());
+    ASSERT_EQ(true, qu.empty()); // NOLINT
 }
 
-TEST(DoubleQueueTest, Size)
+TEST(DoubleQueueTest, Size) // NOLINT
 {
     Queue<double> qu;
-    ASSERT_EQ(0, qu.size());
+    ASSERT_EQ(0, qu.size()); // NOLINT
 
     for (int i = 0; i < 10000; i++) { qu.push(i); }
 
-    ASSERT_EQ(10000, qu.size());
+    ASSERT_EQ(10000, qu.size()); // NOLINT
 }
 
-TEST(DoubleQueueTest, Front)
+TEST(DoubleQueueTest, Front) // NOLINT
 {
     Queue<double> qu;
     double        value = 0;
@@ -105,11 +106,11 @@ TEST(DoubleQueueTest, Front)
         qu.push(value);
         qu.pop();
 
-        ASSERT_EQ(qu.front(), value);
+        ASSERT_EQ(qu.front(), value); // NOLINT
     }
 }
 
-TEST(DoubleQueueTest, Back)
+TEST(DoubleQueueTest, Back) // NOLINT
 {
     Queue<double> qu;
 
@@ -120,7 +121,7 @@ TEST(DoubleQueueTest, Back)
         value = 0.3 * i;
         qu.push(value);
 
-        ASSERT_EQ(qu.back(), value);
+        ASSERT_EQ(qu.back(), value); // NOLINT
 
         if (i % 5 == 0)
         {
@@ -129,7 +130,7 @@ TEST(DoubleQueueTest, Back)
     }
 }
 
-TEST(DoubleQueueTest, OperatorEqual)
+TEST(DoubleQueueTest, OperatorEqual) // NOLINT
 {
     Queue<double> qu1;
     Queue<double> qu2;
@@ -138,11 +139,11 @@ TEST(DoubleQueueTest, OperatorEqual)
     {
         qu1.push(i);
         qu2.push(i);
-        ASSERT_EQ(qu1, qu2);
+        ASSERT_EQ(qu1, qu2); // NOLINT
     }
 }
 
-TEST(DoubleQueueTest, OpeartorNotEqual)
+TEST(DoubleQueueTest, OpeartorNotEqual) // NOLINT
 {
     Queue<double> qu1;
     Queue<double> qu2;
@@ -150,24 +151,24 @@ TEST(DoubleQueueTest, OpeartorNotEqual)
     for (int i = 0; i < 10000; i++)
     {
         qu1.push(i);
-        ASSERT_NE(qu1, qu2);
+        ASSERT_NE(qu1, qu2); // NOLINT
     }
 }
 
-TEST(DoubleQueueTest, СopyOperatorAssigment)
+TEST(DoubleQueueTest, СopyOperatorAssigment) // NOLINT
 {
     Queue<double> qu1;
     Queue<double> qu2;
     for (int i = 0; i < 100000; i++) { qu1.push(i); }
 
     qu1 = qu1;
-    ASSERT_EQ(qu1, qu1);
+    ASSERT_EQ(qu1, qu1); // NOLINT
 
     qu2 = qu1;
-    ASSERT_EQ(qu1, qu2);
+    ASSERT_EQ(qu1, qu2); // NOLINT
 
     qu2 = qu2;
-    ASSERT_EQ(qu2, qu2);
+    ASSERT_EQ(qu2, qu2); // NOLINT
 }
 
 Queue<double> get_move_operator_queue()
@@ -178,7 +179,7 @@ Queue<double> get_move_operator_queue()
     return qu;
 }
 
-TEST(DoubleQueueTest, MoveOperatorAssigment)
+TEST(DoubleQueueTest, MoveOperatorAssigment) // NOLINT
 {
     Queue<double> qu1;
     Queue<double> qu2;
@@ -187,10 +188,10 @@ TEST(DoubleQueueTest, MoveOperatorAssigment)
 
     for (int i = 0; i < 100000; i++) { qu2.push(i); }
 
-    ASSERT_EQ(qu1, qu2);
+    ASSERT_EQ(qu1, qu2); // NOLINT
 }
 
-TEST(DoubleQueueTest, Swap)
+TEST(DoubleQueueTest, Swap) // NOLINT
 {
     Queue<double> qu1;
     Queue<double> qu2;
@@ -205,14 +206,12 @@ TEST(DoubleQueueTest, Swap)
     }
 
     qu1.swap(&qu2);
-    ASSERT_EQ(qu1, temp);
+    ASSERT_EQ(qu1, temp); // NOLINT
 }
 
 int main(int argc, char** argv)
 {
-    testing::InitGoogleTest(&argc, argv);
+    testing::InitGoogleTest(&argc, argv); // NOLINT
 
-    return RUN_ALL_TESTS();
+    return RUN_ALL_TESTS(); // NOLINT
 }
-
-} // namespace s1ky

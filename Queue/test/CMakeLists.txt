@@ -1,54 +1,60 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16.3)
 set(CMAKE_CXX_STANDARD 11)
 
-set(OUTPUT test)
-set(RUN_TEST_NAME run_${OUTPUT})
+#=========================================================================================
 
 include(FetchContent)
 FetchContent_Declare(
-    googletest QUIET
-    URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
+  googletest
+  URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip
 )
 
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-set(BUILD_GMOCK OFF CACHE BOOL "" FORCE)
-set(BUILD_GTEST ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-if(ADD_STACK_IMPL_TESTING)
-    add_executable(${OUTPUT} queue_test.cpp ../stack_impl/stack/stack_bool.cpp)
-elseif(ADD_LIST_IMPL_TESTING)
-    add_executable(${OUTPUT} queue_test.cpp)
-endif()
+#=========================================================================================
 
-target_link_libraries(${OUTPUT} gtest_main)
-
-include(GoogleTest)
-gtest_discover_tests(${OUTPUT})
+set(STACK_OUTPUT stack_test)
+set(LIST_OUTPUT list_test)
 
 if(ADD_STACK_IMPL_TESTING)
-    add_custom_target(${RUN_TEST_NAME} 
+    add_executable(${STACK_OUTPUT} queue_test.cpp ../stack_impl/stack/stack_bool.cpp)
+    target_compile_definitions(${STACK_OUTPUT} PUBLIC -DSTACK_IMPL=1)
+    target_link_libraries(${STACK_OUTPUT} gtest_main)
+
+    include(GoogleTest)
+    gtest_discover_tests(${STACK_OUTPUT})
+
+    if(ADD_SANITIZERS)
+        target_compile_options(${STACK_OUTPUT} PUBLIC -fsanitize=address -g)
+        set_target_properties(${STACK_OUTPUT}  PROPERTIES LINK_FLAGS "-fsanitize=address")
+    endif()
+
+    add_custom_target(run_${STACK_OUTPUT}
         COMMENT "Running tests to stack queue"
-        COMMAND ./${OUTPUT}
+        COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${STACK_OUTPUT}
     )
-elseif(ADD_LIST_IMPL_TESTING)
-    add_custom_target(${RUN_TEST_NAME} 
+    add_dependencies(run_${STACK_OUTPUT} ${STACK_OUTPUT})
+endif()
+
+if(ADD_LIST_IMPL_TESTING)
+    add_executable(${LIST_OUTPUT} queue_test.cpp)
+    target_compile_definitions(${LIST_OUTPUT} PUBLIC -DLIST_IMPL=1)
+    target_link_libraries(${LIST_OUTPUT} gtest_main)
+
+    include(GoogleTest)
+    gtest_discover_tests(${LIST_OUTPUT})
+
+    if(ADD_SANITIZERS)
+        target_compile_options(${LIST_OUTPUT}  PUBLIC -fsanitize=address -g)
+        set_target_properties(${LIST_OUTPUT}   PROPERTIES LINK_FLAGS "-fsanitize=address")
+    endif()
+
+    add_custom_target(run_${LIST_OUTPUT}
         COMMENT "Running tests to list queue"
-        COMMAND ./${OUTPUT}
+        COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${LIST_OUTPUT}
     )
+    add_dependencies(run_${LIST_OUTPUT} ${LIST_OUTPUT})  
 endif()
-
-add_dependencies(${RUN_TEST_NAME} ${OUTPUT})
-
-if(ADD_SANITIZERS)
-    message("-- [Build with sanitizers]")
-    target_compile_options(${OUTPUT} PUBLIC -fsanitize=address -g)
-    set_target_properties(${OUTPUT}  PROPERTIES LINK_FLAGS "-fsanitize=address")
-endif()
-
-set_target_properties(${OUTPUT} PROPERTIES
-CXX_STANDARD 11
-CXX_STANDARD_REQUIRED ON
-)
