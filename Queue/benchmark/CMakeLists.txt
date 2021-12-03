@@ -3,21 +3,21 @@ set(CMAKE_CXX_STANDART 11)
 
 find_package(benchmark REQUIRED)
 
-set(QUEUE_BENCHMARK queue_bench)
+set(QUEUE_BENCHMARK run_queue_bench)
+set(STACK_OUTPUT stack_bench)
+set(LIST_OUTPUT list_bench)
 
-add_executable(${QUEUE_BENCHMARK} queue_impl_bench.cpp)
-target_link_libraries(${QUEUE_BENCHMARK} benchmark::benchmark)
+add_executable(${STACK_OUTPUT} queue_list_bench.cpp)
+target_link_libraries(${STACK_OUTPUT} benchmark::benchmark)
+set_target_properties(${STACK_OUTPUT} PROPERTIES COMMENT "run stack impl bench")
 
-if(ADD_SANITIZERS)
-    message("-- [Build with sanitizers]")
-    target_compile_options(${QUEUE_BENCHMARK} PUBLIC -fsanitize=address -g)
-    set_target_properties(${QUEUE_BENCHMARK}  PROPERTIES LINK_FLAGS "-fsanitize=address")
-endif()
+add_executable(${LIST_OUTPUT} queue_stack_bench.cpp)
+target_link_libraries(${LIST_OUTPUT} benchmark::benchmark)
+set_target_properties(${LIST_OUTPUT} PROPERTIES COMMENT "run list impl bench")
 
-add_custom_target(run_${QUEUE_BENCHMARK}
-    COMMENT "Running benchmark for stack queue"
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${QUEUE_BENCHMARK} 
-    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${QUEUE_BENCHMARK}
+add_custom_target(${QUEUE_BENCHMARK}
+    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${STACK_OUTPUT}
+    COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${LIST_OUTPUT} 
 )
 
-add_dependencies(run_${QUEUE_BENCHMARK} ${QUEUE_BENCHMARK})
+add_dependencies(${QUEUE_BENCHMARK} ${STACK_OUTPUT} ${LIST_OUTPUT})
