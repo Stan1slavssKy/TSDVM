@@ -21,3 +21,8 @@ add_custom_target(${QUEUE_BENCHMARK}
 )
 
 add_dependencies(${QUEUE_BENCHMARK} ${STACK_OUTPUT} ${LIST_OUTPUT})
+
+if(ADD_SANITIZERS)
+    target_compile_options(${QUEUE_BENCHMARK}  PUBLIC -fsanitize=address -g)
+    set_target_properties(${QUEUE_BENCHMARK}   PROPERTIES LINK_FLAGS "-fsanitize=address")
+endif()
