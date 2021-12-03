@@ -241,12 +241,12 @@ bool Stack<bool>::top() const
         {
             cur_data = data_[occupied_bytes_counter];
             value <<= (CHAR_BIT - nmb_occupied_bits_in_byte);
-            out_nmb = static_cast<bool>(cur_data &= value);
+            out_nmb = static_cast<bool>(cur_data &= value); // NOLINT
         }
         else
         {
             cur_data = data_[occupied_bytes_counter - 1];
-            out_nmb  = static_cast<bool>(cur_data &= value);
+            out_nmb  = static_cast<bool>(cur_data &= value); // NOLINT
         }
 
         return out_nmb;
