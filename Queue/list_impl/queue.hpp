@@ -4,6 +4,7 @@
 #include <cstdlib>
 
 namespace s1ky {
+namespace list_queue {
 template<typename T>
 class Queue
 {
@@ -46,6 +47,7 @@ private:
 
     void delete_nodes();
 };
+} // namespace list_queue
 } // namespace s1ky
 
 #endif // _QUEUE_LIST_IMPL_QUEUE_HPP

@@ -10,6 +10,7 @@
 #include <iostream>
 
 namespace s1ky {
+namespace list_queue {
 template<typename T>
 Queue<T>::Queue()
 {}
@@ -303,6 +304,7 @@ void Queue<T>::delete_nodes()
         cur_node = next_node;
     }
 }
+} // namespace list_queue
 } // namespace s1ky
 
 #endif // _QUEUE_LIST_IMPL_QUEUE_IMPL_HPP_INCLUDED
