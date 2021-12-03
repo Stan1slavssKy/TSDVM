@@ -161,13 +161,11 @@ TEST(DoubleQueueTest, СopyOperatorAssigment) // NOLINT
     Queue<double> qu2;
     for (int i = 0; i < 100000; i++) { qu1.push(i); }
 
-    qu1 = qu1;
     ASSERT_EQ(qu1, qu1); // NOLINT
 
     qu2 = qu1;
     ASSERT_EQ(qu1, qu2); // NOLINT
 
-    qu2 = qu2;
     ASSERT_EQ(qu2, qu2); // NOLINT
 }
 
