@@ -1,12 +1,8 @@
-# To use cmake for queue project with all flags use this command:
-# cmake .. -DADD_SANITIZERS=ON -DADD_CLANG_TIDY=ON -DADD_BENCHMARK=ON -DADD_STACK_IMPL_TESTING=OFF -DADD_LIST_IMPL_TESTING=OFF
-
 cmake_minimum_required(VERSION 3.8)
 project(Queque)
 set(CMAKE_CXX_STANDART 11)
 
 add_compile_options(
-    #-Werror
     -Wall
     -Wextra
     -Wpedantic
@@ -39,8 +35,8 @@ add_custom_target(
 if(ADD_CLANG_TIDY)
     set(CMAKE_CXX_CLANG_TIDY
         clang-tidy;
-        --checks=*;
         --format-style=file;
+        --header-filter=*.hpp;
     )
 endif()
 
