@@ -4,6 +4,7 @@
 #include "../stack/stack_impl.hpp"
 
 namespace s1ky {
+namespace stack_queue {
 template<typename T>
 class Queue
 {
@@ -42,6 +43,7 @@ private:
 
     void move_from_input_stack();
 };
+} // namespace stack_queue
 } // namespace s1ky
 
 #endif // _STACK_IMPL_QUEUE_QUEUE_HPP

@@ -4,6 +4,7 @@
 #include "queue.hpp"
 
 namespace s1ky {
+namespace stack_queue {
 
 template<typename T>
 Queue<T>::Queue() : size_(0)
@@ -176,6 +177,8 @@ void Queue<T>::swap(Queue* other)
     *this         = std::move(*other);
     *other        = std::move(temp);
 }
+
+} // namespace stack_queue
 } // namespace s1ky
 
 #endif //_STACK_IMPL_QUEUE_QUEUE_IMPL_HPP
