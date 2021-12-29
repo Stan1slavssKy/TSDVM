@@ -1,0 +1,8 @@
+# ignore TODO list
+TODO
+
+# ignore build direct
+build
+
+# ignore .vscode
+.vscode
