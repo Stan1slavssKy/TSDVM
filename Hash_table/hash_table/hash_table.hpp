@@ -13,15 +13,13 @@ public:
     constexpr static int    rehash_size  = 2;
 
     Hash_table();
-    Hash_table(size_t size);
+    Hash_table(size_t size, data_t init_val);
     Hash_table(const Hash_table<key_t, data_t>& other);
     Hash_table(Hash_table<key_t, data_t>&& other) noexcept;
     ~Hash_table();
     
     Hash_table<key_t, data_t>& operator=(const Hash_table<key_t, data_t>& other);
-    Hash_table<key_t, data_t>&& operator=(Hash_table<key_t, data_t>&& other) noexcept;
-    
-    int hash(const key_t key);
+    Hash_table<key_t, data_t>& operator=(Hash_table<key_t, data_t>&& other) noexcept;
 
 private:
     size_t size_ = 0; // size without deleted values
