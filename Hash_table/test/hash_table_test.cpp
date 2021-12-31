@@ -2,6 +2,13 @@
 
 #include <gtest/gtest.h> // NOLINT
 
+using namespace s1ky;
+
+TEST(HashTable, InitTesting)
+{
+
+}
+
 int main(int argc, char** argv)
 {
     testing::InitGoogleTest(&argc, argv); // NOLINT
