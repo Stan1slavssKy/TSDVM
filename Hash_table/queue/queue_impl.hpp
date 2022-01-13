@@ -304,6 +304,24 @@ void Queue<T>::delete_nodes()
         cur_node = next_node;
     }
 }
+
+template<typename T>
+Queue<T>& Queue<T>::find_value(const T value) const
+{
+    Queue<T>* current_elem = front_;
+
+    for (int i = 0; i < size_; ++i)
+    {
+        if (current_elem.data_ == value)
+        {
+            return current_elem;
+        }
+        current_elem = current_elem.next_;
+    }
+
+    return nullptr;
+}
+
 } // namespace list_queue
 } // namespace s1ky
 
