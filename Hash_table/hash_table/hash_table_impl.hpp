@@ -10,25 +10,28 @@
 
 namespace s1ky {
 template<typename key_t, typename data_t>
-Hash_table<key_t, data_t>::Hash_table() : size_(default_size)
+Hash_table<key_t, data_t>::Hash_table() : capacity_(default_size)
 {
-    keys_ = new Queue<data_t>[size_] {};   
+    keys_ = new Queue<data_t>[capacity_] {};
 }
 
 template<typename key_t, typename data_t>
-Hash_table<key_t, data_t>::Hash_table(size_t size) : size_(size)
+Hash_table<key_t, data_t>::Hash_table(size_t capacity) : capacity_(capacity)
 {
-    keys_ = new Queue<data_t>[size_] {};
+    keys_ = new Queue<data_t>[capacity_] {};
 }
 
+/*
 template<typename key_t, typename data_t>
 Hash_table<key_t, data_t>::Hash_table(const Hash_table<key_t, data_t>& other) : size_(other.size_)
 {
     memcpy(keys_, other.keys_, size_ * sizeof(Queue<data_t>));
 }
+*/
 
 template<typename key_t, typename data_t>
-Hash_table<key_t, data_t>::Hash_table(Hash_table<key_t, data_t>&& other) noexcept : size_(other.size_), keys_(other.keys_)
+Hash_table<key_t, data_t>::Hash_table(Hash_table<key_t, data_t>&& other) noexcept :
+    capacity_(other.capacity_), size_(other.size_), keys_(other.keys_)
 {
     other.keys_ = nullptr;
 }
@@ -41,6 +44,7 @@ Hash_table<key_t, data_t>::~Hash_table()
 
 //==================================================================================================================
 
+/*
 template<typename key_t, typename data_t>
 Hash_table<key_t, data_t>& Hash_table<key_t, data_t>::operator=(const Hash_table<key_t, data_t>& other)
 {
@@ -55,6 +59,7 @@ Hash_table<key_t, data_t>& Hash_table<key_t, data_t>::operator=(const Hash_table
 
     return *this;
 }
+*/
 
 template<typename key_t, typename data_t>
 Hash_table<key_t, data_t>& Hash_table<key_t, data_t>::operator=(Hash_table<key_t, data_t>&& other) noexcept
@@ -75,7 +80,7 @@ Hash_table<key_t, data_t>& Hash_table<key_t, data_t>::operator=(Hash_table<key_t
 //==================================================================================================================
 
 template<typename key_t, typename data_t>
-size_t Hash_table<key_t, data_t>::hash_(key_t key)
+size_t Hash_table<key_t, data_t>::hash_(key_t key) const                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 {
     size_t hash_result = 0;
 
@@ -86,8 +91,8 @@ template<>
 size_t Hash_table<char*, char*>::hash_(char* key)
 {
     size_t hash_result = 0;
-    
-    int idx = 0; 
+
+    int idx = 0;
 
     while (key[idx] != '\0')
     {
@@ -100,10 +105,11 @@ size_t Hash_table<char*, char*>::hash_(char* key)
     return hash_result;
 }
 
+/*
 template<typename key_t, typename data_t>
 void Hash_table<key_t, data_t>::resize_()
 {
-    Queue<data_t>* new_keys_buffer = new Queue<data_t>[size_] {};\
+    Queue<data_t>* new_keys_buffer = new Queue<data_t>[capacity_] {};
 
     memcpy(new_keys_buffer, keys_, size_ * sizeof(Queue<data_t>));
 
@@ -112,36 +118,44 @@ void Hash_table<key_t, data_t>::resize_()
     keys_     = new_keys_buffer;
     capacity_ = capacity_ * resize_coeff;
 }
+*/
 
 template<typename key_t, typename data_t>
-bool Hash_table<key_t, data_t>::find_value(const key_t value)
+bool Hash_table<key_t, data_t>::find_value(const data_t value) const
 {
     int idx = hash_(value);
-
-    return (keys_[idx]).find_value(value);
-}
-
-template<typename key_t, typename data_t>
-void Hash_table<key_t, data_t>::add(const key_t value)
-{
-    if (size_ == capacity_)
-
-    if (size_ < capacity_)
+    
+    if ((keys_[idx])->find_value(value) != nullptr)
     {
-        if (find_value(value) == true)
-        {
-            return;
-        }
-        else
-        {
-
-        }
+        return true;
     }
     else
     {
-        resize_();
-
+        return false;
     }
+}
+
+template<typename key_t, typename data_t>
+void Hash_table<key_t, data_t>::add(const data_t value)
+{
+    if (size_ > capacity_)
+    {
+        std::cout << "Error, size > capacity" << std::endl;
+        return;
+    }
+
+    if (find_value(value) == false)
+    {
+        int idx = hash_(value);
+        (keys_[idx])->push(value);
+    }
+}
+
+template<typename key_t, typename data_t>
+void Hash_table<key_t, data_t>::remove(const data_t value)
+{   
+    int idx = hash_(value);
+    (keys_[idx])->delete_value_node(value);
 }
 
 }; // namespace s1ky

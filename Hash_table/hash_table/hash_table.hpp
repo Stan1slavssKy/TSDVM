@@ -16,26 +16,26 @@ public:
     constexpr static int    resize_coeff = 2;
 
     Hash_table();
-    Hash_table(size_t size);
-    Hash_table(const Hash_table<key_t, data_t>& other);
+    Hash_table(size_t capacity);
+    // Hash_table(const Hash_table<key_t, data_t>& other);
     Hash_table(Hash_table<key_t, data_t>&& other) noexcept;
     ~Hash_table();
 
-    Hash_table<key_t, data_t>& operator=(const Hash_table<key_t, data_t>& other);
+    // Hash_table<key_t, data_t>& operator=(const Hash_table<key_t, data_t>& other);
     Hash_table<key_t, data_t>& operator=(Hash_table<key_t, data_t>&& other) noexcept;
 
-    bool find_value(const key_t value);
+    bool find_value(const data_t value) const;
 
-    void add(const key_t value);
-    void remove();
+    void add(const data_t value);
+    void remove(const data_t );
 
 private:
-    size_t capacity_     = 0;
-    size_t size_         = 0;
-    Queue<data_t>* keys_ = nullptr; // an array that stores a pointer to a list of values
+    size_t         capacity_ = 0;
+    size_t         size_     = 0;
+    Queue<data_t>* keys_     = nullptr; // an array that stores a pointer to a list of values
 
-    size_t hash_(key_t key);
-    void resize_();
+    size_t hash_(key_t key) const;
+    // void   resize_();
 };
 }; // namespace s1ky
 
