@@ -339,6 +339,10 @@ void Queue<T>::delete_value_node(const T value)
             else
             {
                 prev_elem.next_ = current_elem.next_;
+                if (prev_elem.next_ == nullptr)
+                {
+                    back_ = prev_elem;
+                }
             }
 
             delete current_elem;
