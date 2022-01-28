@@ -30,10 +30,11 @@ public:
     const T& front() const;
     const T& back() const;
 
-    void push(T value);
-    void pop();
-    void swap(Queue* other);
-    Queue<T>& find_value(const T value) const;
+    void      push(T value);
+    void      pop();
+    void      swap(Queue* other);
+    Queue<T>* find_value(const T value) const;
+    void      delete_value_node(const T value);
 
 private:
     struct Node

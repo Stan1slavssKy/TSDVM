@@ -306,7 +306,7 @@ void Queue<T>::delete_nodes()
 }
 
 template<typename T>
-Queue<T>& Queue<T>::find_value(const T value) const
+Queue<T>* Queue<T>::find_value(const T value) const
 {
     Queue<T>* current_elem = front_;
 
@@ -320,6 +320,33 @@ Queue<T>& Queue<T>::find_value(const T value) const
     }
 
     return nullptr;
+}
+
+template<typename T>
+void Queue<T>::delete_value_node(const T value)
+{
+    Queue<T>* current_elem = front_;
+    Queue<T>* prev_elem    = nullptr; 
+
+    for (int i = 0; i < size_; ++i)
+    {
+        if (current_elem.data_ == value)
+        {
+            if (prev_elem == nullptr)
+            {
+                front_ = current_elem.next_;
+            }
+            else
+            {
+                prev_elem.next_ = current_elem.next_;
+            }
+
+            delete current_elem;
+            break;
+        }
+        prev_elem    = current_elem;
+        current_elem = current_elem.next_;
+    }
 }
 
 } // namespace list_queue
