@@ -21,14 +21,6 @@ Hash_table<key_t, data_t>::Hash_table(size_t capacity) : capacity_(capacity)
     keys_ = new Queue<data_t>[capacity_] {};
 }
 
-/*
-template<typename key_t, typename data_t>
-Hash_table<key_t, data_t>::Hash_table(const Hash_table<key_t, data_t>& other) : size_(other.size_)
-{
-    memcpy(keys_, other.keys_, size_ * sizeof(Queue<data_t>));
-}
-*/
-
 template<typename key_t, typename data_t>
 Hash_table<key_t, data_t>::Hash_table(Hash_table<key_t, data_t>&& other) noexcept :
     capacity_(other.capacity_), size_(other.size_), keys_(other.keys_)
@@ -43,23 +35,6 @@ Hash_table<key_t, data_t>::~Hash_table()
 }
 
 //==================================================================================================================
-
-/*
-template<typename key_t, typename data_t>
-Hash_table<key_t, data_t>& Hash_table<key_t, data_t>::operator=(const Hash_table<key_t, data_t>& other)
-{
-    if (this == &other)
-    {
-        return *this;
-    }
-
-    size_ = other.size_;
-
-    memcpy(keys_, other.keys_, size_);
-
-    return *this;
-}
-*/
 
 template<typename key_t, typename data_t>
 Hash_table<key_t, data_t>& Hash_table<key_t, data_t>::operator=(Hash_table<key_t, data_t>&& other) noexcept
@@ -87,6 +62,7 @@ size_t Hash_table<key_t, data_t>::hash_(key_t key) const
     return hash_result;
 }
 
+/*
 template<>
 size_t Hash_table<char*, char*>::hash_(char* key)
 {
@@ -103,20 +79,6 @@ size_t Hash_table<char*, char*>::hash_(char* key)
     hash_result = (hash_result * 2 + 1) % capacity_;
 
     return hash_result;
-}
-
-/*
-template<typename key_t, typename data_t>
-void Hash_table<key_t, data_t>::resize_()
-{
-    Queue<data_t>* new_keys_buffer = new Queue<data_t>[capacity_] {};
-
-    memcpy(new_keys_buffer, keys_, size_ * sizeof(Queue<data_t>));
-
-    delete[] keys_;
-
-    keys_     = new_keys_buffer;
-    capacity_ = capacity_ * resize_coeff;
 }
 */
 

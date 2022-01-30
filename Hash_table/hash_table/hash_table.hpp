@@ -12,30 +12,27 @@ template<typename key_t, typename data_t>
 class Hash_table
 {
 public:
-    constexpr static size_t default_size = 16; // here needs static cause class member does not exist at compile time
+    constexpr static size_t default_size = 16;
     constexpr static int    resize_coeff = 2;
 
     Hash_table();
     Hash_table(size_t capacity);
-    // Hash_table(const Hash_table<key_t, data_t>& other);
     Hash_table(Hash_table<key_t, data_t>&& other) noexcept;
     ~Hash_table();
 
-    // Hash_table<key_t, data_t>& operator=(const Hash_table<key_t, data_t>& other);
     Hash_table<key_t, data_t>& operator=(Hash_table<key_t, data_t>&& other) noexcept;
 
     bool find_value(const data_t value) const;
 
-    void add(const data_t value);
-    void remove(const data_t );
+    void add   (const data_t value);
+    void remove(const data_t value);
 
 private:
     size_t         capacity_ = 0;
     size_t         size_     = 0;
-    Queue<data_t>* keys_     = nullptr; // an array that stores a pointer to a list of values
+    Queue<data_t>* keys_     = nullptr;
 
     size_t hash_(key_t key) const;
-    // void   resize_();
 };
 }; // namespace s1ky
 
