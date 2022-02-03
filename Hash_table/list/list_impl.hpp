@@ -290,7 +290,7 @@ void List<key_t, data_t>::pop()
 template<typename key_t, typename data_t>
 void List<key_t, data_t>::swap(List* other)
 {
-    List<T> temp = std::move(*this);
+    List<key_t, data_t> temp = std::move(*this);
 
     *this  = std::move(*other);
     *other = std::move(temp);
@@ -310,15 +310,14 @@ void List<key_t, data_t>::delete_nodes()
     }
 }
 
-/*
 template<typename key_t, typename data_t>
-List<key_t, data_t>* List<key_t, data_t>::find_value(const data_t value) const
+List<key_t, data_t>* List<key_t, data_t>::find_value(data_t key) const
 {
-    List<T>* current_elem = front_;
+    List<key_t, data_t>* current_elem = front_;
 
-    for (int i = 0; i < size_; ++i)
+    for (size_t i = 0; i < size_; ++i)
     {
-        if (current_elem.data_ == value)
+        if (current_elem.key_ == key)
         {
             return current_elem;
         }
@@ -329,14 +328,14 @@ List<key_t, data_t>* List<key_t, data_t>::find_value(const data_t value) const
 }
 
 template<typename key_t, typename data_t>
-void List<T>::delete_value_node(const T value)
+void List<key_t, data_t>::delete_node(key_t key)
 {
-    List<T>* current_elem = front_;
-    List<T>* prev_elem    = nullptr; 
+    List<key_t, data_t>* current_elem = front_;
+    List<key_t, data_t>* prev_elem    = nullptr; 
 
     for (int i = 0; i < size_; ++i)
     {
-        if (current_elem.data_ == value)
+        if (current_elem.key_ == key)
         {
             if (prev_elem == nullptr)
             {
@@ -358,7 +357,6 @@ void List<T>::delete_value_node(const T value)
         current_elem = current_elem.next_;
     }
 }
-*/
 } // namespace s1ky
 
 #endif // _LIST_IMPL_HPP_INCLUDED

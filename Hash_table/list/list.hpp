@@ -32,10 +32,10 @@ public:
     void push(key_t key, data_t value);
     void pop();
     void swap(List* other);
-/*    
-    void delete_value_node(const T value);
-    List<key_t, data_t>* find_value(const data_t value) const;
-*/
+    
+    void delete_node(key_t key);
+    List<key_t, data_t>* find_value(data_t key) const;
+
 private:
     struct Node
     {
