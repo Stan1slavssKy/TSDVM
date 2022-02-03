@@ -17,7 +17,7 @@ List<key_t, data_t>::List()
 template<typename key_t, typename data_t>
 List<key_t, data_t>::List(key_t key, data_t data)
 {
-    front_ = new Node {};
+    front_ = new Node<key_t, data_t> {};
     assert(front_);
 
     front_->key_  = key;
@@ -31,18 +31,18 @@ List<key_t, data_t>::List(const List& other) : size_(other.size_)
 {
     if (!empty())
     {
-        front_ = new Node {};
+        front_ = new Node<key_t, data_t> {};
         assert(front_);
 
-        Node* cur_node       = front_;
-        Node* cur_other_node = other.front_;
+        Node<key_t, data_t>* cur_node       = front_;
+        Node<key_t, data_t>* cur_other_node = other.front_;
 
         cur_node->key_  = cur_other_node->key_;
         cur_node->data_ = cur_other_node->data_;
 
         for (size_t i = 0; i < size_ - 1; i++)
         {
-            cur_node->next_ = new Node {};
+            cur_node->next_ = new Node<key_t, data_t> {};
             assert(cur_node->next_);
 
             cur_node       = cur_node->next_;
@@ -84,18 +84,18 @@ List<key_t, data_t>& List<key_t, data_t>::operator=(const List& other)
 
     if (!empty())
     {
-        front_ = new Node {};
+        front_ = new Node<key_t, data_t> {};
         assert(front_);
 
-        Node* cur_node       = front_;
-        Node* cur_other_node = other.front_;
+        Node<key_t, data_t>* cur_node       = front_;
+        Node<key_t, data_t>* cur_other_node = other.front_;
 
         cur_node->key_  = cur_other_node->key_;
         cur_node->data_ = cur_other_node->data_;
 
         for (size_t i = 0; i < size_ - 1; i++)
         {
-            cur_node->next_ = new Node {};
+            cur_node->next_ = new Node<key_t, data_t> {};
             assert(cur_node->next_);
 
             cur_node       = cur_node->next_;
@@ -151,8 +151,8 @@ bool List<key_t, data_t>::operator==(const List<key_t, data_t>& other) const
         return false;
     }
 
-    Node* cur_node       = front_;
-    Node* other_cur_node = other.front_;
+    Node<key_t, data_t>* cur_node       = front_;
+    Node<key_t, data_t>* other_cur_node = other.front_;
 
     for (size_t i = 0; i < size_; i++)
     {
@@ -184,12 +184,12 @@ bool List<key_t, data_t>::operator!=(const List& other) const
         return true;
     }
 
-    Node* cur_node       = front_;
-    Node* other_cur_node = other.front_;
+    Node<key_t, data_t>* cur_node       = front_;
+    Node<key_t, data_t>* other_cur_node = other.front_;
 
     for (size_t i = 0; i < size_; i++)
     {
-        if ((cur_node->data_ != other_cur_node->data_)  && (cur_node->key_ != other_cur_node->key_))
+        if ((cur_node->data_ != other_cur_node->data_) && (cur_node->key_ != other_cur_node->key_))
         {
             return true;
         }
@@ -246,14 +246,14 @@ void List<key_t, data_t>::push(key_t key, data_t value)
 {
     if (!empty())
     {
-        back_->next_ = new Node {};
+        back_->next_ = new Node<key_t, data_t> {};
         assert(back_->next_);
 
         back_ = back_->next_;
     }
     else
     {
-        back_ = front_ = new Node {};
+        back_ = front_ = new Node<key_t, data_t> {};
         assert(front_);
     }
     back_->key_  = key;
@@ -273,8 +273,8 @@ void List<key_t, data_t>::pop()
         }
         else
         {
-            Node* temp = front_;
-            front_     = front_->next_;
+            Node<key_t, data_t>* temp = front_;
+            front_                    = front_->next_;
 
             delete temp;
             temp = nullptr;
@@ -299,8 +299,8 @@ void List<key_t, data_t>::swap(List* other)
 template<typename key_t, typename data_t>
 void List<key_t, data_t>::delete_nodes()
 {
-    Node* cur_node  = front_;
-    Node* next_node = nullptr;
+    Node<key_t, data_t>* cur_node  = front_;
+    Node<key_t, data_t>* next_node = nullptr;
 
     for (size_t i = 0; i < size_; i++)
     {
@@ -311,17 +311,17 @@ void List<key_t, data_t>::delete_nodes()
 }
 
 template<typename key_t, typename data_t>
-List<key_t, data_t>* List<key_t, data_t>::find_value(data_t key) const
+Node<key_t, data_t>* List<key_t, data_t>::find_value(data_t key)
 {
-    List<key_t, data_t>* current_elem = front_;
+    Node<key_t, data_t>* current_elem = front_;
 
     for (size_t i = 0; i < size_; ++i)
     {
-        if (current_elem.key_ == key)
+        if (current_elem->key_ == key)
         {
             return current_elem;
         }
-        current_elem = current_elem.next_;
+        current_elem = current_elem->next_;
     }
 
     return nullptr;
@@ -330,21 +330,21 @@ List<key_t, data_t>* List<key_t, data_t>::find_value(data_t key) const
 template<typename key_t, typename data_t>
 void List<key_t, data_t>::delete_node(key_t key)
 {
-    List<key_t, data_t>* current_elem = front_;
-    List<key_t, data_t>* prev_elem    = nullptr; 
+    Node<key_t, data_t>* current_elem = front_;
+    Node<key_t, data_t>* prev_elem    = nullptr;
 
     for (int i = 0; i < size_; ++i)
     {
-        if (current_elem.key_ == key)
+        if (current_elem->key_ == key)
         {
             if (prev_elem == nullptr)
             {
-                front_ = current_elem.next_;
+                front_ = current_elem->next_;
             }
             else
             {
-                prev_elem.next_ = current_elem.next_;
-                if (prev_elem.next_ == nullptr)
+                prev_elem->next_ = current_elem->next_;
+                if (prev_elem->next_ == nullptr)
                 {
                     back_ = prev_elem;
                 }
@@ -354,7 +354,7 @@ void List<key_t, data_t>::delete_node(key_t key)
             break;
         }
         prev_elem    = current_elem;
-        current_elem = current_elem.next_;
+        current_elem = current_elem->next_;
     }
 }
 } // namespace s1ky

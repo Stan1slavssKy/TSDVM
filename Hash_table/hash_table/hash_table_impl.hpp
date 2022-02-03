@@ -5,9 +5,9 @@
 #include "hash_table.hpp"
 
 #include <cstring>
-#include <string>
 #include <iostream>
 #include <optional>
+#include <string>
 
 namespace s1ky {
 template<typename key_t, typename data_t>
@@ -56,7 +56,7 @@ Hash_table<key_t, data_t>& Hash_table<key_t, data_t>::operator=(Hash_table<key_t
 //==================================================================================================================
 
 template<typename key_t, typename data_t>
-unsigned int Hash_table<key_t, data_t>::hash_(key_t key) const                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+unsigned int Hash_table<key_t, data_t>::hash_(key_t key) const
 {
     return murmur_hash2(key) % capacity_;
 }
@@ -64,17 +64,17 @@ unsigned int Hash_table<key_t, data_t>::hash_(key_t key) const
 template<typename key_t, typename data_t>
 unsigned int Hash_table<key_t, data_t>::murmur_hash2(data_t key) const
 {
-    const unsigned int m    = 0x5bd1e995;
-    const unsigned int seed = 0xbc9f1d34;
+    const unsigned int   m    = 0x5bd1e995;
+    const unsigned int   seed = 0xbc9f1d34;
     const unsigned char* data = reinterpret_cast<const unsigned char*>(key);
 
-    unsigned int len  = strlen(data);
+    unsigned int len  = strlen(reinterpret_cast<const char*>(key));
     unsigned int hash = seed ^ len;
     unsigned int k    = 0;
 
     while (len >= 4)
     {
-        k  = data[0];
+        k = data[0];
         k |= data[1] << 8;
         k |= data[2] << 16;
         k |= data[3] << 24;
@@ -92,15 +92,11 @@ unsigned int Hash_table<key_t, data_t>::murmur_hash2(data_t key) const
 
     switch (len)
     {
-        case 3:
-            hash ^= data[2] << 16;
+    case 3: hash ^= data[2] << 16;
 
-        case 2:
-            hash ^= data[1] << 8;
+    case 2: hash ^= data[1] << 8;
 
-        case 1:
-            hash ^= data[0];
-            hash *= m;
+    case 1: hash ^= data[0]; hash *= m;
     };
 
     hash ^= hash >> 13;
@@ -115,9 +111,9 @@ unsigned int Hash_table<key_t, data_t>::murmur_hash2(data_t key) const
 template<typename key_t, typename data_t>
 void Hash_table<key_t, data_t>::set_value(key_t key, data_t value)
 {
-    unsigned int idx = hash_(key);    
+    unsigned int idx = hash_(key);
 
-    List<key_t, data_t>* list_elem = keys_[idx].find_value(key);
+    Node<key_t, data_t>* list_elem = keys_[idx].find_value(key);
 
     if (list_elem == nullptr)
     {
@@ -127,24 +123,25 @@ void Hash_table<key_t, data_t>::set_value(key_t key, data_t value)
     ++size_;
 }
 
-template<typename key_t, typename data_t> 
+template<typename key_t, typename data_t>
 std::optional<data_t> Hash_table<key_t, data_t>::get_value(key_t key) const
 {
-    unsigned int idx = hash_(key);    
+    unsigned int idx = hash_(key);
 
-    List<key_t, data_t>* list_elem = keys_[idx].find_value(key);
+    Node<key_t, data_t>* list_elem = keys_[idx].find_value(key);
 
     if (list_elem != nullptr)
     {
-        return list_elem->data_;;
+        return list_elem->data_;
+        ;
     }
-    
+
     return std::nullopt;
 }
 
 template<typename key_t, typename data_t>
 void Hash_table<key_t, data_t>::remove(key_t key)
-{   
+{
     unsigned int idx = hash_(key);
     keys_[idx].delete_value_node(key);
 

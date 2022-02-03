@@ -23,7 +23,7 @@ public:
     Hash_table<key_t, data_t>& operator=(Hash_table<key_t, data_t>&& other) noexcept;
 
     void set_value(key_t key, data_t value);
-    void remove   (key_t key);
+    void remove(key_t key);
 
     std::optional<data_t> get_value(key_t key) const;
 

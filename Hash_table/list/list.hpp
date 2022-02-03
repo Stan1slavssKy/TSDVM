@@ -5,6 +5,14 @@
 
 namespace s1ky {
 template<typename key_t, typename data_t>
+struct Node
+{
+    key_t  key_;
+    data_t data_;
+    Node*  next_ = nullptr;
+};
+
+template<typename key_t, typename data_t>
 class List
 {
 public:
@@ -32,21 +40,16 @@ public:
     void push(key_t key, data_t value);
     void pop();
     void swap(List* other);
-    
+
     void delete_node(key_t key);
-    List<key_t, data_t>* find_value(data_t key) const;
+
+    Node<key_t, data_t>* find_value(data_t key);
 
 private:
-    struct Node
-    {
-        key_t  key_;
-        data_t data_;
-        Node*  next_ = nullptr;
-    };
+    size_t size_ = 0;
 
-    size_t size_  = 0;
-    Node*  front_ = nullptr;
-    Node*  back_  = nullptr;
+    Node<key_t, data_t>* front_ = nullptr;
+    Node<key_t, data_t>* back_  = nullptr;
 
     void delete_nodes();
 };
