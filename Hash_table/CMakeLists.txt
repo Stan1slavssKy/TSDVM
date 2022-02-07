@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 project(Hash_table)
-set(CMAKE_CXX_STANDART 11)
+set(CMAKE_CXX_STANDART 17)
 
 add_compile_options(
     -Wall
@@ -37,7 +37,9 @@ if(ADD_CLANG_TIDY)
         clang-tidy;
         --format-style=file;
         --header-filter=*.hpp;
+        --extra-arg=-std=c++17;
     )
+    message("-- [Build with clang tidy]")
 endif()
 
 if(ADD_HASH_TABLE_TESTING)

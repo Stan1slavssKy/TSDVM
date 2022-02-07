@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16.3)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 
 #=========================================================================================
 
@@ -19,6 +19,8 @@ enable_testing()
 set(HASH_TABLE_OUTPUT hash_table_test)
 
 if(ADD_HASH_TABLE_TESTING)
+    message("-- [Build hash table test]")
+
     add_executable(${HASH_TABLE_OUTPUT} hash_table_test.cpp)
     target_link_libraries(${HASH_TABLE_OUTPUT} gtest_main)
 
