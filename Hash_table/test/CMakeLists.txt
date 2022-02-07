@@ -28,6 +28,7 @@ if(ADD_HASH_TABLE_TESTING)
     gtest_discover_tests(${HASH_TABLE_OUTPUT})
 
     if(ADD_SANITIZERS)
+        message("-- [Build hash table with sanitizers]")
         target_compile_options(${HASH_TABLE_OUTPUT} PUBLIC -fsanitize=address -g)
         set_target_properties(${HASH_TABLE_OUTPUT}  PROPERTIES LINK_FLAGS "-fsanitize=address")
     endif()
