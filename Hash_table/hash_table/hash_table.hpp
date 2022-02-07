@@ -5,6 +5,7 @@
 
 #include <cstdlib>
 #include <optional>
+#include <variant>
 
 namespace s1ky {
 template<typename key_t, typename data_t>
@@ -27,7 +28,7 @@ public:
 
     std::optional<data_t> get_value(key_t key) const;
 
-    unsigned int murmur_hash2(data_t key) const;
+    size_t murmur_hash2(data_t key) const;
 
 private:
     size_t capacity_ = 0;
@@ -35,7 +36,7 @@ private:
 
     List<key_t, data_t>* keys_ = nullptr;
 
-    unsigned int hash_(key_t key) const;
+    size_t hash_(key_t key) const;
 };
 }; // namespace s1ky
 

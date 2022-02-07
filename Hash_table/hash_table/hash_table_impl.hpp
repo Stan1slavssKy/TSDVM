@@ -56,21 +56,21 @@ Hash_table<key_t, data_t>& Hash_table<key_t, data_t>::operator=(Hash_table<key_t
 //==================================================================================================================
 
 template<typename key_t, typename data_t>
-unsigned int Hash_table<key_t, data_t>::hash_(key_t key) const
+size_t Hash_table<key_t, data_t>::hash_(key_t key) const
 {
     return murmur_hash2(key) % capacity_;
 }
 
 template<typename key_t, typename data_t>
-unsigned int Hash_table<key_t, data_t>::murmur_hash2(data_t key) const
+size_t Hash_table<key_t, data_t>::murmur_hash2(data_t key) const
 {
-    const unsigned int   m    = 0x5bd1e995;
-    const unsigned int   seed = 0xbc9f1d34;
+    const size_t         m    = 0x5bd1e995;
+    const size_t         seed = 0xbc9f1d34;
     const unsigned char* data = reinterpret_cast<const unsigned char*>(key);
 
-    unsigned int len  = strlen(reinterpret_cast<const char*>(key));
-    unsigned int hash = seed ^ len;
-    unsigned int k    = 0;
+    size_t len  = strlen(reinterpret_cast<const char*>(key));
+    size_t hash = seed ^ len;
+    size_t k    = 0;
 
     while (len >= 4)
     {
@@ -92,17 +92,20 @@ unsigned int Hash_table<key_t, data_t>::murmur_hash2(data_t key) const
 
     switch (len)
     {
-    case 3: hash ^= data[2] << 16;
+    case 3: hash ^= data[2] << 16; break;
 
-    case 2: hash ^= data[1] << 8;
+    case 2: hash ^= data[1] << 8; break;
 
-    case 1: hash ^= data[0]; hash *= m;
+    case 1:
+        hash ^= data[0];
+        hash *= m;
+        break;
     };
 
     hash ^= hash >> 13;
     hash *= m;
     hash ^= hash >> 15;
-
+    
     return hash;
 }
 
@@ -111,8 +114,8 @@ unsigned int Hash_table<key_t, data_t>::murmur_hash2(data_t key) const
 template<typename key_t, typename data_t>
 void Hash_table<key_t, data_t>::set_value(key_t key, data_t value)
 {
-    unsigned int idx = hash_(key);
-
+    size_t idx = hash_(key);
+    
     Node<key_t, data_t>* list_elem = keys_[idx].find_value(key);
 
     if (list_elem == nullptr)
@@ -126,8 +129,8 @@ void Hash_table<key_t, data_t>::set_value(key_t key, data_t value)
 template<typename key_t, typename data_t>
 std::optional<data_t> Hash_table<key_t, data_t>::get_value(key_t key) const
 {
-    unsigned int idx = hash_(key);
-
+    size_t idx = hash_(key);
+    
     Node<key_t, data_t>* list_elem = keys_[idx].find_value(key);
 
     if (list_elem != nullptr)
@@ -142,7 +145,7 @@ std::optional<data_t> Hash_table<key_t, data_t>::get_value(key_t key) const
 template<typename key_t, typename data_t>
 void Hash_table<key_t, data_t>::remove(key_t key)
 {
-    unsigned int idx = hash_(key);
+    size_t idx = hash_(key);
     keys_[idx].delete_value_node(key);
 
     --size_;
