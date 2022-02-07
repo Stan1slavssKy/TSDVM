@@ -2,7 +2,7 @@
 
 ## What is it?
 
-A dictionary is implemented here.
+Here I implemented a dictionary based on a hash table with a separate chaining to solve collisions
 
 ## Usage
 
