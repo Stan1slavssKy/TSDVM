@@ -1,5 +1,5 @@
-#ifndef HASH_TABLE_HASH_TABLE_IMPL_HPP_INCLUDED
-#define HASH_TABLE_HASH_TABLE_IMPL_HPP_INCLUDED
+#ifndef HASH_TABLE_HASH_TABLE_HASH_TABLE_IMPL_HPP_INCLUDED_
+#define HASH_TABLE_HASH_TABLE_HASH_TABLE_IMPL_HPP_INCLUDED_
 
 #include "../list/list_impl.hpp"
 #include "hash_table.hpp"
@@ -62,7 +62,7 @@ size_t Hash_table<key_t, data_t>::hash_(key_t key) const
 }
 
 template<typename key_t, typename data_t>
-size_t Hash_table<key_t, data_t>::murmur_hash2(data_t key) const
+size_t Hash_table<key_t, data_t>::murmur_hash2(key_t key) const
 {
     const size_t         m    = 0x5bd1e995;
     const size_t         seed = 0xbc9f1d34;
@@ -105,7 +105,7 @@ size_t Hash_table<key_t, data_t>::murmur_hash2(data_t key) const
     hash ^= hash >> 13;
     hash *= m;
     hash ^= hash >> 15;
-    
+
     return hash;
 }
 
@@ -115,28 +115,30 @@ template<typename key_t, typename data_t>
 void Hash_table<key_t, data_t>::set_value(key_t key, data_t value)
 {
     size_t idx = hash_(key);
-    
+
     Node<key_t, data_t>* list_elem = keys_[idx].find_value(key);
 
     if (list_elem == nullptr)
     {
         keys_[idx].push(key, value);
+        ++size_;
     }
-
-    ++size_;
+    else
+    {
+        std::cout << "The key " << list_elem->key_ << " is already in the hash table" << std::endl;
+    }
 }
 
 template<typename key_t, typename data_t>
 std::optional<data_t> Hash_table<key_t, data_t>::get_value(key_t key) const
 {
     size_t idx = hash_(key);
-    
+
     Node<key_t, data_t>* list_elem = keys_[idx].find_value(key);
 
     if (list_elem != nullptr)
     {
         return list_elem->data_;
-        ;
     }
 
     return std::nullopt;
@@ -146,10 +148,22 @@ template<typename key_t, typename data_t>
 void Hash_table<key_t, data_t>::remove(key_t key)
 {
     size_t idx = hash_(key);
-    keys_[idx].delete_value_node(key);
+    keys_[idx].delete_node(key);
 
     --size_;
 }
+
+template<typename key_t, typename data_t>
+size_t Hash_table<key_t, data_t>::get_capacity() const
+{
+    return capacity_;
+}
+
+template<typename key_t, typename data_t>
+size_t Hash_table<key_t, data_t>::get_size() const
+{
+    return size_;
+}
 }; // namespace s1ky
 
-#endif // HASH_TABLE_HASH_TABLE_IMPL_HPP_INCLUDED
+#endif // HASH_TABLE_HASH_TABLE_HASH_TABLE_IMPL_HPP_INCLUDED_

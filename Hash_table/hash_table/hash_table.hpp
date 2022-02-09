@@ -1,5 +1,5 @@
-#ifndef HASH_TABLE_HASH_TABLE_HPP_INCLUDED
-#define HASH_TABLE_HASH_TABLE_HPP_INCLUDED
+#ifndef HASH_TABLE_HASH_TABLE_HASH_TABLE_HPP_INCLUDED_
+#define HASH_TABLE_HASH_TABLE_HASH_TABLE_HPP_INCLUDED_
 
 #include "../list/list_impl.hpp"
 
@@ -28,7 +28,10 @@ public:
 
     std::optional<data_t> get_value(key_t key) const;
 
-    size_t murmur_hash2(data_t key) const;
+    size_t murmur_hash2(key_t key) const;
+
+    size_t get_capacity() const;
+    size_t get_size() const;
 
 private:
     size_t capacity_ = 0;
@@ -40,4 +43,4 @@ private:
 };
 }; // namespace s1ky
 
-#endif // HASH_TABLE_HASH_TABLE_HPP_INCLUDED
+#endif // HASH_TABLE_HASH_TABLE_HASH_TABLE_HPP_INCLUDED_
