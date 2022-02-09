@@ -21,12 +21,13 @@ Checks: >
   -readability-redundant-declaration,
   -readability-function-cognitive-complexity,
   -bugprone-suspicious-include,
-  -bugprone-narrowing-conversions
+  -bugprone-narrowing-conversions,
+  -extra-arg=-std=c++17
+  
 WarningsAsErrors: "*"
 
-Header-filter: *.hpp
-
 CheckOptions:
+  - { key: extra-arg,          value: std=c++17 }
   - { key: readability-identifier-naming.NamespaceCase,          value: lower_case }
   - { key: readability-identifier-naming.ClassCase,              value: CamelCase  }
   - { key: readability-identifier-naming.StructCase,             value: CamelCase  }
