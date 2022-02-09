@@ -1,5 +1,5 @@
-#ifndef _LIST_HPP_INCLUDED
-#define _LIST_HPP_INCLUDED
+#ifndef HASH_TABLE_LIST_LIST_HPP_INCLUDED_
+#define HASH_TABLE_LIST_LIST_HPP_INCLUDED_
 
 #include <cstdlib>
 
@@ -43,7 +43,7 @@ public:
 
     void delete_node(key_t key);
 
-    Node<key_t, data_t>* find_value(data_t key);
+    Node<key_t, data_t>* find_value(key_t key);
 
 private:
     size_t size_ = 0;
@@ -55,4 +55,4 @@ private:
 };
 } // namespace s1ky
 
-#endif // _LIST_HPP_INCLUDED
+#endif // HASH_TABLE_LIST_LIST_HPP_INCLUDED_

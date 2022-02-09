@@ -1,5 +1,5 @@
-#ifndef _LIST_IMPL_HPP_INCLUDED
-#define _LIST_IMPL_HPP_INCLUDED
+#ifndef HASH_TABLE_LIST_LIST_IMPL_HPP_INCLUDED_
+#define HASH_TABLE_LIST_LIST_IMPL_HPP_INCLUDED_
 
 #include "list.hpp"
 
@@ -302,7 +302,7 @@ void List<key_t, data_t>::delete_nodes()
     Node<key_t, data_t>* cur_node  = front_;
     Node<key_t, data_t>* next_node = nullptr;
 
-    for (size_t i = 0; i < size_; i++)
+    for (size_t i = 0; i < size_; ++i)
     {
         next_node = cur_node->next_;
         delete cur_node;
@@ -311,7 +311,7 @@ void List<key_t, data_t>::delete_nodes()
 }
 
 template<typename key_t, typename data_t>
-Node<key_t, data_t>* List<key_t, data_t>::find_value(data_t key)
+Node<key_t, data_t>* List<key_t, data_t>::find_value(key_t key)
 {
     Node<key_t, data_t>* current_elem = front_;
 
@@ -333,7 +333,7 @@ void List<key_t, data_t>::delete_node(key_t key)
     Node<key_t, data_t>* current_elem = front_;
     Node<key_t, data_t>* prev_elem    = nullptr;
 
-    for (int i = 0; i < size_; ++i)
+    for (size_t i = 0; i < size_; ++i)
     {
         if (current_elem->key_ == key)
         {
@@ -351,6 +351,7 @@ void List<key_t, data_t>::delete_node(key_t key)
             }
 
             delete current_elem;
+            --size_;
             break;
         }
         prev_elem    = current_elem;
@@ -359,4 +360,4 @@ void List<key_t, data_t>::delete_node(key_t key)
 }
 } // namespace s1ky
 
-#endif // _LIST_IMPL_HPP_INCLUDED
+#endif // HASH_TABLE_LIST_LIST_IMPL_HPP_INCLUDED_
