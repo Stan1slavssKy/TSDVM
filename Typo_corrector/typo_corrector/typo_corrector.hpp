@@ -3,23 +3,30 @@
 
 #include "../hash_table/hash_table_impl.hpp"
 
-namespace s1ky{
+#include <vector>
+
+namespace s1ky {
 class Dictionary : public Hash_table<std::string, size_t>
 {
 public:
     void input();
 
 private:
-    size_t word_len = 0;
+    size_t word_len_ = 0;
 };
 
 class Typo_corrector
 {
 public:
-    
+    void test();
+
 private:
-    void parser();
+    std::string file_buffer_ = " ";
+    std::vector<std::string> tokens_;
+
+    void read_file_();
+    void parser_();
 };
 }; // namespace s1ky
 
-#endif //TYPO_CORRECTOR_TYPO_CORRECTOR_TYPO_CORRECTOR_HPP_INCLUDED_
+#endif // TYPO_CORRECTOR_TYPO_CORRECTOR_TYPO_CORRECTOR_HPP_INCLUDED_
