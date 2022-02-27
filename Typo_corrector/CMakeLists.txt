@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(Hash_table)
+project(Typo_corrector)
 set(CMAKE_CXX_STANDART 17)
 
 add_compile_options(
@@ -42,6 +42,4 @@ if(ADD_CLANG_TIDY)
     message("-- [Build with clang tidy]")
 endif()
 
-if(ADD_HASH_TABLE_TESTING)
-    add_subdirectory(test)
-endif()
+add_subdirectory(test)
