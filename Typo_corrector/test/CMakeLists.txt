@@ -16,21 +16,23 @@ enable_testing()
 
 #=========================================================================================
 
+set(TYPO_C_DIR ../typo_corrector)
+set(HASH_T_DIR ../hash_table)
+
 set(CORRECTOR_TEST_OUTPUT corrector_test)
+set(SOURCE ${TYPO_C_DIR}/typo_corrector.cpp ${TYPO_C_DIR}/text.cpp ${TYPO_C_DIR}/dictionary.cpp typo_corrector_test.cpp ${HASH_T_DIR}/hash_table.cpp)
 
 if(ADD_TYPO_CORRECTOR_TESTING)
-    message("-- [Build hash table test]")
+    message("-- [Build typo_corrector tests]")
 
-    add_executable(${CORRECTOR_TEST_OUTPUT} typo_corrector_test.cpp)
+    add_executable(${CORRECTOR_TEST_OUTPUT} ${SOURCE})
     target_link_libraries(${CORRECTOR_TEST_OUTPUT} gtest_main)
-
-    add_dependencies(${CORRECTOR_TEST_OUTPUT} ${CORRECTOR_OUTPUT})
 
     include(GoogleTest)
     gtest_discover_tests(${CORRECTOR_TEST_OUTPUT})
 
     if(ADD_SANITIZERS)
-        message("-- [Build hash table with sanitizers]")
+        message("-- [Build typo_corrector with sanitizers]")
         target_compile_options(${CORRECTOR_TEST_OUTPUT} PUBLIC -fsanitize=address -g)
         set_target_properties(${CORRECTOR_TEST_OUTPUT}  PROPERTIES LINK_FLAGS "-fsanitize=address")
     endif()
