@@ -1,31 +1,27 @@
 #ifndef TYPO_CORRECTOR_TYPO_CORRECTOR_TYPO_CORRECTOR_HPP_INCLUDED_
 #define TYPO_CORRECTOR_TYPO_CORRECTOR_TYPO_CORRECTOR_HPP_INCLUDED_
 
-#include "../hash_table/hash_table_impl.hpp"
+#include "dictionary.hpp"
+#include "text.hpp"
 
 #include <vector>
 
 namespace s1ky {
-class Dictionary : public Hash_table<std::string, size_t>
+class Typo_corrector : public Text
 {
 public:
-    void input();
+    constexpr static size_t MIN_LEN_DICTIONARY = 2;
+    constexpr static size_t MAX_LEN_DICTIONARY = 30;
 
-private:
-    size_t word_len_ = 0;
-};
-
-class Typo_corrector
-{
-public:
     void test();
+    void start_correcting();
 
 private:
-    std::string file_buffer_ = " ";
-    std::vector<std::string> tokens_;
+    Dictionary* word_len_dictionary_ = nullptr;
+    size_t      nmb_dictionaries_    = 0;
 
-    void read_file_();
-    void parser_();
+    size_t find_dictionary_by_len_(size_t word_len);
+    void   dictionaries_input_();
 };
 }; // namespace s1ky
 

@@ -6,47 +6,43 @@
 #include <string>
 
 namespace s1ky {
-void Typo_corrector::test()
+void Typo_corrector::dictionaries_input_()
 {
-    read_file_();
-    parser_();
-}
+    size_t dictionary_max_len = MAX_LEN_DICTIONARY;
 
-void Typo_corrector::read_file_()
-{
-    const char*   file_name = "../input_text.txt";
-    std::ifstream file;
-
-    file.open(file_name);
-
-    if (!file.is_open())
+    if (max_token_length_ < MAX_LEN_DICTIONARY)
     {
-        std::cout << "Error, can't open file" << std::endl;
-        return;
+        dictionary_max_len = max_token_length_;
     }
 
-    std::getline(file, file_buffer_, '\0');
-    
-    file.close();
-}
+    word_len_dictionary_ = new Dictionary[dictionary_max_len] {};
+    nmb_dictionaries_    = dictionary_max_len - MIN_LEN_DICTIONARY;
 
-void Typo_corrector::parser_()
-{
-    std::cout << file_buffer_ << std::endl;
+    for (size_t i = 0; i < nmb_dictionaries_; ++i) { word_len_dictionary_[i].word_len = MIN_LEN_DICTIONARY + i; }
 
-    size_t begin_token = 0;
-    size_t end_token   = 0;
+    size_t len = 0;
 
-    std::string token = " ";
-
-    std::string const delims{ " .,:;!?'\n" };
-
-    while((begin_token = file_buffer_.find_first_not_of(delims, end_token)) != std::string::npos)
+    for (auto& it : tokens_)
     {
-        end_token = file_buffer_.find_first_of(delims, begin_token + 1);
-        token     = file_buffer_.substr(begin_token, end_token - begin_token);
-
-        tokens_.push_back(token);
+        if ((len = strlen(it.c_str())) > MIN_LEN_DICTIONARY)
+        {
+            word_len_dictionary_[find_dictionary_by_len_(len)].set_value(it, len);
+        }
     }
 }
+
+size_t Typo_corrector::find_dictionary_by_len_(size_t word_len)
+{
+    for (size_t i = 0; i < nmb_dictionaries_; ++i)
+    {
+        if (word_len_dictionary_[i].word_len == word_len)
+        {
+            return i;
+        }
+    }
+
+    return 0;
+}
+
+void Typo_corrector::test() {}
 }; // namespace s1ky
