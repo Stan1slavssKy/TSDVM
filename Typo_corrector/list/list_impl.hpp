@@ -27,15 +27,15 @@ List<key_t, data_t>::List(key_t key, data_t data)
 }
 
 template<typename key_t, typename data_t>
-List<key_t, data_t>::List(const List &other) : size_(other.size_)
+List<key_t, data_t>::List(const List& other) : size_(other.size_)
 {
     if (!empty())
     {
         front_ = new Node<key_t, data_t> {};
         assert(front_);
 
-        Node<key_t, data_t> *cur_node       = front_;
-        Node<key_t, data_t> *cur_other_node = other.front_;
+        Node<key_t, data_t>* cur_node       = front_;
+        Node<key_t, data_t>* cur_other_node = other.front_;
 
         cur_node->key_  = cur_other_node->key_;
         cur_node->data_ = cur_other_node->data_;
@@ -56,7 +56,7 @@ List<key_t, data_t>::List(const List &other) : size_(other.size_)
 }
 
 template<typename key_t, typename data_t>
-List<key_t, data_t>::List(List &&other) noexcept : size_(other.size_), front_(other.front_), back_(other.back_)
+List<key_t, data_t>::List(List&& other) noexcept : size_(other.size_), front_(other.front_), back_(other.back_)
 {
     other.size_  = 0;
     other.front_ = nullptr;
@@ -72,7 +72,7 @@ List<key_t, data_t>::~List()
 //==========================================================================================================
 
 template<typename key_t, typename data_t>
-List<key_t, data_t> &List<key_t, data_t>::operator=(const List &other)
+List<key_t, data_t>& List<key_t, data_t>::operator=(const List& other)
 {
     if (this == &other)
     {
@@ -87,8 +87,8 @@ List<key_t, data_t> &List<key_t, data_t>::operator=(const List &other)
         front_ = new Node<key_t, data_t> {};
         assert(front_);
 
-        Node<key_t, data_t> *cur_node       = front_;
-        Node<key_t, data_t> *cur_other_node = other.front_;
+        Node<key_t, data_t>* cur_node       = front_;
+        Node<key_t, data_t>* cur_other_node = other.front_;
 
         cur_node->key_  = cur_other_node->key_;
         cur_node->data_ = cur_other_node->data_;
@@ -115,7 +115,7 @@ List<key_t, data_t> &List<key_t, data_t>::operator=(const List &other)
 }
 
 template<typename key_t, typename data_t>
-List<key_t, data_t> &List<key_t, data_t>::operator=(List &&other) noexcept
+List<key_t, data_t>& List<key_t, data_t>::operator=(List&& other) noexcept
 {
     if (this == &other)
     {
@@ -136,7 +136,7 @@ List<key_t, data_t> &List<key_t, data_t>::operator=(List &&other) noexcept
 }
 
 template<typename key_t, typename data_t>
-bool List<key_t, data_t>::operator==(const List<key_t, data_t> &other) const
+bool List<key_t, data_t>::operator==(const List<key_t, data_t>& other) const
 {
     if (this == &other)
     {
@@ -151,8 +151,8 @@ bool List<key_t, data_t>::operator==(const List<key_t, data_t> &other) const
         return false;
     }
 
-    Node<key_t, data_t> *cur_node       = front_;
-    Node<key_t, data_t> *other_cur_node = other.front_;
+    Node<key_t, data_t>* cur_node       = front_;
+    Node<key_t, data_t>* other_cur_node = other.front_;
 
     for (size_t i = 0; i < size_; i++)
     {
@@ -169,7 +169,7 @@ bool List<key_t, data_t>::operator==(const List<key_t, data_t> &other) const
 }
 
 template<typename key_t, typename data_t>
-bool List<key_t, data_t>::operator!=(const List &other) const
+bool List<key_t, data_t>::operator!=(const List& other) const
 {
     if (this == &other)
     {
@@ -184,8 +184,8 @@ bool List<key_t, data_t>::operator!=(const List &other) const
         return true;
     }
 
-    Node<key_t, data_t> *cur_node       = front_;
-    Node<key_t, data_t> *other_cur_node = other.front_;
+    Node<key_t, data_t>* cur_node       = front_;
+    Node<key_t, data_t>* other_cur_node = other.front_;
 
     for (size_t i = 0; i < size_; i++)
     {
@@ -216,25 +216,25 @@ size_t List<key_t, data_t>::size() const
 }
 
 template<typename key_t, typename data_t>
-data_t &List<key_t, data_t>::front()
+data_t& List<key_t, data_t>::front()
 {
     return front_->data_;
 }
 
 template<typename key_t, typename data_t>
-data_t &List<key_t, data_t>::back()
+data_t& List<key_t, data_t>::back()
 {
     return back_->data_;
 }
 
 template<typename key_t, typename data_t>
-const data_t &List<key_t, data_t>::front() const
+const data_t& List<key_t, data_t>::front() const
 {
     return front_->data_;
 }
 
 template<typename key_t, typename data_t>
-const data_t &List<key_t, data_t>::back() const
+const data_t& List<key_t, data_t>::back() const
 {
     return back_->data_;
 }
@@ -273,7 +273,7 @@ void List<key_t, data_t>::pop()
         }
         else
         {
-            Node<key_t, data_t> *temp = front_;
+            Node<key_t, data_t>* temp = front_;
             front_                    = front_->next_;
 
             delete temp;
@@ -288,7 +288,7 @@ void List<key_t, data_t>::pop()
 }
 
 template<typename key_t, typename data_t>
-void List<key_t, data_t>::swap(List *other)
+void List<key_t, data_t>::swap(List* other)
 {
     List<key_t, data_t> temp = std::move(*this);
 
@@ -299,8 +299,8 @@ void List<key_t, data_t>::swap(List *other)
 template<typename key_t, typename data_t>
 void List<key_t, data_t>::delete_nodes()
 {
-    Node<key_t, data_t> *cur_node  = front_;
-    Node<key_t, data_t> *next_node = nullptr;
+    Node<key_t, data_t>* cur_node  = front_;
+    Node<key_t, data_t>* next_node = nullptr;
 
     for (size_t i = 0; i < size_; ++i)
     {
@@ -311,9 +311,9 @@ void List<key_t, data_t>::delete_nodes()
 }
 
 template<typename key_t, typename data_t>
-Node<key_t, data_t> *List<key_t, data_t>::find_value(key_t key)
+Node<key_t, data_t>* List<key_t, data_t>::find_value(key_t key)
 {
-    Node<key_t, data_t> *current_elem = front_;
+    Node<key_t, data_t>* current_elem = front_;
 
     for (size_t i = 0; i < size_; ++i)
     {
@@ -330,8 +330,8 @@ Node<key_t, data_t> *List<key_t, data_t>::find_value(key_t key)
 template<typename key_t, typename data_t>
 void List<key_t, data_t>::delete_node(key_t key)
 {
-    Node<key_t, data_t> *current_elem = front_;
-    Node<key_t, data_t> *prev_elem    = nullptr;
+    Node<key_t, data_t>* current_elem = front_;
+    Node<key_t, data_t>* prev_elem    = nullptr;
 
     for (size_t i = 0; i < size_; ++i)
     {
