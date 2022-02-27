@@ -23,7 +23,7 @@ Hash_table<key_t, data_t>::Hash_table(size_t capacity) : capacity_(capacity)
 }
 
 template<typename key_t, typename data_t>
-Hash_table<key_t, data_t>::Hash_table(Hash_table<key_t, data_t>&& other) noexcept :
+Hash_table<key_t, data_t>::Hash_table(Hash_table<key_t, data_t> &&other) noexcept :
     capacity_(other.capacity_), size_(other.size_), keys_(other.keys_)
 {
     other.keys_ = nullptr;
@@ -38,12 +38,14 @@ Hash_table<key_t, data_t>::~Hash_table()
 //==================================================================================================================
 
 template<typename key_t, typename data_t>
-Hash_table<key_t, data_t>& Hash_table<key_t, data_t>::operator=(Hash_table<key_t, data_t>&& other) noexcept
+Hash_table<key_t, data_t> &Hash_table<key_t, data_t>::operator=(Hash_table<key_t, data_t> &&other) noexcept
 {
     if (this == &other)
     {
         return *this;
     }
+
+    delete[] keys_;
 
     size_ = other.size_;
     keys_ = other.keys_;
@@ -66,9 +68,9 @@ size_t Hash_table<key_t, data_t>::murmur_hash2(key_t key) const
 {
     const size_t         m    = 0x5bd1e995;
     const size_t         seed = 0xbc9f1d34;
-    const unsigned char* data = reinterpret_cast<const unsigned char*>(key);
+    const unsigned char *data = reinterpret_cast<const unsigned char *>(key);
 
-    size_t len  = strlen(reinterpret_cast<const char*>(key));
+    size_t len  = strlen(reinterpret_cast<const char *>(key));
     size_t hash = seed ^ len;
     size_t k    = 0;
 
@@ -116,7 +118,7 @@ void Hash_table<key_t, data_t>::set_value(key_t key, data_t value)
 {
     size_t idx = hash_(key);
 
-    Node<key_t, data_t>* list_elem = keys_[idx].find_value(key);
+    Node<key_t, data_t> *list_elem = keys_[idx].find_value(key);
 
     if (list_elem == nullptr)
     {
@@ -134,7 +136,7 @@ std::optional<data_t> Hash_table<key_t, data_t>::get_value(key_t key) const
 {
     size_t idx = hash_(key);
 
-    Node<key_t, data_t>* list_elem = keys_[idx].find_value(key);
+    Node<key_t, data_t> *list_elem = keys_[idx].find_value(key);
 
     if (list_elem != nullptr)
     {

@@ -16,12 +16,12 @@ public:
 
     Hash_table();
     Hash_table(size_t capacity);
-    Hash_table(const Hash_table<key_t, data_t>& other) = delete;
-    Hash_table(Hash_table<key_t, data_t>&& other) noexcept;
+    Hash_table(const Hash_table<key_t, data_t> &other) = delete;
+    Hash_table(Hash_table<key_t, data_t> &&other) noexcept;
     ~Hash_table();
 
-    Hash_table<key_t, data_t>& operator=(const Hash_table<key_t, data_t>& other) = delete;
-    Hash_table<key_t, data_t>& operator=(Hash_table<key_t, data_t>&& other) noexcept;
+    Hash_table<key_t, data_t> &operator=(const Hash_table<key_t, data_t> &other) = delete;
+    Hash_table<key_t, data_t> &operator=(Hash_table<key_t, data_t> &&other) noexcept;
 
     void set_value(key_t key, data_t value);
     void remove(key_t key);
@@ -37,7 +37,7 @@ private:
     size_t capacity_ = 0;
     size_t size_     = 0;
 
-    List<key_t, data_t>* keys_ = nullptr;
+    List<key_t, data_t> *keys_ = nullptr;
 
     size_t hash_(key_t key) const;
 };
