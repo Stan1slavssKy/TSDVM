@@ -24,8 +24,7 @@ Hash_table<std::string, size_t>::~Hash_table()
 
 //==================================================================================================================
 
-Hash_table<std::string, size_t>& Hash_table<std::string, size_t>::operator=(
-    Hash_table<std::string, size_t>&& other) noexcept
+Hash_table<std::string, size_t>& Hash_table<std::string, size_t>::operator=(Hash_table<std::string, size_t>&& other) noexcept
 {
     if (this == &other)
     {
@@ -44,17 +43,17 @@ Hash_table<std::string, size_t>& Hash_table<std::string, size_t>::operator=(
 
 //==================================================================================================================
 
-size_t Hash_table<std::string, size_t>::hash_(std::string key) const
+size_t Hash_table<std::string, size_t>::hash_(std::string& key) const
 {
     return murmur_hash2(key) % capacity_;
 }
 
-size_t Hash_table<std::string, size_t>::murmur_hash2(std::string key) const
+size_t Hash_table<std::string, size_t>::murmur_hash2(std::string& key)
 {
     const size_t m    = 0x5bd1e995;
     const size_t seed = 0xbc9f1d34;
 
-    const unsigned char* data = reinterpret_cast<const unsigned char*>(key.c_str());
+    const auto* data = reinterpret_cast<const unsigned char*>(key.c_str());
 
     size_t len  = strlen(key.c_str());
     size_t hash = seed ^ len;
@@ -99,7 +98,7 @@ size_t Hash_table<std::string, size_t>::murmur_hash2(std::string key) const
 
 //==================================================================================================================
 
-void Hash_table<std::string, size_t>::set_value(std::string key, size_t value)
+bool Hash_table<std::string, size_t>::set_value(std::string& key, size_t& value)
 {
     size_t idx = hash_(key);
 
@@ -109,14 +108,14 @@ void Hash_table<std::string, size_t>::set_value(std::string key, size_t value)
     {
         keys_[idx].push(key, value);
         ++size_;
+
+        return true;
     }
-    else
-    {
-        std::cout << "The key " << list_elem->key_ << " is already in the hash table" << std::endl;
-    }
+
+    return false;
 }
 
-std::optional<size_t> Hash_table<std::string, size_t>::get_value(std::string key) const
+std::optional<size_t> Hash_table<std::string, size_t>::get_value(std::string& key) const
 {
     size_t idx = hash_(key);
 
@@ -130,7 +129,7 @@ std::optional<size_t> Hash_table<std::string, size_t>::get_value(std::string key
     return std::nullopt;
 }
 
-void Hash_table<std::string, size_t>::remove(std::string key)
+void Hash_table<std::string, size_t>::remove(std::string& key)
 {
     size_t idx = hash_(key);
     keys_[idx].delete_node(key);
