@@ -33,7 +33,7 @@ Text& Text::operator=(Text&& other) noexcept
 
 void Text::read_file_()
 {
-    const char*   file_name = "../input_text.txt";
+    const char*   file_name = "../../input_text.txt";
     std::ifstream file;
 
     file.open(file_name);

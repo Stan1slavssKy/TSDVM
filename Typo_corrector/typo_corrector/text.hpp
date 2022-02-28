@@ -17,7 +17,7 @@ public:
     ~Text() {};
 
     Text& operator=(const Text& other) = delete;
-    Text& operator                     =(Text&& other) noexcept;
+    Text& operator=(Text&& other) noexcept;
 
 protected:
     std::string file_name_ = " ";
