@@ -2,6 +2,8 @@
 #define HASH_TABLE_LIST_LIST_HPP_INCLUDED_
 
 #include <cstdlib>
+#include <cstddef>
+#include <iterator>
 
 namespace s1ky {
 template<typename key_t, typename data_t>
@@ -37,13 +39,15 @@ public:
     const data_t& front() const;
     const data_t& back() const;
 
-    void push(key_t key, data_t value);
+    List<key_t, data_t>* push(key_t key, data_t value);
     void pop();
     void swap(List* other);
-
     void delete_node(key_t key);
-
     Node<key_t, data_t>* find_value(key_t key);
+
+    struct Iterator;
+    Iterator begin() { return Iterator(front_); };
+    Iterator end() { return Iterator(back_); };
 
 private:
     size_t size_ = 0;
@@ -53,6 +57,31 @@ private:
 
     void delete_nodes();
 };
-} // namespace s1ky
+
+template<typename key_t, typename data_t>
+class List<key_t, data_t>::Iterator
+{
+public:
+    explicit Iterator(Node<key_t, data_t>* cur_node) : cur_node_(cur_node) {};
+    Iterator(const Iterator& other) : cur_node_(other.cur_node_) {};
+    Iterator(Iterator&& other) noexcept : cur_node_(other.cur_node_) {};
+    ~Iterator() = default;
+
+    Iterator& operator=(const Iterator& other);
+    Iterator& operator=(Iterator&& other) noexcept;
+
+    data_t& operator*() const { return cur_node_->data_; };
+    data_t* operator->() const { return &(cur_node_->data_); };
+
+    Iterator& operator++() { cur_node_ = cur_node_->next_; return *this; };
+    Iterator  operator++(int) { Iterator temp = *this; cur_node_ = cur_node_->next_; return temp; };
+
+    bool operator==(const Iterator& other) const { return cur_node_ == other.cur_node_; };
+    bool operator!=(const Iterator& other) const { return cur_node_ != other.cur_node_; };
+
+private:
+    Node<key_t, data_t>* cur_node_;
+};
+}; // namespace s1ky
 
 #endif // HASH_TABLE_LIST_LIST_HPP_INCLUDED_

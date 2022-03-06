@@ -242,7 +242,7 @@ const data_t& List<key_t, data_t>::back() const
 //==========================================================================================================
 
 template<typename key_t, typename data_t>
-void List<key_t, data_t>::push(key_t key, data_t value)
+List<key_t, data_t>* List<key_t, data_t>::push(key_t key, data_t value)
 {
     if (!empty())
     {
@@ -250,15 +250,22 @@ void List<key_t, data_t>::push(key_t key, data_t value)
         assert(back_->next_);
 
         back_ = back_->next_;
+        
+        back_->key_  = key;
+        back_->data_ = value;
+        ++size_;
+       
+        return nullptr;
     }
-    else
-    {
-        back_ = front_ = new Node<key_t, data_t> {};
-        assert(front_);
-    }
+  
+    back_ = front_ = new Node<key_t, data_t> {};
+    assert(front_);
+
     back_->key_  = key;
     back_->data_ = value;
-    size_++;
+    ++size_;
+    
+    return nullptr;
 }
 
 template<typename key_t, typename data_t>
