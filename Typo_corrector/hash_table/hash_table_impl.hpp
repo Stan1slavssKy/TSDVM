@@ -9,31 +9,36 @@
 #include <optional>
 #include <string>
 #include <typeinfo>
+#include <type_traits>
 
 namespace s1ky {
 template<typename key_t, typename data_t>
 Hash_table<key_t, data_t>::Hash_table() : capacity_(default_size)
 {
     keys_ = new List<key_t, data_t>[capacity_] {};
+    iteration_list_ = new List<int, List<key_t, data_t>*> {};
 }
 
 template<typename key_t, typename data_t>
 Hash_table<key_t, data_t>::Hash_table(size_t capacity) : capacity_(capacity)
 {
     keys_ = new List<key_t, data_t>[capacity_] {};
+    iteration_list_ = new List<int, List<key_t, data_t>*> {};
 }
 
 template<typename key_t, typename data_t>
 Hash_table<key_t, data_t>::Hash_table(Hash_table<key_t, data_t>&& other) noexcept :
-    capacity_(other.capacity_), size_(other.size_), keys_(other.keys_)
+    capacity_(other.capacity_), size_(other.size_), keys_(other.keys_), iteration_list_(other.iteration_list_)
 {
     other.keys_ = nullptr;
+    other.iteration_list_ = nullptr;
 }
 
 template<typename key_t, typename data_t>
 Hash_table<key_t, data_t>::~Hash_table()
 {
     delete[] keys_;
+    delete iteration_list_;
 }
 
 //==================================================================================================================
@@ -50,8 +55,10 @@ Hash_table<key_t, data_t>& Hash_table<key_t, data_t>::operator=(Hash_table<key_t
 
     size_ = other.size_;
     keys_ = other.keys_;
+    iteration_list_ = other.iteration_list_;
 
     other.keys_ = nullptr;
+    other.iteration_list_ = nullptr;
 
     return *this;
 }
@@ -69,12 +76,24 @@ size_t Hash_table<key_t, data_t>::murmur_hash2(key_t& key)
 {
     const size_t m    = 0x5bd1e995;
     const size_t seed = 0xbc9f1d34;
+    
+    const unsigned char* data = nullptr;
+    
+    size_t len = 0;
+    size_t k   = 0;
 
-    const unsigned char* data = reinterpret_cast<const unsigned char*>(key);
+    if constexpr(std::is_same<key_t, std::string>::value)
+    {
+        data = reinterpret_cast<const unsigned char*>(key.c_str());
+        len  = strlen(key.c_str());
+    }
+    else
+    {
+        data = reinterpret_cast<const unsigned char*>(key);
+        len  = strlen(reinterpret_cast<const char*>(key));
+    }
 
-    size_t len  = strlen(reinterpret_cast<const char*>(key));
     size_t hash = seed ^ len;
-    size_t k    = 0;
 
     while (len >= 4)
     {
@@ -124,7 +143,13 @@ bool Hash_table<key_t, data_t>::set_value(key_t& key, data_t& value)
 
     if (list_elem == nullptr)
     {
-        keys_[idx].push(key, value);
+        Node<key_t, data_t>* is_new_list = keys_[idx].push(key, value);
+
+        if (is_new_list != nullptr)
+        {
+            iteration_list_->push(0, &keys_[idx]);
+        }
+
         ++size_;
 
         return true;
@@ -152,9 +177,13 @@ template<typename key_t, typename data_t>
 void Hash_table<key_t, data_t>::remove(key_t& key)
 {
     size_t idx = hash_(key);
-    keys_[idx].delete_node(key);
-
+    Node<key_t, data_t>* is_list_no_delete = keys_[idx].delete_node(key);
     --size_;
+
+    if (is_list_no_delete == nullptr)
+    {
+        iteration_list_->delete_node(&keys_[idx].front());
+    }
 }
 
 template<typename key_t, typename data_t>
