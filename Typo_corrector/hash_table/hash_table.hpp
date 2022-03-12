@@ -32,17 +32,16 @@ public:
 
     size_t get_capacity() const;
     size_t get_size() const;
-    
-    void delete_invalid_node();
 
-private:
+protected:
     size_t hash_(key_t& key) const;
 
     size_t capacity_ = 0;
     size_t size_     = 0;
 
     List<key_t, data_t>* keys_ = nullptr;
-    List<int, List<key_t, data_t>*>* iteration_list_;
+
+    List<size_t, List<key_t, data_t>>* iteration_list_;
 };
 } // namespace s1ky
 
