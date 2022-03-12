@@ -82,11 +82,11 @@ public:
 
     data_t& operator*() const
     {
-        return cur_node_;
+        return cur_node_->data_;
     };
     data_t* operator->() const
     {
-        return &cur_node_;
+        return &(cur_node_->data_);
     };
 
     Iterator& operator++()
