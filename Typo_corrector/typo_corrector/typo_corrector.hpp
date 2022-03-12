@@ -10,8 +10,9 @@ namespace s1ky {
 class Typo_corrector : public Text
 {
 public:
-    constexpr static size_t MIN_LEN_DICTIONARY = 2;
-    constexpr static size_t MAX_LEN_DICTIONARY = 30;
+    constexpr static size_t ACCEPTABLE_LEV_DIST = 2;
+    constexpr static size_t MIN_LEN_DICTIONARY  = 2;
+    constexpr static size_t MAX_LEN_DICTIONARY  = 30;
 
     Typo_corrector();
     explicit Typo_corrector(size_t dictionary_max_len);
@@ -25,13 +26,15 @@ public:
     void start_correcting();
 
 private:
-    Dictionary* word_len_dictionary_ = nullptr;
-    size_t      nmb_dictionaries_    = 0;
-    size_t      dictionary_max_len_  = 0;
+    Dictionary* len_dictionaries_   = nullptr;
+    size_t      nmb_dictionaries_   = 0;
+    size_t      dictionary_max_len_ = 0;
 
     size_t find_dictionary_by_len_(size_t word_len);
-    void   dictionaries_input_();
+
+    void dictionaries_input_();
+    void replacing_words_();
 };
-}; // namespace s1ky
+} // namespace s1ky
 
 #endif // TYPO_CORRECTOR_TYPO_CORRECTOR_TYPO_CORRECTOR_HPP_INCLUDED_
