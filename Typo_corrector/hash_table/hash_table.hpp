@@ -41,7 +41,7 @@ protected:
 
     List<key_t, data_t>* keys_ = nullptr;
 
-    List<size_t, List<key_t, data_t>>* iteration_list_;
+    List<size_t, List<key_t, data_t>*>* iteration_list_;
 };
 } // namespace s1ky
 

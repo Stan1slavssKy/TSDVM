@@ -16,14 +16,14 @@ template<typename key_t, typename data_t>
 Hash_table<key_t, data_t>::Hash_table() : capacity_(default_size)
 {
     keys_           = new List<key_t, data_t>[capacity_] {};
-    iteration_list_ = new List<size_t, List<key_t, data_t>> {};
+    iteration_list_ = new List<size_t, List<key_t, data_t>*> {};
 }
 
 template<typename key_t, typename data_t>
 Hash_table<key_t, data_t>::Hash_table(size_t capacity) : capacity_(capacity)
 {
     keys_           = new List<key_t, data_t>[capacity_] {};
-    iteration_list_ = new List<size_t, List<key_t, data_t>> {};
+    iteration_list_ = new List<size_t, List<key_t, data_t>*> {};
 }
 
 template<typename key_t, typename data_t>
@@ -147,7 +147,7 @@ bool Hash_table<key_t, data_t>::set_value(key_t& key, data_t& value)
 
         if (is_new_list != nullptr)
         {
-            iteration_list_->push(0, keys_[idx]);
+            iteration_list_->push(0, &keys_[idx]);
         }
 
         ++size_;
