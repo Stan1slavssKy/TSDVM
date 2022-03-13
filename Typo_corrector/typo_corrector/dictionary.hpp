@@ -7,8 +7,11 @@ namespace s1ky {
 class Dictionary : public Hash_table<std::string, size_t>
 {
 public:
-    std::string find_similar_word(std::string word);
-    static size_t lev_distance_calculation(const char* lhs, const char* rhs);
+    constexpr static size_t ACCEPTABLE_LEV_DIST = 1;
+
+    std::string find_similar_word(std::string& word) const;
+    
+    static size_t lev_distance_calculation(std::string& lhs, std::string& rhs);
 
     size_t word_len = 0;
 };

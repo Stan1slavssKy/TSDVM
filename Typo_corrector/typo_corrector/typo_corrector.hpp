@@ -10,7 +10,7 @@ namespace s1ky {
 class Typo_corrector : public Text
 {
 public:
-    constexpr static size_t ACCEPTABLE_LEV_DIST = 2;
+    constexpr static size_t ACCEPTABLE_LEV_DIST = 1;
     constexpr static size_t MIN_LEN_DICTIONARY  = 2;
     constexpr static size_t MAX_LEN_DICTIONARY  = 30;
 
@@ -34,6 +34,8 @@ private:
 
     void dictionaries_input_();
     void replacing_words_();
+    std::string find_replacement_word_(std::string& it);
+    static bool pair_comparator(std::pair<std::string, size_t> lhs, std::pair<std::string, size_t> rhs);
 };
 } // namespace s1ky
 
