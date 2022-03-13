@@ -109,8 +109,9 @@ void Typo_corrector::start_correcting()
 void Typo_corrector::replacing_words_()
 {
     for (auto& it : tokens_)
-    {  
-        find_replacement_word_(it);
+    {
+        std::string replacement_word = find_replacement_word_(it);
+        std::cout << it << " ---> " << replacement_word << std::endl;
     }
 }
 
@@ -121,6 +122,11 @@ std::string Typo_corrector::find_replacement_word_(std::string& it)
     std::vector<std::pair<std::string, size_t>> frequency;
 
     size_t max_dict_idx = 0;
+
+    if (len < 2)
+    {
+        return it;
+    }
 
     if (len > 2)
     {
@@ -133,7 +139,7 @@ std::string Typo_corrector::find_replacement_word_(std::string& it)
 
     for (size_t i = 0; i < max_dict_idx; ++i)
     {
-        size_t len_idx = len - MIN_LEN_DICTIONARY - 1 + i;
+        size_t len_idx = len - MIN_LEN_DICTIONARY - ACCEPTABLE_LEV_DIST + i;
         
         if (len == 2)
         {
@@ -141,18 +147,24 @@ std::string Typo_corrector::find_replacement_word_(std::string& it)
         }
 
         std::string cur_word = len_dictionaries_[len_idx].find_similar_word(it);
-        size_t cur_freq      = len_dictionaries_[len_idx].get_value(it).value_or(0);
+        if (cur_word.size() == 0) continue;
+
+        size_t cur_freq = len_dictionaries_[len_idx].get_value(cur_word).value_or(0);
+        if (cur_freq == 0) continue;
 
         frequency.push_back(std::make_pair(cur_word, cur_freq));
-        std::cout << cur_word << std::endl;
+    }
+    
+    if (frequency.size() == 0)
+    {
+        return it;
     }
 
     std::sort(frequency.begin(), frequency.end(), pair_comparator);    
 
     std::string similar_word = std::get<0>(frequency.front());
-
-    // return similar_word;
-    return std::string(" ");
+    
+    return similar_word;
 }
 
 bool Typo_corrector::pair_comparator(std::pair<std::string, size_t> lhs, std::pair<std::string, size_t> rhs)
