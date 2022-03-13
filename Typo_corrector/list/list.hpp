@@ -80,13 +80,13 @@ public:
     Iterator& operator=(const Iterator& other);
     Iterator& operator=(Iterator&& other) noexcept;
 
-    data_t& operator*() const
+    Node<key_t, data_t>& operator*() const
     {
-        return cur_node_->data_;
+        return *cur_node_;
     };
-    data_t* operator->() const
+    Node<key_t, data_t>* operator->() const
     {
-        return &(cur_node_->data_);
+        return cur_node_;
     };
 
     Iterator& operator++()
