@@ -20,6 +20,8 @@ cmake .. -DADD_SANITIZERS=ON -DADD_CLANG_TIDY=ON -DADD_TYPO_CORRECTOR_TESTING=ON
 
 You can also use the prescribed targets:
 
-to run all: make
-to run tests: make run_corrector_test
+to run all:        make
+
+to run tests:      make run_corrector_test
+
 to formating code: make clang_format
