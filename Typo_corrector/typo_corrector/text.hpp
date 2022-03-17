@@ -17,9 +17,11 @@ public:
     ~Text() {};
 
     Text& operator=(const Text& other) = delete;
-    Text& operator=(Text&& other) noexcept;
+    Text& operator                     =(Text&& other) noexcept;
 
     std::string get_file_buffer();
+
+    static std::string get_lower_case(std::string& token);
 
     void read_file();
     void parser();

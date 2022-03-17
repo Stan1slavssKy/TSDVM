@@ -1,13 +1,13 @@
 #include "typo_corrector.hpp"
 
+#include <algorithm>
 #include <cctype>
+#include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <iterator>
 #include <optional>
 #include <string>
-#include <cstring>
-#include <algorithm>
-#include <filesystem>
 
 namespace s1ky {
 Typo_corrector::Typo_corrector()
@@ -69,20 +69,19 @@ Typo_corrector& Typo_corrector::operator=(Typo_corrector&& other) noexcept
 
 void Typo_corrector::dictionaries_input_()
 {
-    for (size_t i = 0; i < nmb_dictionaries_; ++i) 
-    { 
-        len_dictionaries_[i].word_len = MIN_LEN_DICTIONARY + i; 
-    }
+    for (size_t i = 0; i < nmb_dictionaries_; ++i) { len_dictionaries_[i].word_len = MIN_LEN_DICTIONARY + i; }
 
     size_t len = 0;
 
     for (auto& it : tokens_)
     {
+        size_t len_idx   = 0;
+        size_t frequency = 0;
+
         if ((len = strlen(it.c_str())) > MIN_LEN_DICTIONARY)
         {
-            size_t len_idx   = find_dictionary_by_len_(len);
-            size_t frequency = len_dictionaries_[len_idx].get_value(it).value_or(0);
-
+            len_idx   = find_dictionary_by_len_(len);
+            frequency = len_dictionaries_[len_idx].get_value(it).value_or(0);
             len_dictionaries_[len_idx].set_value(it, ++frequency);
         }
     }
@@ -117,7 +116,7 @@ void Typo_corrector::start_correcting()
     std::cin >> answer;
 
     std::string output_str = replacing_words_(input_filename, static_cast<replacing_type>(answer));
-    
+
     std::ofstream out(output_filename);
     out << output_str;
     out.close();
@@ -132,14 +131,15 @@ std::string Typo_corrector::replacing_words_(const char* input_filename, replaci
 
     size_t begin_token = 0;
     size_t end_token   = 0;
+
     std::string       token = " ";
-    std::string const delims { " .,:;!?\n()" };
+    std::string const delims { " .,:;!?\n()\"" };
 
     while ((begin_token = input_buffer.find_first_not_of(delims, end_token)) != std::string::npos)
     {
         end_token = input_buffer.find_first_of(delims, begin_token + 1);
         token     = input_buffer.substr(begin_token, end_token - begin_token);
-        
+
         char& front = token.front();
         if (front == '\'')
         {
@@ -159,12 +159,16 @@ std::string Typo_corrector::replacing_words_(const char* input_filename, replaci
         if (!token.empty())
         {
             std::string sim_word = find_replacement_word_(token);
-            
-            if ((answer == REPLACE_SELECTIVELY) && (strcmp(sim_word.c_str(), token.c_str())))
+
+            if ((answer == REPLACE_SELECTIVELY) && (strcmp(sim_word.c_str(), token.c_str()) != 0))
             {
-                std::cout << "Would you like to replace " << token << " ---> " << sim_word << std::endl;
+                std::cout << "Would you like to replace " << token << " ---> " << sim_word << "[y/n]" << std::endl;
                 if (get_answer_()) {}
-                else continue;
+
+                else
+                {
+                    continue;
+                }
             }
 
             input_buffer.replace(begin_token, token.size(), sim_word.c_str());
@@ -177,7 +181,7 @@ std::string Typo_corrector::replacing_words_(const char* input_filename, replaci
 std::string Typo_corrector::find_replacement_word_(std::string& it)
 {
     size_t len = std::strlen(it.c_str());
-    
+
     std::vector<std::pair<std::string, size_t>> frequency;
 
     size_t max_dict_idx = 0;
@@ -199,30 +203,37 @@ std::string Typo_corrector::find_replacement_word_(std::string& it)
     for (size_t i = 0; i < max_dict_idx; ++i)
     {
         size_t len_idx = len - MIN_LEN_DICTIONARY - ACCEPTABLE_LEV_DIST + i;
-        
+
         if (len == 2)
         {
-            len_idx+=1;
+            len_idx += 1;
         }
 
         std::string cur_word = len_dictionaries_[len_idx].find_similar_word(it);
-        if (cur_word.size() == 0) continue;
+        if (cur_word.empty())
+            continue;
 
         size_t cur_freq = len_dictionaries_[len_idx].get_value(cur_word).value_or(0);
-        if (cur_freq == 0) continue;
+        if (cur_freq == 0)
+            continue;
 
-        frequency.push_back(std::make_pair(cur_word, cur_freq));
+        frequency.emplace_back(std::make_pair(cur_word, cur_freq));
     }
-    
-    if (frequency.size() == 0)
+
+    if (frequency.empty())
     {
         return it;
     }
 
-    std::sort(frequency.begin(), frequency.end(), pair_comparator);    
+    std::sort(frequency.begin(), frequency.end(), pair_comparator);
+
+    if (std::get<1>(frequency.front()) < MIN_WORD_REPLACE_FREQ)
+    {
+        return it;
+    }
 
     std::string similar_word = std::get<0>(frequency.front());
-    
+
     return similar_word;
 }
 
@@ -231,15 +242,11 @@ bool Typo_corrector::pair_comparator(std::pair<std::string, size_t> lhs, std::pa
     return (std::get<1>(lhs) < std::get<1>(rhs));
 }
 
-inline bool Typo_corrector::get_answer_() const
+bool Typo_corrector::get_answer_()
 {
-    std::string is_replaсe;
-    std::getline(std::cin, is_replaсe);
+    std::string answer;
+    std::cin >> answer;
 
-    if (!strcmp("y", is_replaсe.c_str()) || !strcmp("yes", is_replaсe.c_str())) 
-    {
-        return true;
-    }
-    return false;
+    return strcmp("y", answer.c_str()) == 0 || strcmp("yes", answer.c_str()) == 0;
 }
 } // namespace s1ky

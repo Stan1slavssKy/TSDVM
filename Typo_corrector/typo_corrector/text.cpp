@@ -55,13 +55,13 @@ void Text::parser()
     size_t cur_length  = 0;
 
     std::string       token = " ";
-    std::string const delims { " .,:;!?\n()" };
+    std::string const delims { " .,:;!?\n()\"" };
 
     while ((begin_token = file_buffer_.find_first_not_of(delims, end_token)) != std::string::npos)
     {
         end_token = file_buffer_.find_first_of(delims, begin_token + 1);
         token     = file_buffer_.substr(begin_token, end_token - begin_token);
-        
+
         char& front = token.front();
         if (front == '\'')
         {
@@ -89,5 +89,11 @@ void Text::parser()
 std::string Text::get_file_buffer()
 {
     return file_buffer_;
+}
+
+std::string Text::get_lower_case(std::string& token)
+{
+    for (auto& it : token) { it = static_cast<char>(std::tolower(it)); }
+    return token;
 }
 } // namespace s1ky
