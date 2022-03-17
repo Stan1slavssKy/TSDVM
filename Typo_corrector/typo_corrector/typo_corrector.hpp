@@ -7,6 +7,12 @@
 #include <vector>
 
 namespace s1ky {
+enum replacing_type
+{
+    REPLACE_ALL = 1,
+    REPLACE_SELECTIVELY = 2
+};
+
 class Typo_corrector : public Text
 {
 public:
@@ -33,9 +39,11 @@ private:
     size_t find_dictionary_by_len_(size_t word_len);
 
     void dictionaries_input_();
-    void replacing_words_();
+    std::string replacing_words_(const char* input_filename, replacing_type answer);
+
     std::string find_replacement_word_(std::string& it);
     static bool pair_comparator(std::pair<std::string, size_t> lhs, std::pair<std::string, size_t> rhs);
+    bool get_answer_() const;
 };
 } // namespace s1ky
 

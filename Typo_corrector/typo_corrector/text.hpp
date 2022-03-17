@@ -8,7 +8,7 @@ namespace s1ky {
 class Text
 {
 public:
-    constexpr static const char* file_path = "../input_text";
+    constexpr static const char* FILE_PATH = "../../dictionary_text.txt";
 
     Text();
     explicit Text(const char* file_name);
@@ -19,6 +19,11 @@ public:
     Text& operator=(const Text& other) = delete;
     Text& operator=(Text&& other) noexcept;
 
+    std::string get_file_buffer();
+
+    void read_file();
+    void parser();
+
 protected:
     std::string file_name_ = " ";
 
@@ -27,10 +32,7 @@ protected:
     std::vector<std::string> tokens_ = {};
 
     size_t max_token_length_ = 0;
-
-    void read_file_();
-    void parser_();
 };
-}; // namespace s1ky
+} // namespace s1ky
 
 #endif // TYPO_CORRECTOR_TYPO_CORRECTOR_TEXT_HPP_INCLUDED_

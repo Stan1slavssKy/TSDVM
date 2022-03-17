@@ -7,12 +7,13 @@
 #include <string>
 #include <cstring>
 #include <algorithm>
+#include <filesystem>
 
 namespace s1ky {
 Typo_corrector::Typo_corrector()
 {
-    read_file_();
-    parser_();
+    read_file();
+    parser();
 
     dictionary_max_len_ = MAX_LEN_DICTIONARY;
 
@@ -34,8 +35,8 @@ Typo_corrector::~Typo_corrector()
 Typo_corrector::Typo_corrector(size_t dictionary_max_len) :
     nmb_dictionaries_(dictionary_max_len - MIN_LEN_DICTIONARY), dictionary_max_len_(dictionary_max_len)
 {
-    read_file_();
-    parser_();
+    read_file();
+    parser();
 
     len_dictionaries_ = new Dictionary[dictionary_max_len_] {};
 }
@@ -103,16 +104,74 @@ size_t Typo_corrector::find_dictionary_by_len_(size_t word_len)
 void Typo_corrector::start_correcting()
 {
     dictionaries_input_();
-    replacing_words_();
+
+    const char* input_filename  = "../../input_text.txt";
+    const char* output_filename = "../../output_text.txt";
+
+    std::cout << "Press\n"
+              << "1 - If you want to replace all typos at once\n"
+              << "2 - If you want to replace typos selectively\n"
+              << "By default, 1 is provided" << std::endl;
+
+    int answer = REPLACE_ALL;
+    std::cin >> answer;
+
+    std::string output_str = replacing_words_(input_filename, static_cast<replacing_type>(answer));
+    
+    std::ofstream out(output_filename);
+    out << output_str;
+    out.close();
 }
 
-void Typo_corrector::replacing_words_()
+std::string Typo_corrector::replacing_words_(const char* input_filename, replacing_type answer)
 {
-    for (auto& it : tokens_)
+    Text input_file(input_filename);
+    input_file.read_file();
+    input_file.parser();
+    std::string input_buffer = input_file.get_file_buffer();
+
+    size_t begin_token = 0;
+    size_t end_token   = 0;
+    std::string       token = " ";
+    std::string const delims { " .,:;!?\n()" };
+
+    while ((begin_token = input_buffer.find_first_not_of(delims, end_token)) != std::string::npos)
     {
-        std::string replacement_word = find_replacement_word_(it);
-        std::cout << it << " ---> " << replacement_word << std::endl;
+        end_token = input_buffer.find_first_of(delims, begin_token + 1);
+        token     = input_buffer.substr(begin_token, end_token - begin_token);
+        
+        char& front = token.front();
+        if (front == '\'')
+        {
+            token.erase(0, 1);
+            ++begin_token;
+        }
+
+        if (!token.empty())
+        {
+            char& back = token.back();
+            if (back == '\'')
+            {
+                token.erase(token.size() - 1, 1);
+            }
+        }
+
+        if (!token.empty())
+        {
+            std::string sim_word = find_replacement_word_(token);
+            
+            if ((answer == REPLACE_SELECTIVELY) && (strcmp(sim_word.c_str(), token.c_str())))
+            {
+                std::cout << "Would you like to replace " << token << " ---> " << sim_word << std::endl;
+                if (get_answer_()) {}
+                else continue;
+            }
+
+            input_buffer.replace(begin_token, token.size(), sim_word.c_str());
+        }
     }
+
+    return input_buffer;
 }
 
 std::string Typo_corrector::find_replacement_word_(std::string& it)
@@ -134,7 +193,7 @@ std::string Typo_corrector::find_replacement_word_(std::string& it)
     }
     else if (len == 2)
     {
-        max_dict_idx = ACCEPTABLE_LEV_DIST + 1;
+        return it;
     }
 
     for (size_t i = 0; i < max_dict_idx; ++i)
@@ -170,5 +229,17 @@ std::string Typo_corrector::find_replacement_word_(std::string& it)
 bool Typo_corrector::pair_comparator(std::pair<std::string, size_t> lhs, std::pair<std::string, size_t> rhs)
 {
     return (std::get<1>(lhs) < std::get<1>(rhs));
+}
+
+inline bool Typo_corrector::get_answer_() const
+{
+    std::string is_replaсe;
+    std::getline(std::cin, is_replaсe);
+
+    if (!strcmp("y", is_replaсe.c_str()) || !strcmp("yes", is_replaсe.c_str())) 
+    {
+        return true;
+    }
+    return false;
 }
 } // namespace s1ky
