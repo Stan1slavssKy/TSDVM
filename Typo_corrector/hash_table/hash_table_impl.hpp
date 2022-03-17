@@ -155,6 +155,8 @@ bool Hash_table<key_t, data_t>::set_value(key_t& key, data_t& value)
         return true;
     }
 
+    list_elem->data_ = value;
+
     return false;
 }
 
@@ -198,6 +200,6 @@ size_t Hash_table<key_t, data_t>::get_size() const
 {
     return size_;
 }
-}; // namespace s1ky
+} // namespace s1ky
 
 #endif // HASH_TABLE_HASH_TABLE_HASH_TABLE_IMPL_HPP_INCLUDED_
