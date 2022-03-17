@@ -383,7 +383,8 @@ void List<key_t, data_t>::delete_invalid_node()
     {
         bool is_invalid = false;
 
-        if constexpr ((std::is_same<data_t, List<size_t, std::string>>::value == true) && (current_elem->data_.size() == 0))
+        if constexpr ((std::is_same<data_t, List<size_t, std::string>>::value == true) &&
+                      (current_elem->data_.size() == 0))
         {
             is_invalid = true;
         }

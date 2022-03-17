@@ -45,7 +45,7 @@ public:
     void swap(List* other);
 
     void delete_invalid_node();
-    
+
     Node<key_t, data_t>* delete_node(key_t key);
     Node<key_t, data_t>* find_value(key_t key);
 
