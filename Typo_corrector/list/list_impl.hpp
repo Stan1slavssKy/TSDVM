@@ -242,7 +242,7 @@ const data_t& List<key_t, data_t>::back() const
 //==========================================================================================================
 
 template<typename key_t, typename data_t>
-Node<key_t, data_t>* List<key_t, data_t>::push(key_t key, data_t value)
+Node<key_t, data_t>* List<key_t, data_t>::push(const key_t& key, const data_t& value)
 {
     if (!empty())
     {
@@ -318,7 +318,7 @@ void List<key_t, data_t>::delete_nodes()
 }
 
 template<typename key_t, typename data_t>
-Node<key_t, data_t>* List<key_t, data_t>::find_value(key_t key)
+Node<key_t, data_t>* List<key_t, data_t>::find_value(const key_t& key)
 {
     Node<key_t, data_t>* current_elem = front_;
 
@@ -335,7 +335,7 @@ Node<key_t, data_t>* List<key_t, data_t>::find_value(key_t key)
 }
 
 template<typename key_t, typename data_t>
-Node<key_t, data_t>* List<key_t, data_t>::delete_node(key_t key)
+Node<key_t, data_t>* List<key_t, data_t>::delete_node(const key_t& key)
 {
     Node<key_t, data_t>* current_elem = front_;
     Node<key_t, data_t>* prev_elem    = nullptr;

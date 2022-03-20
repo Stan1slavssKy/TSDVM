@@ -39,15 +39,15 @@ public:
     const data_t& front() const;
     const data_t& back() const;
 
-    Node<key_t, data_t>* push(key_t key, data_t value);
+    Node<key_t, data_t>* push(const key_t& key, const data_t& value);
 
     void pop();
     void swap(List* other);
 
     void delete_invalid_node();
 
-    Node<key_t, data_t>* delete_node(key_t key);
-    Node<key_t, data_t>* find_value(key_t key);
+    Node<key_t, data_t>* delete_node(const key_t& key);
+    Node<key_t, data_t>* find_value(const key_t& key);
 
     struct Iterator;
     Iterator begin()

@@ -66,13 +66,13 @@ Hash_table<key_t, data_t>& Hash_table<key_t, data_t>::operator=(Hash_table<key_t
 //==================================================================================================================
 
 template<typename key_t, typename data_t>
-size_t Hash_table<key_t, data_t>::hash_(key_t& key) const
+size_t Hash_table<key_t, data_t>::hash_(const key_t& key) const
 {
     return murmur_hash2(key) % capacity_;
 }
 
 template<typename key_t, typename data_t>
-size_t Hash_table<key_t, data_t>::murmur_hash2(key_t& key)
+size_t Hash_table<key_t, data_t>::murmur_hash2(const key_t& key)
 {
     const size_t m    = 0x5bd1e995;
     const size_t seed = 0xbc9f1d34;
@@ -135,7 +135,7 @@ size_t Hash_table<key_t, data_t>::murmur_hash2(key_t& key)
 //==================================================================================================================
 
 template<typename key_t, typename data_t>
-bool Hash_table<key_t, data_t>::set_value(key_t& key, data_t& value)
+bool Hash_table<key_t, data_t>::set_value(const key_t& key, const data_t& value)
 {
     size_t idx = hash_(key);
 
@@ -161,7 +161,7 @@ bool Hash_table<key_t, data_t>::set_value(key_t& key, data_t& value)
 }
 
 template<typename key_t, typename data_t>
-std::optional<data_t> Hash_table<key_t, data_t>::get_value(key_t& key) const
+std::optional<data_t> Hash_table<key_t, data_t>::get_value(const key_t& key) const
 {
     size_t idx = hash_(key);
 
@@ -176,7 +176,7 @@ std::optional<data_t> Hash_table<key_t, data_t>::get_value(key_t& key) const
 }
 
 template<typename key_t, typename data_t>
-void Hash_table<key_t, data_t>::remove(key_t& key)
+void Hash_table<key_t, data_t>::remove(const key_t& key)
 {
     size_t idx = hash_(key);
 
