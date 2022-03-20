@@ -23,6 +23,7 @@ public:
 
     Typo_corrector();
     explicit Typo_corrector(size_t dictionary_max_len);
+    explicit Typo_corrector(const char* teaching_text_path);
     Typo_corrector(const Typo_corrector& other) = delete;
     Typo_corrector(Typo_corrector&& other) noexcept;
     ~Typo_corrector();
@@ -31,19 +32,21 @@ public:
 
     Typo_corrector& operator=(Typo_corrector&& other) noexcept;
 
-    void start_correcting();
+    void start_correcting(const char* input_text_path);
 
 private:
     Dictionary* len_dictionaries_   = nullptr;
     size_t      nmb_dictionaries_   = 0;
     size_t      dictionary_max_len_ = 0;
 
-    size_t find_dictionary_by_len_(size_t word_len);
+    size_t find_dictionary_(size_t word_len) const;
 
-    void        dictionaries_input_();
+    void dictionaries_input_();
+
     std::string replacing_words_(const char* input_filename, replacing_type answer);
 
-    std::string find_replacement_word_(std::string& it);
+    std::string find_replacement_word_(const std::string& token) const;
+
     static bool pair_comparator(std::pair<std::string, size_t> lhs, std::pair<std::string, size_t> rhs);
     static bool get_answer_();
 };

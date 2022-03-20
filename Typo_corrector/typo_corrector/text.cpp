@@ -6,13 +6,12 @@
 #include <iterator>
 
 namespace s1ky {
-Text::Text() : file_name_(FILE_PATH) {}
+Text::Text() : file_name(FILE_PATH) {}
 
-Text::Text(const char* file_name) : file_name_(file_name) {}
+Text::Text(const char* file_name) : file_name(file_name) {}
 
 Text::Text(Text&& other) noexcept :
-    file_name_(std::move(other.file_name_)), file_buffer_(std::move(other.file_buffer_)),
-    tokens_(std::move(other.tokens_))
+    file_name(std::move(other.file_name)), file_buffer(std::move(other.file_buffer)), tokens(std::move(other.tokens))
 {}
 
 Text& Text::operator=(Text&& other) noexcept
@@ -22,9 +21,9 @@ Text& Text::operator=(Text&& other) noexcept
         return *this;
     }
 
-    std::swap(other.file_buffer_, file_buffer_);
-    std::swap(other.file_name_, file_name_);
-    std::swap(other.tokens_, tokens_);
+    std::swap(other.file_buffer, file_buffer);
+    std::swap(other.file_name, file_name);
+    std::swap(other.tokens, tokens);
 
     return *this;
 }
@@ -35,7 +34,7 @@ void Text::read_file()
 {
     std::ifstream file;
 
-    file.open(file_name_);
+    file.open(file_name);
 
     if (!file.is_open())
     {
@@ -43,7 +42,7 @@ void Text::read_file()
         return;
     }
 
-    std::getline(file, file_buffer_, '\0');
+    std::getline(file, file_buffer, '\0');
 
     file.close();
 }
@@ -57,10 +56,10 @@ void Text::parser()
     std::string       token = " ";
     std::string const delims { " .,:;!?\n()\"" };
 
-    while ((begin_token = file_buffer_.find_first_not_of(delims, end_token)) != std::string::npos)
+    while ((begin_token = file_buffer.find_first_not_of(delims, end_token)) != std::string::npos)
     {
-        end_token = file_buffer_.find_first_of(delims, begin_token + 1);
-        token     = file_buffer_.substr(begin_token, end_token - begin_token);
+        end_token = file_buffer.find_first_of(delims, begin_token + 1);
+        token     = file_buffer.substr(begin_token, end_token - begin_token);
 
         char& front = token.front();
         if (front == '\'')
@@ -77,18 +76,13 @@ void Text::parser()
             }
         }
 
-        tokens_.push_back(token);
+        tokens.push_back(token);
 
-        if ((cur_length = strlen(token.c_str())) > max_token_length_)
+        if ((cur_length = strlen(token.c_str())) > max_token_length)
         {
-            max_token_length_ = cur_length;
+            max_token_length = cur_length;
         }
     }
-}
-
-std::string Text::get_file_buffer()
-{
-    return file_buffer_;
 }
 
 std::string Text::get_lower_case(std::string& token)

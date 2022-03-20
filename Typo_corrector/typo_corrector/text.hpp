@@ -17,23 +17,21 @@ public:
     ~Text() {};
 
     Text& operator=(const Text& other) = delete;
-    Text& operator                     =(Text&& other) noexcept;
 
-    std::string get_file_buffer();
+    Text& operator=(Text&& other) noexcept;
 
     static std::string get_lower_case(std::string& token);
 
     void read_file();
     void parser();
 
-protected:
-    std::string file_name_ = " ";
+    std::string file_name = " ";
 
-    std::string file_buffer_ = " ";
+    std::string file_buffer = " ";
 
-    std::vector<std::string> tokens_ = {};
+    std::vector<std::string> tokens = {};
 
-    size_t max_token_length_ = 0;
+    size_t max_token_length = 0;
 };
 } // namespace s1ky
 

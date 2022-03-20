@@ -17,9 +17,9 @@ Typo_corrector::Typo_corrector()
 
     dictionary_max_len_ = MAX_LEN_DICTIONARY;
 
-    if (max_token_length_ < MAX_LEN_DICTIONARY)
+    if (max_token_length < MAX_LEN_DICTIONARY)
     {
-        dictionary_max_len_ = max_token_length_;
+        dictionary_max_len_ = max_token_length;
     }
 
     len_dictionaries_ = new Dictionary[dictionary_max_len_] {};
@@ -39,6 +39,23 @@ Typo_corrector::Typo_corrector(size_t dictionary_max_len) :
     parser();
 
     len_dictionaries_ = new Dictionary[dictionary_max_len_] {};
+}
+
+Typo_corrector::Typo_corrector(const char* teaching_text_path) : Text(teaching_text_path)
+{
+    read_file();
+    parser();
+
+    dictionary_max_len_ = MAX_LEN_DICTIONARY;
+
+    if (max_token_length < MAX_LEN_DICTIONARY)
+    {
+        dictionary_max_len_ = max_token_length;
+    }
+
+    len_dictionaries_ = new Dictionary[dictionary_max_len_] {};
+
+    nmb_dictionaries_ = dictionary_max_len_ - MIN_LEN_DICTIONARY;
 }
 
 Typo_corrector::Typo_corrector(Typo_corrector&& other) noexcept :
@@ -73,21 +90,21 @@ void Typo_corrector::dictionaries_input_()
 
     size_t len = 0;
 
-    for (auto& it : tokens_)
+    for (auto& it : tokens)
     {
         size_t len_idx   = 0;
         size_t frequency = 0;
 
         if ((len = strlen(it.c_str())) > MIN_LEN_DICTIONARY)
         {
-            len_idx   = find_dictionary_by_len_(len);
+            len_idx   = find_dictionary_(len);
             frequency = len_dictionaries_[len_idx].get_value(it).value_or(0);
             len_dictionaries_[len_idx].set_value(it, ++frequency);
         }
     }
 }
 
-size_t Typo_corrector::find_dictionary_by_len_(size_t word_len)
+size_t Typo_corrector::find_dictionary_(size_t word_len) const
 {
     for (size_t i = 0; i < nmb_dictionaries_; ++i)
     {
@@ -100,12 +117,16 @@ size_t Typo_corrector::find_dictionary_by_len_(size_t word_len)
     return 0;
 }
 
-void Typo_corrector::start_correcting()
+void Typo_corrector::start_correcting(const char* input_text_path)
 {
     dictionaries_input_();
 
-    const char* input_filename  = "../../input_text.txt";
-    const char* output_filename = "../../output_text.txt";
+    std::string input_filename  = input_text_path;
+    std::string output_filename = input_filename.substr(0, input_filename.find_last_of('.'));
+
+    output_filename = output_filename + "_output.txt";
+
+    std::cout << output_filename << std::endl;
 
     std::cout << "Press\n"
               << "1 - If you want to replace all typos at once\n"
@@ -115,7 +136,7 @@ void Typo_corrector::start_correcting()
     int answer = REPLACE_ALL;
     std::cin >> answer;
 
-    std::string output_str = replacing_words_(input_filename, static_cast<replacing_type>(answer));
+    std::string output_str = replacing_words_(input_text_path, static_cast<replacing_type>(answer));
 
     std::ofstream out(output_filename);
     out << output_str;
@@ -127,7 +148,7 @@ std::string Typo_corrector::replacing_words_(const char* input_filename, replaci
     Text input_file(input_filename);
     input_file.read_file();
     input_file.parser();
-    std::string input_buffer = input_file.get_file_buffer();
+    std::string input_buffer = input_file.file_buffer;
 
     size_t begin_token = 0;
     size_t end_token   = 0;
@@ -178,9 +199,9 @@ std::string Typo_corrector::replacing_words_(const char* input_filename, replaci
     return input_buffer;
 }
 
-std::string Typo_corrector::find_replacement_word_(std::string& it)
+std::string Typo_corrector::find_replacement_word_(const std::string& token) const
 {
-    size_t len = std::strlen(it.c_str());
+    size_t len = std::strlen(token.c_str());
 
     std::vector<std::pair<std::string, size_t>> frequency;
 
@@ -188,7 +209,7 @@ std::string Typo_corrector::find_replacement_word_(std::string& it)
 
     if (len < 2)
     {
-        return it;
+        return token;
     }
 
     if (len > 2)
@@ -197,7 +218,7 @@ std::string Typo_corrector::find_replacement_word_(std::string& it)
     }
     else if (len == 2)
     {
-        return it;
+        return token;
     }
 
     for (size_t i = 0; i < max_dict_idx; ++i)
@@ -209,7 +230,7 @@ std::string Typo_corrector::find_replacement_word_(std::string& it)
             len_idx += 1;
         }
 
-        std::string cur_word = len_dictionaries_[len_idx].find_similar_word(it);
+        std::string cur_word = len_dictionaries_[len_idx].find_similar_word(token);
         if (cur_word.empty())
             continue;
 
@@ -222,14 +243,14 @@ std::string Typo_corrector::find_replacement_word_(std::string& it)
 
     if (frequency.empty())
     {
-        return it;
+        return token;
     }
 
     std::sort(frequency.begin(), frequency.end(), pair_comparator);
 
     if (std::get<1>(frequency.front()) < MIN_WORD_REPLACE_FREQ)
     {
-        return it;
+        return token;
     }
 
     std::string similar_word = std::get<0>(frequency.front());

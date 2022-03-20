@@ -4,7 +4,7 @@
 #include <vector>
 
 namespace s1ky {
-std::string Dictionary::find_similar_word(std::string& word) const
+std::string Dictionary::find_similar_word(const std::string& word) const
 {
     for (auto& ll_it : *iteration_list_)
     {
@@ -22,7 +22,7 @@ std::string Dictionary::find_similar_word(std::string& word) const
     return "\0"; // NOLINT
 }
 
-size_t Dictionary::lev_distance_calculation(std::string& lhs, std::string& rhs)
+size_t Dictionary::lev_distance_calculation(const std::string& lhs, const std::string& rhs) // NOLINT
 {
     if (lhs.size() > rhs.size())
     {

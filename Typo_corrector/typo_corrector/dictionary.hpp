@@ -9,9 +9,9 @@ class Dictionary : public Hash_table<std::string, size_t>
 public:
     constexpr static size_t ACCEPTABLE_LEV_DIST = 1;
 
-    std::string find_similar_word(std::string& word) const;
+    std::string find_similar_word(const std::string& word) const;
 
-    static size_t lev_distance_calculation(std::string& lhs, std::string& rhs);
+    static size_t lev_distance_calculation(const std::string& lhs, const std::string& rhs);
 
     size_t word_len = 0;
 };
