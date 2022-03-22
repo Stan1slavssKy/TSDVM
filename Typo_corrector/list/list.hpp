@@ -56,7 +56,7 @@ public:
     };
     Iterator end()
     {
-        return Iterator(back_);
+        return Iterator(nullptr);
     };
 
 private:
