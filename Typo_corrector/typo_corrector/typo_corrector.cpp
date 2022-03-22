@@ -151,7 +151,7 @@ void Typo_corrector::replacing_words_(std::string* file_buffer, replacing_type a
             continue;
 
         token = file_buffer->substr(beg_pos, end_pos);
-        
+
         if (*end_ptr == '\0')
             break;
 
@@ -161,17 +161,21 @@ void Typo_corrector::replacing_words_(std::string* file_buffer, replacing_type a
         {
             std::string sim_word = find_replacement_word_(token);
 
-            if ((answer == REPLACE_SELECTIVELY) && (strcmp(sim_word.c_str(), token.c_str()) != 0))
+            if (!strcmp(sim_word.c_str(), token.c_str()))
+            {
+                continue;
+            }
+
+            if (answer == REPLACE_SELECTIVELY)
             {
                 std::cout << "Would you like to replace " << token << " ---> " << sim_word << "[y/n]" << std::endl;
-                if (get_answer_()) {}
 
-                else
-                {
+                if (!get_answer_())
                     continue;
-                }
             }
-            file_buffer->replace(beg_pos, token.size(), sim_word.c_str());
+            std::cout << "token: [" << token << "] beg_pos = " << beg_pos << " token_size = " << token.size() << std::endl;
+            
+            file_buffer->replace(beg_pos - 1, token.size(), sim_word);
         }
     }
 }
@@ -197,32 +201,26 @@ std::string Typo_corrector::find_replacement_word_(const std::string& token) con
     {
         size_t len_idx = len - MIN_LEN_DICTIONARY - ACCEPTABLE_LEV_DIST + i;
 
-        if (len == 2)
+        std::vector<std::pair<std::string, size_t>> suitable_words = len_dictionaries_[len_idx].find_similar_word(token);
+
+        if (suitable_words.empty())
+            continue;
+
+        if (std::get<0>(suitable_words.front()).empty())
         {
-            len_idx += 1;
+            return token;
         }
 
-        std::string cur_word = len_dictionaries_[len_idx].find_similar_word(token);
-
-        if (cur_word.empty())
-            continue;
-
-        if (!strcmp(token.c_str(), cur_word.c_str()))
-            return token;
-
-        size_t cur_freq = len_dictionaries_[len_idx].get_value(cur_word).value_or(0);
-
-        if (cur_freq == 0)
-            continue;
-
-        frequency.emplace_back(std::make_pair(cur_word, cur_freq));
+        std::sort(suitable_words.begin(), suitable_words.end(), pair_comparator);
+    
+        frequency.emplace_back(suitable_words.front());
     }
 
     if (frequency.empty())
     {
         return token;
     }
-
+    
     std::sort(frequency.begin(), frequency.end(), pair_comparator);
 
     if (std::get<1>(frequency.front()) < MIN_WORD_REPLACE_FREQ)
@@ -237,7 +235,7 @@ std::string Typo_corrector::find_replacement_word_(const std::string& token) con
 
 bool Typo_corrector::pair_comparator(std::pair<std::string, size_t> lhs, std::pair<std::string, size_t> rhs)
 {
-    return (std::get<1>(lhs) < std::get<1>(rhs));
+    return (std::get<1>(lhs) > std::get<1>(rhs));
 }
 
 bool Typo_corrector::get_answer_()

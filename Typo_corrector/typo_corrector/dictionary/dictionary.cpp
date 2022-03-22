@@ -2,24 +2,35 @@
 
 #include <algorithm>
 #include <vector>
+#include <iostream>
+#include <cstring>
 
 namespace s1ky {
-std::string Dictionary::find_similar_word(const std::string& word) const
+std::vector<std::pair<std::string, size_t>> Dictionary::find_similar_word(const std::string& word) const
 {
+    std::vector<std::pair<std::string, size_t>> suitable_words;
+
     for (auto& ll_it : *iteration_list_)
     {
         for (auto& l_it : *ll_it.data_)
-        {
+        {   
+            if (!strcmp(word.c_str(), l_it.key_.c_str()))
+            {
+                std::vector<std::pair<std::string, size_t>> empty(1);
+                empty.emplace_back(std::make_pair(" ", 0));
+                return empty;
+            }
+
             size_t lev_dist = lev_distance_calculation(word, (l_it.key_));
 
             if (lev_dist <= ACCEPTABLE_LEV_DIST)
             {
-                return l_it.key_;
+                suitable_words.emplace_back(std::make_pair(l_it.key_, get_value(l_it.key_).value_or(0)));
             }
         }
     }
 
-    return "\0"; // NOLINT
+    return suitable_words;
 }
 
 size_t Dictionary::lev_distance_calculation(const std::string& lhs, const std::string& rhs) // NOLINT

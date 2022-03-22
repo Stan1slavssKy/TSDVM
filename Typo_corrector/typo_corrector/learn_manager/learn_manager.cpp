@@ -21,11 +21,14 @@ void Learn_manager::get_tokens_for_learn(std::vector<std::string>* words_for_lea
         std::cin  >> learn_file_path_;
 
         learn_file_path_ = "../../texts_for_learn/" + learn_file_path_;
-        std::cout << learn_file_path_ << std::endl;
 
         read_file_();
         parse_();
         make_dump_();
+        
+        learn_file_path_ = DUMP_NAME;
+        read_file_();
+        fill_tokens_from_dump_();
     }
     else
     {
@@ -93,7 +96,7 @@ void Learn_manager::parse_()
         token = file_buffer_.substr(beg_pos, end_pos);
 
         tokens_.push_back(token);
-        
+
         if ((cur_len = strlen(token.c_str())) > token_max_length_)
             token_max_length_ = cur_len;
         
@@ -121,8 +124,6 @@ void Learn_manager::make_dump_()
         file << " ";
     }
 
-    file << "\n\n";
-
     file.close();
 }
 
@@ -144,7 +145,7 @@ void Learn_manager::fill_tokens_from_dump_()
 
     for (size_t idx = 0; idx < file_buffer_.size(); ++idx)
     {
-        while(*beg_ptr == ' ')
+        while(*beg_ptr == ' ' || *beg_ptr == '\n')
             ++beg_ptr;
 
         if (*beg_ptr == '\0')

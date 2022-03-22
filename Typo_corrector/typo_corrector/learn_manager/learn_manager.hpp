@@ -9,7 +9,7 @@ class Learn_manager
 {
 public:
     constexpr static const char* LEARN_FILE_PATH = "../../texts_for_learn/dictionary_text.txt";
-    constexpr static const char* DUMP_NAME = "../../typo_corrector/learn_manager/tokens_DUMP.txt";
+    constexpr static const char* DUMP_NAME = "../../typo_corrector/learn_manager/TOKENS_DUMP.txt";
 
     void get_tokens_for_learn(std::vector<std::string>* words_for_learning);
     
