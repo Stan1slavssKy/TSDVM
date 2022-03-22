@@ -1,4 +1,4 @@
-#include "learn_manager.hpp"
+#include "teaching_manager.hpp"
 
 #include <cstring>
 #include <fstream>
@@ -6,18 +6,16 @@
 #include <iterator>
 
 namespace s1ky {
-void Learn_manager::get_tokens_for_learn(std::vector<std::string>* words_for_learning)
+void Teaching_manager::get_tokens_for_teaching(std::vector<std::string>* words_for_learning)
 {
-    std::cout << "Which mode do you want to use? [by default - 2]\n"
-              << "1 - train a dictionary\n"
-              << "2 - use an already trained dictionary\n";
-    
-    int answer = 0;
-    std::cin >> answer;
+    int answer = choosing_teaching_mode_();
 
-    if (answer == 1)
+    if (answer == -1)
+        return;
+        
+    if (answer == TEACH)
     {   
-        std::cout << "Enter the name of the file from which you want to train the dictionary: ";
+        std::cout << "Enter the name of the file from which you want to teach the dictionary: ";
         std::cin  >> learn_file_path_;
 
         learn_file_path_ = "../../texts_for_learn/" + learn_file_path_;
@@ -50,7 +48,29 @@ void Learn_manager::get_tokens_for_learn(std::vector<std::string>* words_for_lea
     *words_for_learning = tokens_;
 }
 
-void Learn_manager::read_file_()
+int Teaching_manager::choosing_teaching_mode_()
+{
+    int answer = 0;
+
+    while (true)
+    {
+        std::cout << "Which mode do you want to use? [by default - 2]\n"
+                  << "1 - teach a dictionary\n"
+                  << "2 - use an already teached dictionary\n"
+                  << "3 - to exit\n";
+
+        std::cin >> answer;
+        if (answer == TEACH || answer == USE_TEACHED)
+            return answer;
+
+        if (answer == 3)
+            return -1;
+
+        std::cout << "You have entered an incorrect character. Try again.\n";
+    }
+}
+
+void Teaching_manager::read_file_()
 {
     std::ifstream file;
     file.open(learn_file_path_);
@@ -66,7 +86,7 @@ void Learn_manager::read_file_()
     file.close();
 }
 
-void Learn_manager::parse_()
+void Teaching_manager::parse_()
 {
     std::string token = " ";
 
@@ -107,7 +127,7 @@ void Learn_manager::parse_()
     }
 }
 
-void Learn_manager::make_dump_()
+void Teaching_manager::make_dump_()
 {
     std::ofstream file;
     file.open(DUMP_NAME, std::ios_base::app);
@@ -127,7 +147,7 @@ void Learn_manager::make_dump_()
     file.close();
 }
 
-void Learn_manager::fill_tokens_from_dump_()
+void Teaching_manager::fill_tokens_from_dump_()
 {
     std::ifstream file(DUMP_NAME);
 
@@ -143,7 +163,7 @@ void Learn_manager::fill_tokens_from_dump_()
 
     std::string token = " ";
 
-    for (size_t idx = 0; idx < file_buffer_.size(); ++idx)
+    while (true)
     {
         while(*beg_ptr == ' ' || *beg_ptr == '\n')
             ++beg_ptr;
@@ -178,7 +198,7 @@ void Learn_manager::fill_tokens_from_dump_()
     file.close();
 }
 
-bool Learn_manager::is_file_empty_(const std::string& file_path)
+bool Teaching_manager::is_file_empty_(const std::string& file_path)
 {
     std::ifstream file(file_path);
 
@@ -189,7 +209,7 @@ bool Learn_manager::is_file_empty_(const std::string& file_path)
     return true; 
 }
 
-size_t Learn_manager::get_token_max_len() const
+size_t Teaching_manager::get_token_max_len() const
 {
     return token_max_length_;
 }

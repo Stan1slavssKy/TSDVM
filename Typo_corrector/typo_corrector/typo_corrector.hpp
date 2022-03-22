@@ -2,7 +2,7 @@
 #define TYPO_CORRECTOR_TYPO_CORRECTOR_TYPO_CORRECTOR_HPP_INCLUDED_
 
 #include "./dictionary/dictionary.hpp"
-#include "./learn_manager/learn_manager.hpp"
+#include "./teaching_manager/teaching_manager.hpp"
 
 #include <vector>
 
@@ -34,7 +34,7 @@ public:
     void start_correcting(const std::string& input_text_path);
 
 private:
-    Learn_manager learn_manager_;
+    Teaching_manager teaching_manager_;
 
     std::vector<std::string> words_for_learning_;
 
@@ -55,6 +55,8 @@ private:
     static bool get_answer_();
 
     static void read_file_(const std::string& input_filename, std::string* buffer);
+
+    static int choosing_replace_mode_();
 };
 } // namespace s1ky
 

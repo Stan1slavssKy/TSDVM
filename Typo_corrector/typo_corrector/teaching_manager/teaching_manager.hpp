@@ -1,17 +1,23 @@
-#ifndef TYPO_CORRECTOR_LEARN_MANAGER_HPP_INCLUDED_
-#define TYPO_CORRECTOR_LEARN_MANAGER_HPP_INCLUDED_
+#ifndef TYPO_CORRECTOR_TEACHING_MANAGER_HPP_INCLUDED_
+#define TYPO_CORRECTOR_TEACHING_MANAGER_HPP_INCLUDED_
 
 #include <string>
 #include <vector>
 
 namespace s1ky {
-class Learn_manager
+enum teaching_mode
+{
+    TEACH = 1,
+    USE_TEACHED = 2
+};
+
+class Teaching_manager
 {
 public:
     constexpr static const char* LEARN_FILE_PATH = "../../texts_for_learn/dictionary_text.txt";
-    constexpr static const char* DUMP_NAME = "../../typo_corrector/learn_manager/TOKENS_DUMP.txt";
+    constexpr static const char* DUMP_NAME = "../../typo_corrector/teaching_manager/TOKENS_DUMP.txt";
 
-    void get_tokens_for_learn(std::vector<std::string>* words_for_learning);
+    void get_tokens_for_teaching(std::vector<std::string>* words_for_learning);
     
     size_t get_token_max_len() const;
 
@@ -32,7 +38,8 @@ private:
     void fill_tokens_from_dump_();
 
     static bool is_file_empty_(const std::string& file_path);
+    static int  choosing_teaching_mode_();
 };
 } // namespace s1ky
 
-#endif // TYPO_CORRECTOR_LEARN_MANAGER_HPP_INCLUDED_
+#endif // TYPO_CORRECTOR_TEACHING_MANAGER_HPP_INCLUDED_

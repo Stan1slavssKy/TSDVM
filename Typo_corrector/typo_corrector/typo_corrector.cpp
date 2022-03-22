@@ -12,13 +12,13 @@
 namespace s1ky {
 Typo_corrector::Typo_corrector()
 {
-    learn_manager_.get_tokens_for_learn(&words_for_learning_);
+    teaching_manager_.get_tokens_for_teaching(&words_for_learning_);
 
     dictionary_max_len_ = MAX_LEN_DICTIONARY;
 
-    if (learn_manager_.get_token_max_len() < MAX_LEN_DICTIONARY)
+    if (teaching_manager_.get_token_max_len() < MAX_LEN_DICTIONARY)
     {
-        dictionary_max_len_ = learn_manager_.get_token_max_len();
+        dictionary_max_len_ = teaching_manager_.get_token_max_len();
     }
 
     len_dictionaries_ = new Dictionary[dictionary_max_len_] {};
@@ -34,7 +34,7 @@ Typo_corrector::~Typo_corrector()
 Typo_corrector::Typo_corrector(size_t dictionary_max_len) :
     nmb_dictionaries_(dictionary_max_len - MIN_LEN_DICTIONARY), dictionary_max_len_(dictionary_max_len)
 {
-    learn_manager_.get_tokens_for_learn(&words_for_learning_);
+    teaching_manager_.get_tokens_for_teaching(&words_for_learning_);
 
     len_dictionaries_ = new Dictionary[dictionary_max_len_] {};
 }
@@ -106,22 +106,42 @@ void Typo_corrector::start_correcting(const std::string& input_text_path)
 
     output_filename = output_filename + "_output.txt";
 
-    std::cout << "Press\n"
-              << "1 - If you want to replace all typos at once\n"
-              << "2 - If you want to replace typos selectively\n"
-              << "By default, 1 is provided" << std::endl;
-
-    int answer = REPLACE_ALL;
-    std::cin >> answer;
-
     std::string file_buffer;
     read_file_(input_text_path, &file_buffer);
+
+    int answer = choosing_replace_mode_();
+
+    if (answer == -1)
+        return;
 
     replacing_words_(&file_buffer, static_cast<replacing_type>(answer));
 
     std::ofstream out(output_filename);
     out << file_buffer;
     out.close();
+}
+
+int Typo_corrector::choosing_replace_mode_()
+{
+    int answer = 0;
+
+    while (true)
+    {
+        std::cout << "How do you want to replace words?\n"
+                  << "1 - replace all typos at once\n"
+                  << "2 - replace typos selectively\n"
+                  << "3 - to exit\n";
+
+        std::cin >> answer;
+
+        if (answer == REPLACE_SELECTIVELY || answer == REPLACE_ALL)
+            return answer;
+
+        if (answer == 3)
+            return -1;
+
+        std::cout << "You have entered an incorrect character. Try again.\n";
+    }
 }
 
 void Typo_corrector::replacing_words_(std::string* file_buffer, replacing_type answer)
@@ -131,7 +151,7 @@ void Typo_corrector::replacing_words_(std::string* file_buffer, replacing_type a
     char*  beg_ptr = file_buffer->data();
     char*  end_ptr = nullptr;
 
-    for (size_t idx = 0; idx < file_buffer->size(); ++idx)
+    while(true)
     {
         while(!isalpha(*beg_ptr) && *beg_ptr != '\0')
             ++beg_ptr;
@@ -173,9 +193,9 @@ void Typo_corrector::replacing_words_(std::string* file_buffer, replacing_type a
                 if (!get_answer_())
                     continue;
             }
-            std::cout << "token: [" << token << "] beg_pos = " << beg_pos << " token_size = " << token.size() << std::endl;
+            file_buffer->replace(beg_pos, token.size(), sim_word);
             
-            file_buffer->replace(beg_pos - 1, token.size(), sim_word);
+            beg_ptr = file_buffer->data() + end_pos + 1 + (sim_word.size() - token.size());
         }
     }
 }
