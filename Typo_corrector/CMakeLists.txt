@@ -21,6 +21,7 @@ add_compile_options(
     -Wsign-promo
 
     -fno-elide-constructors
+    -g3
 )
 
 file(GLOB_RECURSE ALL_SOURCES_FILES *.cpp *.hpp)
