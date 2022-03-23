@@ -4,6 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include <iterator>
+#include <filesystem>
 
 namespace s1ky {
 void Teaching_manager::get_tokens_for_teaching(std::vector<std::string>* words_for_learning)
@@ -12,37 +13,38 @@ void Teaching_manager::get_tokens_for_teaching(std::vector<std::string>* words_f
 
     if (answer == -1)
         return;
-        
-    if (answer == TEACH)
-    {   
-        std::cout << "Enter the name of the file from which you want to teach the dictionary: ";
-        std::cin  >> learn_file_path_;
 
-        learn_file_path_ = "../../texts_for_learn/" + learn_file_path_;
+    size_t beg_dump_idx = 0;
 
+    if (is_file_empty_(DUMP_NAME_PATH))
+    {
+        learn_file_path_ = LEARN_FILE_PATH;
         read_file_();
         parse_();
-        make_dump_();
         
-        learn_file_path_ = DUMP_NAME;
-        read_file_();
-        fill_tokens_from_dump_();
+        if (answer == USE_TEACHED)
+            make_dump_();
     }
     else
     {
-        if (is_file_empty_(DUMP_NAME))
-        {
-            learn_file_path_ = LEARN_FILE_PATH;
-            read_file_();
-            parse_();
-            make_dump_();
-        }
-        else
-        {
-            learn_file_path_ = DUMP_NAME;
-            read_file_();
-            fill_tokens_from_dump_();
-        }
+        learn_file_path_ = DUMP_NAME_PATH;
+        read_file_();
+        fill_tokens_from_dump_(); 
+        beg_dump_idx = tokens_.size();
+    }
+
+    if (answer == TEACH)
+    {
+        std::vector<std::string> texts_for_teaching;
+        get_texts_for_teaching_(&texts_for_teaching);
+
+        learn_file_path_ = choosing_teaching_text_(&texts_for_teaching);
+
+        learn_file_path_ = "../../texts_for_teaching/" + learn_file_path_;
+        read_file_();
+
+        parse_();
+        make_dump_(beg_dump_idx);
     }
 
     *words_for_learning = tokens_;
@@ -60,11 +62,56 @@ int Teaching_manager::choosing_teaching_mode_()
                   << "3 - to exit\n";
 
         std::cin >> answer;
+        std::cout << "\n";
+
         if (answer == TEACH || answer == USE_TEACHED)
             return answer;
 
         if (answer == 3)
             return -1;
+
+        std::cout << "You have entered an incorrect character. Try again.\n";
+    }
+}
+
+void Teaching_manager::get_texts_for_teaching_(std::vector<std::string>* texts_names)
+{
+    std::string path = TEXTS_FOR_TEACHING_PATH;
+
+    for (const auto & dir_entry : std::filesystem::directory_iterator(path))
+    {
+        texts_names->push_back(dir_entry.path().filename());
+    }
+}
+
+const std::string& Teaching_manager::choosing_teaching_text_(std::vector<std::string>* texts_names)
+{
+    std::string answer;
+
+    while (true)
+    {
+        std::cout << "Texts available for dictionary teaching:\n";
+
+        for (auto& it : *texts_names)
+        {
+            std::cout << " - " << it;
+
+            if (!strcmp(it.c_str(), "Night_shift.txt"))
+                std::cout << " (this one is teached by default)";
+
+            std::cout << "\n";
+        }
+
+        std::cout << "\n";
+        std::cout << "Enter the name of the file from which you want to teach the dictionary: ";
+        std::cin  >> answer;
+        std::cout << "\n";
+        
+        for (auto& it : *texts_names)
+        {
+            if (!strcmp(it.c_str(), answer.c_str()))
+                return it;
+        }
 
         std::cout << "You have entered an incorrect character. Try again.\n";
     }
@@ -127,20 +174,20 @@ void Teaching_manager::parse_()
     }
 }
 
-void Teaching_manager::make_dump_()
+void Teaching_manager::make_dump_(size_t begin_dump_idx)
 {
     std::ofstream file;
-    file.open(DUMP_NAME, std::ios_base::app);
+    file.open(DUMP_NAME_PATH, std::ios_base::app);
 
     if (!file.is_open())
     {
-        std::cout << "Error, can't open " << DUMP_NAME << " file" << std::endl;
+        std::cout << "Error, can't open " << DUMP_NAME_PATH << " file" << std::endl;
         return;
     }
-
-    for (auto& it : tokens_)
+    
+    for (size_t idx = begin_dump_idx; idx < tokens_.size(); ++idx)
     {
-        file << it;
+        file << tokens_[idx];
         file << " ";
     }
 
@@ -149,11 +196,11 @@ void Teaching_manager::make_dump_()
 
 void Teaching_manager::fill_tokens_from_dump_()
 {
-    std::ifstream file(DUMP_NAME);
+    std::ifstream file(DUMP_NAME_PATH);
 
     if (!file.is_open())
     {
-        std::cout << "Error, can't open " << DUMP_NAME << " file" << std::endl;
+        std::cout << "Error, can't open " << DUMP_NAME_PATH << " file" << std::endl;
         return;
     }
 
