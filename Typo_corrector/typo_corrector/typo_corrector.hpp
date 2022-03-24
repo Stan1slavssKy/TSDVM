@@ -3,6 +3,7 @@
 
 #include "./dictionary/dictionary.hpp"
 #include "./teaching_manager/teaching_manager.hpp"
+#include "./thread_manager/thread_manager.hpp"
 
 #include <vector>
 
@@ -35,12 +36,15 @@ public:
 
 private:
     Teaching_manager teaching_manager_;
+    Thread_manager   thread_manager_;
 
     std::vector<std::string> words_for_learning_;
 
     Dictionary* len_dictionaries_   = nullptr;
     size_t      nmb_dictionaries_   = 0;
     size_t      dictionary_max_len_ = 0;
+
+    bool is_valid_ = false;
 
     size_t find_dictionary_(size_t word_len) const;
 
