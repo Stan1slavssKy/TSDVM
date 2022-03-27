@@ -15,5 +15,5 @@ To use you need to download the folder with the code. Then go to the Hash_table 
     cmake ..
     make
 
-To use cmake for queue project with all flags use this command:
+To use cmake for hash table with all flags use this command:
 cmake .. -DADD_SANITIZERS=ON -DADD_CLANG_TIDY=ON -DADD_HASH_TABLE_TESTING=ON
