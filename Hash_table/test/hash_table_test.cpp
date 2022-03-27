@@ -2,21 +2,23 @@
 
 #include <gtest/gtest.h> // NOLINT
 
+#include <string>
+
 using namespace s1ky; // NOLINT
 
-const char* test_key_arr[] = { "Bob", "Steve", "John", "Erwin", "Eren" };
+std::string test_key_arr[] = { "Bob", "Steve", "John", "Erwin", "Eren" };
 
 int test_value_arr[] = { 100, 100, 150, 10, 10000 };
 
 TEST(CharIntHashTable, ValueConstructor)
 {
-    Hash_table<const char*, int> test(10);
+    Hash_table<std::string, int> test(10);
     ASSERT_EQ(10, test.get_capacity());
 }
 
-TEST(CharIntHashTable, SetValue)
+TEST(StringIntHashTable, SetValue)
 {
-    Hash_table<const char*, int> test(4);
+    Hash_table<std::string, int> test(4);
 
     for (int i = 0; i < 5; ++i)
     {
@@ -26,9 +28,9 @@ TEST(CharIntHashTable, SetValue)
     test.set_value("Bob", 4);
 }
 
-TEST(CharIntHashTable, GetValue)
+TEST(StringIntHashTable, GetValue)
 {
-    Hash_table<const char*, int> test;
+    Hash_table<std::string, int> test;
 
     for (int i = 0; i < 5; ++i)
     {
@@ -39,9 +41,9 @@ TEST(CharIntHashTable, GetValue)
     ASSERT_EQ(-1, test.get_value("XXX").value_or(-1));
 }
 
-TEST(CharIntHashTable, Remove)
+TEST(StringIntHashTable, Remove)
 {
-    Hash_table<const char*, int> test;
+    Hash_table<std::string, int> test;
 
     for (int i = 0; i < 5; ++i)
     {
@@ -51,15 +53,15 @@ TEST(CharIntHashTable, Remove)
     }
 }
 
-TEST(CharIntHashTable, GetCapacity)
+TEST(StringIntHashTable, GetCapacity)
 {
-    Hash_table<const char*, int> test(23);
+    Hash_table<std::string, int> test(23);
     ASSERT_EQ(23, test.get_capacity());
 }
 
-TEST(CharIntHashTable, GetSize)
+TEST(StringIntHashTable, GetSize)
 {
-    Hash_table<const char*, int> test;
+    Hash_table<std::string, int> test;
 
     for (int i = 0; i < 5; ++i) { test.set_value(test_key_arr[i], test_value_arr[i]); }
     ASSERT_EQ(5, test.get_size());
