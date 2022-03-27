@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <optional>
 #include <variant>
+#include <vector>
 
 namespace s1ky {
 template<typename key_t, typename data_t>
@@ -28,8 +29,6 @@ public:
 
     std::optional<data_t> get_value(const key_t& key) const;
 
-    static size_t murmur_hash2(const key_t& key);
-
     size_t get_capacity() const;
     size_t get_size() const;
 
@@ -41,7 +40,7 @@ protected:
 
     List<key_t, data_t>* keys_ = nullptr;
 
-    List<size_t, List<key_t, data_t>*>* iteration_list_;
+    std::vector<List<key_t, data_t>*> valid_lists_;
 };
 } // namespace s1ky
 
