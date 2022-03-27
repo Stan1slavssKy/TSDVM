@@ -61,7 +61,7 @@ Hash_table<key_t, data_t>& Hash_table<key_t, data_t>::operator=(Hash_table<key_t
 template<typename key_t, typename data_t>
 size_t Hash_table<key_t, data_t>::hash_(const key_t& key) const
 {
-    return std::hash<key_t> {}(key) % capacity_;
+    return (std::hash<key_t>{}(key)) % capacity_;
 }
 
 template<typename key_t, typename data_t>
@@ -123,6 +123,7 @@ size_t Hash_table<key_t, data_t>::get_capacity() const
 template<typename key_t, typename data_t>
 size_t Hash_table<key_t, data_t>::get_size() const
 {
+    std::cout << valid_lists_.size() << std::endl;
     return size_;
 }
 } // namespace s1ky
