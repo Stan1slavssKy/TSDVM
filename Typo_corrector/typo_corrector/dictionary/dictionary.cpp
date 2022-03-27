@@ -1,19 +1,19 @@
 #include "dictionary.hpp"
 
 #include <algorithm>
-#include <vector>
-#include <iostream>
 #include <cstring>
+#include <iostream>
+#include <vector>
 
 namespace s1ky {
 std::vector<std::pair<std::string, size_t>> Dictionary::find_similar_word(const std::string& word) const
 {
     std::vector<std::pair<std::string, size_t>> suitable_words;
 
-    for (auto& ll_it : *iteration_list_)
+    for (const auto& vector_it : valid_lists_)
     {
-        for (auto& l_it : *ll_it.data_)
-        {   
+        for (auto& l_it : *vector_it)
+        {
             if (!strcmp(word.c_str(), l_it.key_.c_str()))
             {
                 std::vector<std::pair<std::string, size_t>> empty(1);

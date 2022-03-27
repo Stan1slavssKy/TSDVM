@@ -1,18 +1,18 @@
 #include "teaching_manager.hpp"
 
 #include <cstring>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <iterator>
-#include <filesystem>
 
 namespace s1ky {
-void Teaching_manager::get_tokens_for_teaching(std::vector<std::string>* words_for_learning)
+bool Teaching_manager::get_tokens_for_teaching(std::vector<std::string>* words_for_learning)
 {
     int answer = choosing_teaching_mode_();
 
     if (answer == -1)
-        return;
+        return false;
 
     size_t beg_dump_idx = 0;
 
@@ -21,7 +21,7 @@ void Teaching_manager::get_tokens_for_teaching(std::vector<std::string>* words_f
         learn_file_path_ = LEARN_FILE_PATH;
         read_file_();
         parse_();
-        
+
         if (answer == USE_TEACHED)
             make_dump_();
     }
@@ -29,7 +29,7 @@ void Teaching_manager::get_tokens_for_teaching(std::vector<std::string>* words_f
     {
         learn_file_path_ = DUMP_NAME_PATH;
         read_file_();
-        fill_tokens_from_dump_(); 
+        fill_tokens_from_dump_();
         beg_dump_idx = tokens_.size();
     }
 
@@ -48,6 +48,7 @@ void Teaching_manager::get_tokens_for_teaching(std::vector<std::string>* words_f
     }
 
     *words_for_learning = tokens_;
+    return true;
 }
 
 int Teaching_manager::choosing_teaching_mode_()
@@ -78,7 +79,7 @@ void Teaching_manager::get_texts_for_teaching_(std::vector<std::string>* texts_n
 {
     std::string path = TEXTS_FOR_TEACHING_PATH;
 
-    for (const auto & dir_entry : std::filesystem::directory_iterator(path))
+    for (const auto& dir_entry : std::filesystem::directory_iterator(path))
     {
         texts_names->push_back(dir_entry.path().filename());
     }
@@ -104,9 +105,9 @@ const std::string& Teaching_manager::choosing_teaching_text_(std::vector<std::st
 
         std::cout << "\n";
         std::cout << "Enter the name of the file from which you want to teach the dictionary: ";
-        std::cin  >> answer;
+        std::cin >> answer;
         std::cout << "\n";
-        
+
         for (auto& it : *texts_names)
         {
             if (!strcmp(it.c_str(), answer.c_str()))
@@ -143,17 +144,15 @@ void Teaching_manager::parse_()
 
     for (size_t idx = 0; idx < file_buffer_.size(); ++idx)
     {
-        while(!isalpha(*beg_ptr) && *beg_ptr != '\0')
-            ++beg_ptr;
+        while (!isalpha(*beg_ptr) && *beg_ptr != '\0') ++beg_ptr;
 
         if (*beg_ptr == '\0')
             break;
 
         end_ptr = beg_ptr;
 
-        while(isalpha(*end_ptr) || *end_ptr == '-')
-            ++end_ptr;
-        
+        while (isalpha(*end_ptr) || *end_ptr == '-') ++end_ptr;
+
         auto beg_pos = static_cast<size_t>(beg_ptr - file_buffer_.data());
         auto end_pos = static_cast<size_t>(end_ptr - beg_ptr);
 
@@ -166,7 +165,7 @@ void Teaching_manager::parse_()
 
         if ((cur_len = strlen(token.c_str())) > token_max_length_)
             token_max_length_ = cur_len;
-        
+
         if (*end_ptr == '\0')
             break;
 
@@ -184,7 +183,7 @@ void Teaching_manager::make_dump_(size_t begin_dump_idx)
         std::cout << "Error, can't open " << DUMP_NAME_PATH << " file" << std::endl;
         return;
     }
-    
+
     for (size_t idx = begin_dump_idx; idx < tokens_.size(); ++idx)
     {
         file << tokens_[idx];
@@ -212,16 +211,14 @@ void Teaching_manager::fill_tokens_from_dump_()
 
     while (true)
     {
-        while(*beg_ptr == ' ' || *beg_ptr == '\n')
-            ++beg_ptr;
+        while (*beg_ptr == ' ' || *beg_ptr == '\n') ++beg_ptr;
 
         if (*beg_ptr == '\0')
             break;
 
         end_ptr = beg_ptr;
 
-        while(isalpha(*end_ptr) || *end_ptr == '-')
-            ++end_ptr;
+        while (isalpha(*end_ptr) || *end_ptr == '-') ++end_ptr;
 
         auto beg_pos = static_cast<size_t>(beg_ptr - file_buffer_.data());
         auto end_pos = static_cast<size_t>(end_ptr - beg_ptr);
@@ -232,10 +229,10 @@ void Teaching_manager::fill_tokens_from_dump_()
         token = file_buffer_.substr(beg_pos, end_pos);
 
         tokens_.push_back(token);
-        
+
         if ((cur_len = strlen(token.c_str())) > token_max_length_)
             token_max_length_ = cur_len;
-        
+
         if (*end_ptr == '\0')
             break;
 
@@ -253,7 +250,7 @@ bool Teaching_manager::is_file_empty_(const std::string& file_path)
     {
         return file.peek() == std::ifstream::traits_type::eof();
     }
-    return true; 
+    return true;
 }
 
 size_t Teaching_manager::get_token_max_len() const

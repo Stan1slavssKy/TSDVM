@@ -7,19 +7,19 @@
 namespace s1ky {
 enum teaching_mode
 {
-    TEACH = 1,
+    TEACH       = 1,
     USE_TEACHED = 2
 };
 
 class Teaching_manager
 {
 public:
-    constexpr static const char* LEARN_FILE_PATH = "../../texts_for_teaching/Night_shift.txt";
-    constexpr static const char* DUMP_NAME_PATH  = "../../typo_corrector/teaching_manager/TOKENS_DUMP.txt";
+    constexpr static const char* LEARN_FILE_PATH         = "../../texts_for_teaching/Night_shift.txt";
+    constexpr static const char* DUMP_NAME_PATH          = "../../typo_corrector/teaching_manager/TOKENS_DUMP.txt";
     constexpr static const char* TEXTS_FOR_TEACHING_PATH = "../../texts_for_teaching";
 
-    void get_tokens_for_teaching(std::vector<std::string>* words_for_learning);
-    
+    bool get_tokens_for_teaching(std::vector<std::string>* words_for_learning);
+
     size_t get_token_max_len() const;
 
 private:
@@ -40,10 +40,10 @@ private:
 
     static bool is_file_empty_(const std::string& file_path);
 
-    static int  choosing_teaching_mode_();
+    static int choosing_teaching_mode_();
 
     static void get_texts_for_teaching_(std::vector<std::string>* texts_names);
-    
+
     static const std::string& choosing_teaching_text_(std::vector<std::string>* texts_names);
 };
 } // namespace s1ky

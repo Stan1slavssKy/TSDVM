@@ -3,7 +3,6 @@
 
 #include "./dictionary/dictionary.hpp"
 #include "./teaching_manager/teaching_manager.hpp"
-#include "./thread_manager/thread_manager.hpp"
 
 #include <vector>
 
@@ -36,7 +35,6 @@ public:
 
 private:
     Teaching_manager teaching_manager_;
-    Thread_manager   thread_manager_;
 
     std::vector<std::string> words_for_learning_;
 
@@ -55,7 +53,7 @@ private:
     std::string find_replacement_word_(const std::string& token) const;
 
     static bool pair_comparator(std::pair<std::string, size_t> lhs, std::pair<std::string, size_t> rhs);
-    
+
     static bool get_answer_();
 
     static void read_file_(const std::string& input_filename, std::string* buffer);
