@@ -242,7 +242,7 @@ const data_t& List<key_t, data_t>::back() const
 //==========================================================================================================
 
 template<typename key_t, typename data_t>
-void List<key_t, data_t>::push(key_t key, data_t value)
+Node<key_t, data_t>* List<key_t, data_t>::push(const key_t& key, const data_t& value)
 {
     if (!empty())
     {
@@ -250,15 +250,22 @@ void List<key_t, data_t>::push(key_t key, data_t value)
         assert(back_->next_);
 
         back_ = back_->next_;
+
+        back_->key_  = key;
+        back_->data_ = value;
+        ++size_;
+
+        return nullptr;
     }
-    else
-    {
-        back_ = front_ = new Node<key_t, data_t> {};
-        assert(front_);
-    }
+
+    back_ = front_ = new Node<key_t, data_t> {};
+    assert(front_);
+
     back_->key_  = key;
     back_->data_ = value;
-    size_++;
+    ++size_;
+
+    return front_;
 }
 
 template<typename key_t, typename data_t>
@@ -311,7 +318,7 @@ void List<key_t, data_t>::delete_nodes()
 }
 
 template<typename key_t, typename data_t>
-Node<key_t, data_t>* List<key_t, data_t>::find_value(key_t key)
+Node<key_t, data_t>* List<key_t, data_t>::find_value(const key_t& key)
 {
     Node<key_t, data_t>* current_elem = front_;
 
@@ -328,7 +335,7 @@ Node<key_t, data_t>* List<key_t, data_t>::find_value(key_t key)
 }
 
 template<typename key_t, typename data_t>
-void List<key_t, data_t>::delete_node(key_t key)
+Node<key_t, data_t>* List<key_t, data_t>::delete_node(const key_t& key)
 {
     Node<key_t, data_t>* current_elem = front_;
     Node<key_t, data_t>* prev_elem    = nullptr;
@@ -340,6 +347,101 @@ void List<key_t, data_t>::delete_node(key_t key)
             if (prev_elem == nullptr)
             {
                 front_ = current_elem->next_;
+
+                if (front_ == nullptr)
+                {
+                    back_ = front_;
+                }
+            }
+            else
+            {
+                prev_elem->next_ = current_elem->next_;
+                if (prev_elem->next_ == nullptr)
+                {
+                    back_ = prev_elem;
+                }
+            }
+
+            delete current_elem;
+            --size_;
+            break;
+        }
+        prev_elem    = current_elem;
+        current_elem = current_elem->next_;
+    }
+
+    return front_;
+}
+
+template<typename key_t, typename data_t>
+Node<key_t, data_t>* List<key_t, data_t>::delete_node(const data_t& data)
+{
+    Node<key_t, data_t>* current_elem = front_;
+    Node<key_t, data_t>* prev_elem    = nullptr;
+
+    for (size_t i = 0; i < size_; ++i)
+    {
+        if (current_elem->data_ == data)
+        {
+            if (prev_elem == nullptr)
+            {
+                front_ = current_elem->next_;
+
+                if (front_ == nullptr)
+                {
+                    back_ = front_;
+                }
+            }
+            else
+            {
+                prev_elem->next_ = current_elem->next_;
+                if (prev_elem->next_ == nullptr)
+                {
+                    back_ = prev_elem;
+                }
+            }
+
+            delete current_elem;
+            --size_;
+            break;
+        }
+        prev_elem    = current_elem;
+        current_elem = current_elem->next_;
+    }
+
+    return front_;
+}
+
+template<typename key_t, typename data_t>
+void List<key_t, data_t>::delete_invalid_node()
+{
+    Node<key_t, data_t>* current_elem = front_;
+    Node<key_t, data_t>* prev_elem    = nullptr;
+
+    for (size_t i = 0; i < size_; ++i)
+    {
+        bool is_invalid = false;
+
+        if constexpr ((std::is_same<data_t, List<size_t, std::string>>::value == true) &&
+                      (current_elem->data_.size() == 0))
+        {
+            is_invalid = true;
+        }
+        else if (!current_elem->data_)
+        {
+            is_invalid = true;
+        }
+
+        if (is_invalid)
+        {
+            if (prev_elem == nullptr)
+            {
+                front_ = current_elem->next_;
+
+                if (front_ == nullptr)
+                {
+                    back_ = front_;
+                }
             }
             else
             {
