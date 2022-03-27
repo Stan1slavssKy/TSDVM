@@ -71,7 +71,7 @@ int Teaching_manager::choosing_teaching_mode_()
         if (answer == 3)
             return -1;
 
-        std::cout << "You have entered an incorrect character. Try again.\n";
+        std::cout << "You have entered an incorrect character. Try again." << std::endl;
     }
 }
 

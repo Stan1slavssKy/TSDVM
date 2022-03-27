@@ -4,8 +4,106 @@
 #include <cstring>
 #include <iostream>
 #include <vector>
+#include <functional>
 
 namespace s1ky {
+Dictionary::Dictionary()
+{
+    threads_number_ = std::thread::hardware_concurrency();
+}
+
+Dictionary::Dictionary(size_t threads_number) : threads_number_(threads_number)
+{
+    threads_number_ = std::thread::hardware_concurrency();
+}
+
+Dictionary::Dictionary(Dictionary&& other) noexcept :
+    threads_number_(other.threads_number_), nmb_iterations_per_thread_(other.nmb_iterations_per_thread_),
+    nmb_iterations_for_last_thread_(other.nmb_iterations_for_last_thread_)
+{
+    std::swap(threads_, other.threads_);
+}
+
+Dictionary& Dictionary::operator=(Dictionary&& other) noexcept
+{
+    if (this == &other)
+        return *this;
+
+    std::swap(threads_, other.threads_);
+
+    threads_number_                 = other.threads_number_;
+    nmb_iterations_per_thread_      = other.nmb_iterations_per_thread_;
+    nmb_iterations_for_last_thread_ = other.nmb_iterations_for_last_thread_;
+
+    return *this;
+}
+
+//=========================================================================================================================
+
+std::vector<std::pair<std::string, size_t>> Dictionary::get_similar_word_thread(const std::string& token)
+{
+    if (threads_number_ <= 1)
+        return find_similar_word(token);
+
+    nmb_iterations_per_thread_ = valid_lists_.size() / threads_number_;
+    nmb_iterations_for_last_thread_ = nmb_iterations_per_thread_ + valid_lists_.size() % threads_number_;
+
+    auto* suitable_words = new std::vector<std::string>[threads_number_] {};
+
+    std::vector<std::pair<std::string, size_t>> output;
+
+    for (size_t i = 0; i < threads_number_; ++i)
+    {
+        size_t beg_pos = nmb_iterations_per_thread_ * i;
+        size_t end_pos = beg_pos + nmb_iterations_per_thread_;
+
+        if (i == (threads_number_ - 1))
+        {
+            end_pos = beg_pos + nmb_iterations_for_last_thread_;
+        }
+        threads_.emplace_back(
+            std::thread(find_similar_word_thread, valid_lists_, &suitable_words[i], token, beg_pos, end_pos));
+    }
+
+    for (size_t i = 0; i < threads_number_; ++i) 
+    {
+        if (threads_[i].joinable())
+            threads_[i].join();
+    }
+
+    for (size_t i = 0; i < threads_number_; ++i)
+    {
+        for (auto& vec_it : suitable_words[i])
+        {
+            output.emplace_back(std::make_pair(vec_it, get_value(vec_it).value_or(0)));
+        }
+    }
+    delete[] suitable_words;
+
+    return output;
+}
+
+void Dictionary::find_similar_word_thread(const std::vector<List<std::string, size_t>*>& input_vector,
+                                         std::vector<std::string>* out_vector,
+                                         const std::string& word, size_t beg_pos, size_t end_pos) //NOLINT
+{
+    for (size_t i = beg_pos; i < end_pos; ++i)
+    {
+        for (auto& l_it : *input_vector[i])
+        {
+            size_t lev_dist = Dictionary::lev_distance_calculation(word, (l_it.key_));
+
+            if (lev_dist <= Dictionary::ACCEPTABLE_LEV_DIST)
+            {
+                std::cout << "l_it.key = " << l_it.key_ << std::endl;
+                out_vector->emplace_back(l_it.key_);
+            }
+        }
+    }
+}
+
+//=========================================================================================================================
+
 std::vector<std::pair<std::string, size_t>> Dictionary::find_similar_word(const std::string& word) const
 {
     std::vector<std::pair<std::string, size_t>> suitable_words;
@@ -14,13 +112,6 @@ std::vector<std::pair<std::string, size_t>> Dictionary::find_similar_word(const 
     {
         for (auto& l_it : *vector_it)
         {
-            if (!strcmp(word.c_str(), l_it.key_.c_str()))
-            {
-                std::vector<std::pair<std::string, size_t>> empty(1);
-                empty.emplace_back(std::make_pair(" ", 0));
-                return empty;
-            }
-
             size_t lev_dist = lev_distance_calculation(word, (l_it.key_));
 
             if (lev_dist <= ACCEPTABLE_LEV_DIST)

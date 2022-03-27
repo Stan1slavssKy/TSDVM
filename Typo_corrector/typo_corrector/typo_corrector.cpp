@@ -134,7 +134,7 @@ int Typo_corrector::choosing_replace_mode_()
                   << "1 - replace all typos at once\n"
                   << "2 - replace typos selectively\n"
                   << "3 - to exit\n";
-
+        
         std::cin >> answer;
 
         if (answer == REPLACE_SELECTIVELY || answer == REPLACE_ALL)
@@ -143,7 +143,7 @@ int Typo_corrector::choosing_replace_mode_()
         if (answer == 3)
             return -1;
 
-        std::cout << "You have entered an incorrect character. Try again.\n";
+        std::cout << "You have entered an incorrect character. Try again." << std::endl;
     }
 }
 
@@ -180,12 +180,14 @@ void Typo_corrector::replacing_words_(std::string* file_buffer, replacing_type a
 
         if (!token.empty())
         {
+            size_t len = strlen(token.c_str());
+            if (len > 1 && len_dictionaries_[len - MIN_LEN_DICTIONARY].get_value(token).value_or(0) != 0U)
+                continue;
+
             std::string sim_word = find_replacement_word_(token);
 
             if (!strcmp(sim_word.c_str(), token.c_str()))
-            {
                 continue;
-            }
 
             if (answer == REPLACE_SELECTIVELY)
             {
@@ -227,15 +229,10 @@ std::string Typo_corrector::find_replacement_word_(const std::string& token) con
             len_idx = len - MIN_LEN_DICTIONARY + i;
 
         std::vector<std::pair<std::string, size_t>> suitable_words =
-            len_dictionaries_[len_idx].find_similar_word(token);
+            len_dictionaries_[len_idx].get_similar_word_thread(token);
 
         if (suitable_words.empty())
             continue;
-
-        if (std::get<0>(suitable_words.front()).empty())
-        {
-            return token;
-        }
 
         std::sort(suitable_words.begin(), suitable_words.end(), pair_comparator);
 
@@ -243,9 +240,7 @@ std::string Typo_corrector::find_replacement_word_(const std::string& token) con
     }
 
     if (frequency.empty())
-    {
         return token;
-    }
 
     std::sort(frequency.begin(), frequency.end(), pair_comparator);
 
