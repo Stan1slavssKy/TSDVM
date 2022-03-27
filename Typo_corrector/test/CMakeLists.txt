@@ -23,8 +23,11 @@ set(TEACHING_MANAGE_DIR /teaching_manager)
 
 
 set(CORRECTOR_TEST_OUTPUT corrector_test)
-set(SOURCE ${TYPO_C_DIR}/typo_corrector.cpp ${TYPO_C_DIR}/${TEACHING_MANAGE_DIR}/teaching_manager.cpp 
-           ${TYPO_C_DIR}/${DICT_DIR}/dictionary.cpp typo_corrector_test.cpp)
+set(SOURCE ${TYPO_C_DIR}/typo_corrector.cpp 
+           ${TYPO_C_DIR}/${TEACHING_MANAGE_DIR}/teaching_manager.cpp 
+           ${TYPO_C_DIR}/${DICT_DIR}/dictionary.cpp
+           typo_corrector_test.cpp
+           )
 
 if(ADD_TYPO_CORRECTOR_TESTING)
     message("-- [Build typo_corrector tests]")
