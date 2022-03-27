@@ -12,7 +12,7 @@ template<typename key_t, typename data_t>
 class Hash_table
 {
 public:
-    constexpr static size_t default_size = 16;
+    constexpr static size_t default_size = 1 << 18;
 
     Hash_table();
     Hash_table(size_t capacity);
@@ -23,24 +23,24 @@ public:
     Hash_table<key_t, data_t>& operator=(const Hash_table<key_t, data_t>& other) = delete;
     Hash_table<key_t, data_t>& operator=(Hash_table<key_t, data_t>&& other) noexcept;
 
-    void set_value(key_t key, data_t value);
-    void remove(key_t key);
+    bool set_value(const key_t& key, const data_t& value);
+    void remove(const key_t& key);
 
-    std::optional<data_t> get_value(key_t key) const;
-
-    size_t murmur_hash2(key_t key) const;
+    std::optional<data_t> get_value(const key_t& key) const;
 
     size_t get_capacity() const;
     size_t get_size() const;
 
-private:
+protected:
+    size_t hash_(const key_t& key) const;
+
     size_t capacity_ = 0;
     size_t size_     = 0;
 
     List<key_t, data_t>* keys_ = nullptr;
 
-    size_t hash_(key_t key) const;
+    List<size_t, List<key_t, data_t>*>* iteration_list_;
 };
-}; // namespace s1ky
+} // namespace s1ky
 
 #endif // HASH_TABLE_HASH_TABLE_HASH_TABLE_HPP_INCLUDED_
