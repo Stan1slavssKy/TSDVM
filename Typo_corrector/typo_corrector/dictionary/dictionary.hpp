@@ -24,6 +24,11 @@ public:
 
     std::vector<std::pair<std::string, size_t>> get_similar_word_thread(const std::string& token);
 
+    void call_threads_(const std::string& token, std::vector<std::string>* suitable_words);
+    void join_threads_();
+    void make_output_words_(std::vector<std::string>* suitable_words, 
+                            std::vector<std::pair<std::string, size_t>>* output);
+
     static void find_similar_word_thread(const std::vector<List<std::string, size_t>*>& input_vector,
                                          std::vector<std::string>* out_vector,
                                          const std::string& word, size_t beg_pos, size_t end_pos);

@@ -52,6 +52,18 @@ std::vector<std::pair<std::string, size_t>> Dictionary::get_similar_word_thread(
 
     std::vector<std::pair<std::string, size_t>> output;
 
+    call_threads_(token, suitable_words);
+    join_threads_();
+    make_output_words_(suitable_words, &output);
+
+    delete[] suitable_words;
+    threads_.clear();
+
+    return output;
+}
+
+void Dictionary::call_threads_(const std::string& token, std::vector<std::string>* suitable_words)
+{
     for (size_t i = 0; i < threads_number_; ++i)
     {
         size_t beg_pos = nmb_iterations_per_thread_ * i;
@@ -64,23 +76,29 @@ std::vector<std::pair<std::string, size_t>> Dictionary::get_similar_word_thread(
         threads_.emplace_back(
             std::thread(find_similar_word_thread, valid_lists_, &suitable_words[i], token, beg_pos, end_pos));
     }
+}
 
+void Dictionary::join_threads_()
+{
     for (size_t i = 0; i < threads_number_; ++i) 
     {
         if (threads_[i].joinable())
+        {
             threads_[i].join();
+        }        
     }
+}
 
+void Dictionary::make_output_words_(std::vector<std::string>* suitable_words, 
+                                    std::vector<std::pair<std::string, size_t>>* output)
+{
     for (size_t i = 0; i < threads_number_; ++i)
     {
-        for (auto& vec_it : suitable_words[i])
+        for (const auto& vec_it : suitable_words[i])
         {
-            output.emplace_back(std::make_pair(vec_it, get_value(vec_it).value_or(0)));
+            output->emplace_back(std::make_pair(vec_it, get_value(vec_it).value_or(0)));
         }
     }
-    delete[] suitable_words;
-
-    return output;
 }
 
 void Dictionary::find_similar_word_thread(const std::vector<List<std::string, size_t>*>& input_vector,
@@ -95,8 +113,8 @@ void Dictionary::find_similar_word_thread(const std::vector<List<std::string, si
 
             if (lev_dist <= Dictionary::ACCEPTABLE_LEV_DIST)
             {
-                std::cout << "l_it.key = " << l_it.key_ << std::endl;
                 out_vector->emplace_back(l_it.key_);
+                return;
             }
         }
     }
@@ -106,6 +124,7 @@ void Dictionary::find_similar_word_thread(const std::vector<List<std::string, si
 
 std::vector<std::pair<std::string, size_t>> Dictionary::find_similar_word(const std::string& word) const
 {
+    std::cout << "Odnopotochno" << std::endl;
     std::vector<std::pair<std::string, size_t>> suitable_words;
 
     for (const auto& vector_it : valid_lists_)
