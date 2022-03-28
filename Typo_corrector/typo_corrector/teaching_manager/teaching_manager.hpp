@@ -5,18 +5,19 @@
 #include <vector>
 
 namespace s1ky {
-enum teaching_mode
-{
-    TEACH       = 1,
-    USE_TEACHED = 2
-};
-
 class Teaching_manager
 {
 public:
     constexpr static const char* LEARN_FILE_PATH         = "../../texts_for_teaching/Night_shift.txt";
     constexpr static const char* DUMP_NAME_PATH          = "../../typo_corrector/teaching_manager/TOKENS_DUMP.txt";
     constexpr static const char* TEXTS_FOR_TEACHING_PATH = "../../texts_for_teaching";
+
+    enum teaching_mode
+    {
+        TEACH       = 1,
+        USE_TEACHED = 2,
+        EXIT = 3
+    };
 
     bool get_tokens_for_teaching(std::vector<std::string>* words_for_learning);
 
@@ -32,7 +33,7 @@ private:
 
     void read_file_();
 
-    void parse_();
+    void parse_string_to_tokens_();
 
     void make_dump_(size_t begin_dump_idx = 0);
 

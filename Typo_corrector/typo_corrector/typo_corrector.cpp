@@ -114,10 +114,10 @@ void Typo_corrector::start_correcting(const std::string& input_text_path)
 
     int answer = choosing_replace_mode_();
 
-    if (answer == -1)
+    if (answer == EXIT)
         return;
 
-    replacing_words_(&file_buffer, static_cast<replacing_type>(answer));
+    replacing_words(&file_buffer, static_cast<replacement_type>(answer));
 
     std::ofstream out(output_filename);
     out << file_buffer;
@@ -126,10 +126,10 @@ void Typo_corrector::start_correcting(const std::string& input_text_path)
 
 int Typo_corrector::choosing_replace_mode_()
 {
-    int answer = 0;
-
     while (true)
     {
+        int answer = 0;
+
         std::cout << "How do you want to replace words?\n"
                   << "1 - replace all typos at once\n"
                   << "2 - replace typos selectively\n"
@@ -140,14 +140,17 @@ int Typo_corrector::choosing_replace_mode_()
         if (answer == REPLACE_SELECTIVELY || answer == REPLACE_ALL)
             return answer;
 
-        if (answer == 3)
-            return -1;
+        if (answer == EXIT)
+            return answer;
+
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         std::cout << "You have entered an incorrect character. Try again." << std::endl;
     }
 }
 
-void Typo_corrector::replacing_words_(std::string* file_buffer, replacing_type answer)
+void Typo_corrector::replacing_words(std::string* file_buffer, replacement_type replacement_type)
 {
     std::string token = " ";
 
@@ -189,11 +192,11 @@ void Typo_corrector::replacing_words_(std::string* file_buffer, replacing_type a
             if (!strcmp(sim_word.c_str(), token.c_str()))
                 continue;
 
-            if (answer == REPLACE_SELECTIVELY)
+            if (replacement_type == REPLACE_SELECTIVELY)
             {
                 std::cout << "Would you like to replace " << token << " ---> " << sim_word << "[y/n]" << std::endl;
 
-                if (!get_answer_())
+                if (!is_need_replace_())
                     continue;
             }
             file_buffer->replace(beg_pos, token.size(), sim_word);
@@ -259,7 +262,7 @@ bool Typo_corrector::pair_comparator(std::pair<std::string, size_t> lhs, std::pa
     return (std::get<1>(lhs) > std::get<1>(rhs));
 }
 
-bool Typo_corrector::get_answer_()
+bool Typo_corrector::is_need_replace_()
 {
     std::string answer;
     std::cin >> answer;

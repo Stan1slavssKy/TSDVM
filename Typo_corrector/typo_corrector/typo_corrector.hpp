@@ -7,12 +7,6 @@
 #include <vector>
 
 namespace s1ky {
-enum replacing_type
-{
-    REPLACE_ALL         = 1,
-    REPLACE_SELECTIVELY = 2
-};
-
 class Typo_corrector
 {
 public:
@@ -20,6 +14,13 @@ public:
     constexpr static size_t MIN_LEN_DICTIONARY    = 2;
     constexpr static size_t MAX_LEN_DICTIONARY    = 30;
     constexpr static size_t MIN_WORD_REPLACE_FREQ = 10;
+
+    enum replacement_type
+    {
+        REPLACE_ALL         = 1,
+        REPLACE_SELECTIVELY = 2,
+        EXIT = 3
+    };
 
     Typo_corrector();
     explicit Typo_corrector(size_t dictionary_max_len);
@@ -32,6 +33,7 @@ public:
     Typo_corrector& operator=(Typo_corrector&& other) noexcept;
 
     void start_correcting(const std::string& input_text_path);
+    void replacing_words(std::string* file_buffer, replacement_type replacement_type);
 
 private:
     Teaching_manager teaching_manager_;
@@ -48,13 +50,11 @@ private:
 
     void dictionaries_input_();
 
-    void replacing_words_(std::string* file_buffer, replacing_type answer);
-
     std::string find_replacement_word_(const std::string& token) const;
 
     static bool pair_comparator(std::pair<std::string, size_t> lhs, std::pair<std::string, size_t> rhs);
 
-    static bool get_answer_();
+    static bool is_need_replace_();
 
     static void read_file_(const std::string& input_filename, std::string* buffer);
 

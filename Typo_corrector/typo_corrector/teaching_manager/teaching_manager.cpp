@@ -11,7 +11,7 @@ bool Teaching_manager::get_tokens_for_teaching(std::vector<std::string>* words_f
 {
     int answer = choosing_teaching_mode_();
 
-    if (answer == -1)
+    if (answer == EXIT)
         return false;
 
     size_t beg_dump_idx = 0;
@@ -20,7 +20,7 @@ bool Teaching_manager::get_tokens_for_teaching(std::vector<std::string>* words_f
     {
         learn_file_path_ = LEARN_FILE_PATH;
         read_file_();
-        parse_();
+        parse_string_to_tokens_();
 
         if (answer == USE_TEACHED)
             make_dump_();
@@ -43,7 +43,7 @@ bool Teaching_manager::get_tokens_for_teaching(std::vector<std::string>* words_f
         learn_file_path_ = "../../texts_for_teaching/" + learn_file_path_;
         read_file_();
 
-        parse_();
+        parse_string_to_tokens_();
         make_dump_(beg_dump_idx);
     }
 
@@ -68,8 +68,11 @@ int Teaching_manager::choosing_teaching_mode_()
         if (answer == TEACH || answer == USE_TEACHED)
             return answer;
 
-        if (answer == 3)
-            return -1;
+        if (answer == EXIT)
+            return EXIT;
+        
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         std::cout << "You have entered an incorrect character. Try again." << std::endl;
     }
@@ -114,6 +117,9 @@ const std::string& Teaching_manager::choosing_teaching_text_(std::vector<std::st
                 return it;
         }
 
+        std::cin.clear();
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
         std::cout << "You have entered an incorrect character. Try again.\n";
     }
 }
@@ -132,45 +138,6 @@ void Teaching_manager::read_file_()
     std::getline(file, file_buffer_, '\0');
 
     file.close();
-}
-
-void Teaching_manager::parse_()
-{
-    std::string token = " ";
-
-    char*  beg_ptr = file_buffer_.data();
-    char*  end_ptr = nullptr;
-    size_t cur_len = 0;
-
-    for (size_t idx = 0; idx < file_buffer_.size(); ++idx)
-    {
-        while (!isalpha(*beg_ptr) && *beg_ptr != '\0') ++beg_ptr;
-
-        if (*beg_ptr == '\0')
-            break;
-
-        end_ptr = beg_ptr;
-
-        while (isalpha(*end_ptr) || *end_ptr == '-') ++end_ptr;
-
-        auto beg_pos = static_cast<size_t>(beg_ptr - file_buffer_.data());
-        auto end_pos = static_cast<size_t>(end_ptr - beg_ptr);
-
-        if ((end_pos - beg_pos) == 0)
-            continue;
-
-        token = file_buffer_.substr(beg_pos, end_pos);
-
-        tokens_.push_back(token);
-
-        if ((cur_len = strlen(token.c_str())) > token_max_length_)
-            token_max_length_ = cur_len;
-
-        if (*end_ptr == '\0')
-            break;
-
-        beg_ptr = end_ptr + 1;
-    }
 }
 
 void Teaching_manager::make_dump_(size_t begin_dump_idx)
@@ -203,6 +170,13 @@ void Teaching_manager::fill_tokens_from_dump_()
         return;
     }
 
+    parse_string_to_tokens_();
+
+    file.close();
+}
+
+void Teaching_manager::parse_string_to_tokens_()
+{
     char*  beg_ptr = file_buffer_.data();
     char*  end_ptr = nullptr;
     size_t cur_len = 0;
@@ -211,7 +185,8 @@ void Teaching_manager::fill_tokens_from_dump_()
 
     while (true)
     {
-        while (*beg_ptr == ' ' || *beg_ptr == '\n') ++beg_ptr;
+        while (!isalpha(*beg_ptr) && *beg_ptr != '\0')
+            ++beg_ptr;
 
         if (*beg_ptr == '\0')
             break;
@@ -238,8 +213,6 @@ void Teaching_manager::fill_tokens_from_dump_()
 
         beg_ptr = end_ptr + 1;
     }
-
-    file.close();
 }
 
 bool Teaching_manager::is_file_empty_(const std::string& file_path)
