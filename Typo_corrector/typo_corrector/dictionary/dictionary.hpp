@@ -13,7 +13,7 @@ public:
     constexpr static size_t ACCEPTABLE_LEV_DIST = 1;
 
     Dictionary();
-    explicit Dictionary(size_t threads_number);
+     Dictionary(size_t threads_number);
     Dictionary(const Dictionary& other) = delete;
     Dictionary(Dictionary&& other) noexcept;
     ~Dictionary() = default;

@@ -8,6 +8,7 @@
 #include <iterator>
 #include <optional>
 #include <string>
+#include <memory>
 
 namespace s1ky {
 Typo_corrector::Typo_corrector()
@@ -20,30 +21,50 @@ Typo_corrector::Typo_corrector()
     {
         dictionary_max_len_ = teaching_manager_.get_token_max_len();
     }
-
-    len_dictionaries_ = new Dictionary[dictionary_max_len_] {};
-
+        
     nmb_dictionaries_ = dictionary_max_len_ - MIN_LEN_DICTIONARY;
+
+    len_dictionaries_ = dict_alloc_.allocate(nmb_dictionaries_);
+    
+    for (size_t i = 0; i < nmb_dictionaries_; ++i)
+    {
+        dict_alloc_.construct(len_dictionaries_ + i);
+    }
 }
 
 Typo_corrector::~Typo_corrector()
 {
-    delete[] len_dictionaries_;
+    for (size_t i = 0; i < nmb_dictionaries_; ++i)
+    {
+        dict_alloc_.destroy(len_dictionaries_ + i);
+    }
+    dict_alloc_.deallocate(len_dictionaries_, nmb_dictionaries_);
 }
 
-Typo_corrector::Typo_corrector(size_t dictionary_max_len) :
-    nmb_dictionaries_(dictionary_max_len - MIN_LEN_DICTIONARY), dictionary_max_len_(dictionary_max_len)
+Typo_corrector::Typo_corrector(size_t threads_number)
 {
     is_valid_ = teaching_manager_.get_tokens_for_teaching(&words_for_learning_);
 
-    len_dictionaries_ = new Dictionary[dictionary_max_len_] {};
+    dictionary_max_len_ = MAX_LEN_DICTIONARY;
+
+    if (teaching_manager_.get_token_max_len() < MAX_LEN_DICTIONARY)
+    {
+        dictionary_max_len_ = teaching_manager_.get_token_max_len();
+    }
+    nmb_dictionaries_ = dictionary_max_len_ - MIN_LEN_DICTIONARY;
+
+    len_dictionaries_ = dict_alloc_.allocate(nmb_dictionaries_);
+
+    for (size_t i = 0; i < nmb_dictionaries_; ++i)
+    {
+        dict_alloc_.construct(len_dictionaries_ + i, threads_number);
+    }
 }
 
 Typo_corrector::Typo_corrector(Typo_corrector&& other) noexcept :
-    len_dictionaries_(other.len_dictionaries_), nmb_dictionaries_(other.nmb_dictionaries_),
-    dictionary_max_len_(other.dictionary_max_len_)
+    nmb_dictionaries_(other.nmb_dictionaries_), dictionary_max_len_(other.dictionary_max_len_)
 {
-    other.len_dictionaries_ = nullptr;
+    std::swap(len_dictionaries_, other.len_dictionaries_);
 }
 
 //=============================================================================================

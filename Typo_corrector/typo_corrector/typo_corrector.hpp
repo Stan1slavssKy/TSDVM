@@ -23,7 +23,7 @@ public:
     };
 
     Typo_corrector();
-    explicit Typo_corrector(size_t dictionary_max_len);
+    explicit Typo_corrector(size_t threads_number);
     Typo_corrector(const Typo_corrector& other) = delete;
     Typo_corrector(Typo_corrector&& other) noexcept;
     ~Typo_corrector();
@@ -40,9 +40,13 @@ private:
 
     std::vector<std::string> words_for_learning_;
 
-    Dictionary* len_dictionaries_   = nullptr;
-    size_t      nmb_dictionaries_   = 0;
-    size_t      dictionary_max_len_ = 0;
+    std::allocator<Dictionary> dict_alloc_;
+
+    Dictionary* len_dictionaries_ = nullptr;
+
+    size_t nmb_dictionaries_   = 0;
+
+    size_t dictionary_max_len_ = 0;
 
     bool is_valid_ = false;
 

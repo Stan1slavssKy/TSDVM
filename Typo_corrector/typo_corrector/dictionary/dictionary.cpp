@@ -13,9 +13,7 @@ Dictionary::Dictionary()
 }
 
 Dictionary::Dictionary(size_t threads_number) : threads_number_(threads_number)
-{
-    threads_number_ = std::thread::hardware_concurrency();
-}
+{}
 
 Dictionary::Dictionary(Dictionary&& other) noexcept :
     threads_number_(other.threads_number_), nmb_iterations_per_thread_(other.nmb_iterations_per_thread_),
@@ -124,7 +122,7 @@ void Dictionary::find_similar_word_thread(const std::vector<List<std::string, si
 
 std::vector<std::pair<std::string, size_t>> Dictionary::find_similar_word(const std::string& word) const
 {
-    std::cout << "Odnopotochno" << std::endl;
+    std::cout << "fin by one thread\n";
     std::vector<std::pair<std::string, size_t>> suitable_words;
 
     for (const auto& vector_it : valid_lists_)
