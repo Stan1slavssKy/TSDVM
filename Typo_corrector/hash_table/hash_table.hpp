@@ -40,7 +40,7 @@ protected:
 
     List<key_t, data_t>* keys_ = nullptr;
 
-    std::vector<List<key_t, data_t>*> valid_lists_;
+    std::vector<Node<key_t, data_t>*> valid_nodes_;
 };
 } // namespace s1ky
 

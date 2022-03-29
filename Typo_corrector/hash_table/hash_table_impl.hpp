@@ -27,10 +27,10 @@ Hash_table<key_t, data_t>::Hash_table(size_t capacity) : capacity_(capacity)
 
 template<typename key_t, typename data_t>
 Hash_table<key_t, data_t>::Hash_table(Hash_table<key_t, data_t>&& other) noexcept :
-    capacity_(other.capacity_), size_(other.size_), keys_(other.keys_), valid_lists_(other.valid_lists_)
+    capacity_(other.capacity_), size_(other.size_), keys_(other.keys_), valid_nodes_(other.valid_nodes_)
 {
     other.keys_        = nullptr;
-    other.valid_lists_ = nullptr;
+    other.valid_nodes_ = nullptr;
 }
 
 template<typename key_t, typename data_t>
@@ -51,7 +51,7 @@ Hash_table<key_t, data_t>& Hash_table<key_t, data_t>::operator=(Hash_table<key_t
     capacity_ = other.capacity_;
 
     std::swap(keys_, other.keys_);
-    std::swap(valid_lists_, other.valid_lists_);
+    std::swap(valid_nodes_, other.valid_nodes_);
 
     return *this;
 }
@@ -77,7 +77,7 @@ bool Hash_table<key_t, data_t>::set_value(const key_t& key, const data_t& value)
 
         if (is_new_list != nullptr)
         {
-            valid_lists_.push_back(&keys_[idx]);
+            valid_nodes_.push_back(is_new_list);
         }
 
         ++size_;
@@ -123,7 +123,6 @@ size_t Hash_table<key_t, data_t>::get_capacity() const
 template<typename key_t, typename data_t>
 size_t Hash_table<key_t, data_t>::get_size() const
 {
-    std::cout << valid_lists_.size() << std::endl;
     return size_;
 }
 } // namespace s1ky
