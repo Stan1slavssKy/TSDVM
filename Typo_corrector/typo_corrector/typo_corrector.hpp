@@ -17,9 +17,10 @@ public:
 
     enum replacement_type
     {
+        NOT_SELECTED        = 0,
         REPLACE_ALL         = 1,
         REPLACE_SELECTIVELY = 2,
-        EXIT = 3
+        EXIT                = 3
     };
 
     Typo_corrector();
@@ -32,7 +33,7 @@ public:
 
     Typo_corrector& operator=(Typo_corrector&& other) noexcept;
 
-    void start_correcting(const std::string& input_text_path);
+    void start_correcting(const std::string& input_text_path, replacement_type replacement_type = NOT_SELECTED);
     void replacing_words(std::string* file_buffer, replacement_type replacement_type);
 
 private:

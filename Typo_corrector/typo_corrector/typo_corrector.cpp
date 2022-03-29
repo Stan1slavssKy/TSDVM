@@ -119,7 +119,7 @@ size_t Typo_corrector::find_dictionary_(size_t word_len) const
     return 0;
 }
 
-void Typo_corrector::start_correcting(const std::string& input_text_path)
+void Typo_corrector::start_correcting(const std::string& input_text_path, replacement_type replacement_type)
 {
     if (!is_valid_)
         return;
@@ -133,12 +133,15 @@ void Typo_corrector::start_correcting(const std::string& input_text_path)
     std::string file_buffer;
     read_file_(input_text_path, &file_buffer);
 
-    int answer = choosing_replace_mode_();
+    if (replacement_type == NOT_SELECTED)
+    {
+        replacement_type = static_cast<enum replacement_type>(choosing_replace_mode_());
 
-    if (answer == EXIT)
-        return;
+        if (replacement_type == EXIT)
+            return;
+    }
 
-    replacing_words(&file_buffer, static_cast<replacement_type>(answer));
+    replacing_words(&file_buffer, replacement_type);
 
     std::ofstream out(output_filename);
     out << file_buffer;
@@ -205,7 +208,11 @@ void Typo_corrector::replacing_words(std::string* file_buffer, replacement_type 
         if (!token.empty())
         {
             size_t len = strlen(token.c_str());
-            if (len > 1 && len_dictionaries_[len - MIN_LEN_DICTIONARY].get_value(token).value_or(0) != 0U)
+
+            if (len < MIN_LEN_DICTIONARY || len > MAX_LEN_DICTIONARY)
+                continue;
+
+            if(len_dictionaries_[len - MIN_LEN_DICTIONARY].get_value(token).value_or(0) != 0U)
                 continue;
 
             std::string sim_word = find_replacement_word_(token);
