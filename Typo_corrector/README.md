@@ -16,7 +16,7 @@ To use you need to download the folder with the code. Then go to the Hash_table 
     make
 
 To use cmake for queue project with all flags use this command:
-cmake .. -DADD_SANITIZERS=ON -DADD_CLANG_TIDY=ON -DADD_TYPO_CORRECTOR_TESTING=ON
+cmake .. -DADD_SANITIZERS=ON -DADD_CLANG_TIDY=ON -DADD_TYPO_CORRECTOR_TESTING=ON -DADD_BENCH=ON -DCMAKE_BUILD_TYPE=Release
 
 You can also use the prescribed targets:
 
