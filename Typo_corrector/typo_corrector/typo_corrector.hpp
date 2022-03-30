@@ -30,42 +30,31 @@ public:
     ~Typo_corrector();
 
     Typo_corrector& operator=(const Typo_corrector& other) = delete;
-
     Typo_corrector& operator=(Typo_corrector&& other) noexcept;
 
     void start_correcting(const std::string& input_text_path, replacement_type replacement_type = NOT_SELECTED);
     void replacing_words(std::string* file_buffer, replacement_type replacement_type);
+    void dictionaries_input();
+    size_t find_dictionary(size_t word_len) const;
+    
+    std::string* find_replacement_word(std::string* token) const;
 
 private:
     Teaching_manager teaching_manager_;
 
     std::vector<std::string> words_for_learning_;
-
     std::allocator<Dictionary> dict_alloc_;
-
-    Dictionary* len_dictionaries_ = nullptr;
+    Dictionary* len_dictionaries_;
 
     size_t nmb_dictionaries_ = 0;
-
     size_t dictionary_max_len_ = 0;
-
     bool is_valid_ = false;
 
-    size_t find_dictionary_(size_t word_len) const;
-
-    void dictionaries_input_();
-
-    std::string find_replacement_word_(const std::string& token) const;
-
     static size_t get_number_dictionaries_for_iterations(size_t word_len);
-
-    static bool pair_comparator(std::pair<std::string, size_t> lhs, std::pair<std::string, size_t> rhs);
-
-    static bool is_need_replace_();
-
-    static void read_file_(const std::string& input_filename, std::string* buffer);
-
-    static int choosing_replace_mode_();
+    static bool pair_comparator(std::pair<std::string*, size_t> lhs, std::pair<std::string*, size_t> rhs);
+    static bool is_need_replace();
+    static void read_file(const std::string& input_filename, std::string* buffer);
+    static int choosing_replace_mode();
 };
 } // namespace s1ky
 

@@ -19,23 +19,21 @@ public:
     ~Dictionary() = default;
 
     Dictionary& operator=(const Dictionary& other) = delete;
-
     Dictionary& operator=(Dictionary&& other) noexcept;
 
-    std::vector<std::pair<std::string, size_t>> get_similar_word_thread(const std::string& token);
+    std::string* get_similar_word_thread(const std::string& token);
 
-    void call_threads_(const std::string& token, std::vector<std::string>* suitable_words);
+    void call_threads(const std::string& token, std::vector<std::string*>* suitable_words);
+    void join_threads(std::vector<std::string*>* suitable_words, 
+                      std::vector<std::pair<std::string*, size_t>>* output);
 
-    void join_threads_(std::vector<std::string>* suitable_words, 
-                       std::vector<std::pair<std::string, size_t>>* output);
-
+    std::string* find_similar_word(const std::string& word) const;
+    
     static void find_similar_word_thread(const std::vector<Node<std::string, size_t>*>& input_vector,
-                                         std::vector<std::string>* out_vector,
+                                         std::vector<std::string*>* out_vector,
                                          const std::string& word, size_t beg_pos, size_t end_pos);
-
-    std::vector<std::pair<std::string, size_t>> find_similar_word(const std::string& word) const;
-
     static size_t lev_distance_calculation(const std::string& lhs, const std::string& rhs);
+    static bool   pair_comparator(std::pair<std::string*, size_t> lhs, std::pair<std::string*, size_t> rhs);
 
     size_t word_len = 0;
 

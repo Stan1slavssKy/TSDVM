@@ -14,7 +14,6 @@ namespace s1ky {
 Typo_corrector::Typo_corrector()
 {
     is_valid_ = teaching_manager_.get_tokens_for_teaching(&words_for_learning_);
-
     dictionary_max_len_ = MAX_LEN_DICTIONARY;
 
     if (teaching_manager_.get_token_max_len() < MAX_LEN_DICTIONARY)
@@ -23,7 +22,6 @@ Typo_corrector::Typo_corrector()
     }
         
     nmb_dictionaries_ = dictionary_max_len_ - MIN_LEN_DICTIONARY;
-
     len_dictionaries_ = dict_alloc_.allocate(nmb_dictionaries_);
     
     for (size_t i = 0; i < nmb_dictionaries_; ++i)
@@ -44,15 +42,14 @@ Typo_corrector::~Typo_corrector()
 Typo_corrector::Typo_corrector(size_t threads_number)
 {
     is_valid_ = teaching_manager_.get_tokens_for_teaching(&words_for_learning_);
-
     dictionary_max_len_ = MAX_LEN_DICTIONARY;
 
     if (teaching_manager_.get_token_max_len() < MAX_LEN_DICTIONARY)
     {
         dictionary_max_len_ = teaching_manager_.get_token_max_len();
     }
-    nmb_dictionaries_ = dictionary_max_len_ - MIN_LEN_DICTIONARY;
 
+    nmb_dictionaries_ = dictionary_max_len_ - MIN_LEN_DICTIONARY;
     len_dictionaries_ = dict_alloc_.allocate(nmb_dictionaries_);
 
     for (size_t i = 0; i < nmb_dictionaries_; ++i)
@@ -86,7 +83,7 @@ Typo_corrector& Typo_corrector::operator=(Typo_corrector&& other) noexcept
 
 //=============================================================================================
 
-void Typo_corrector::dictionaries_input_()
+void Typo_corrector::dictionaries_input()
 {
     for (size_t i = 0; i < nmb_dictionaries_; ++i) { len_dictionaries_[i].word_len = MIN_LEN_DICTIONARY + i; }
 
@@ -99,14 +96,14 @@ void Typo_corrector::dictionaries_input_()
 
         if ((len = strlen(it.c_str())) >= MIN_LEN_DICTIONARY)
         {
-            len_idx   = find_dictionary_(len);
+            len_idx   = find_dictionary(len);
             frequency = len_dictionaries_[len_idx].get_value(it).value_or(0);
             len_dictionaries_[len_idx].set_value(it, ++frequency);
         }
     }
 }
 
-size_t Typo_corrector::find_dictionary_(size_t word_len) const
+size_t Typo_corrector::find_dictionary(size_t word_len) const
 {
     for (size_t i = 0; i < nmb_dictionaries_; ++i)
     {
@@ -124,18 +121,18 @@ void Typo_corrector::start_correcting(const std::string& input_text_path, replac
     if (!is_valid_)
         return;
 
-    dictionaries_input_();
+    dictionaries_input();
 
     std::string output_filename = input_text_path.substr(0, input_text_path.find_last_of('.'));
 
     output_filename = output_filename + "_output.txt";
 
     std::string file_buffer;
-    read_file_(input_text_path, &file_buffer);
+    read_file(input_text_path, &file_buffer);
 
     if (replacement_type == NOT_SELECTED)
     {
-        replacement_type = static_cast<enum replacement_type>(choosing_replace_mode_());
+        replacement_type = static_cast<enum replacement_type>(choosing_replace_mode());
 
         if (replacement_type == EXIT)
             return;
@@ -148,7 +145,7 @@ void Typo_corrector::start_correcting(const std::string& input_text_path, replac
     out.close();
 }
 
-int Typo_corrector::choosing_replace_mode_()
+int Typo_corrector::choosing_replace_mode()
 {
     while (true)
     {
@@ -215,31 +212,33 @@ void Typo_corrector::replacing_words(std::string* file_buffer, replacement_type 
             if(len_dictionaries_[len - MIN_LEN_DICTIONARY].get_value(token).value_or(0) != 0U)
                 continue;
 
-            std::string sim_word = find_replacement_word_(token);
+            std::string* sim_word = find_replacement_word(&token);
 
-            if (!strcmp(sim_word.c_str(), token.c_str()))
+            if (!strcmp(sim_word->c_str(), token.c_str()))
                 continue;
 
             if (replacement_type == REPLACE_SELECTIVELY)
             {
-                std::cout << "Would you like to replace " << token << " ---> " << sim_word << "[y/n]" << std::endl;
+                std::cout << "Would you like to replace " << token << " ---> " << *sim_word << "[y/n]" << std::endl;
 
-                if (!is_need_replace_())
+                if (!is_need_replace())
                     continue;
             }
-            file_buffer->replace(beg_pos, token.size(), sim_word);
+            file_buffer->replace(beg_pos, token.size(), *sim_word);
 
-            beg_ptr = file_buffer->data() + beg_pos + std::max(sim_word.size(), token.size());
+            beg_ptr = file_buffer->data() + beg_pos + std::max(sim_word->size(), token.size());
         }
     }
 }
 
-std::string Typo_corrector::find_replacement_word_(const std::string& token) const
+std::string* Typo_corrector::find_replacement_word(std::string* token) const
 {
-    size_t len = std::strlen(token.c_str());
-    if (len < 2) return token;
+    size_t len = std::strlen(token->c_str());
+    
+    if (len < 2) 
+        return token;
 
-    std::vector<std::pair<std::string, size_t>> frequency;
+    std::vector<std::pair<std::string*, size_t>> frequency;
 
     size_t max_dict_idx = get_number_dictionaries_for_iterations(len);
 
@@ -252,15 +251,12 @@ std::string Typo_corrector::find_replacement_word_(const std::string& token) con
         else if (len == 2)
             len_idx = len - MIN_LEN_DICTIONARY + i;
 
-        std::vector<std::pair<std::string, size_t>> suitable_words =
-            len_dictionaries_[len_idx].get_similar_word_thread(token);
+        std::string* suitable_word = len_dictionaries_[len_idx].get_similar_word_thread(*token);
 
-        if (suitable_words.empty())
+        if (suitable_word == nullptr)
             continue;
 
-        std::sort(suitable_words.begin(), suitable_words.end(), pair_comparator);
-
-        frequency.emplace_back(suitable_words.front());
+        frequency.emplace_back(std::make_pair(suitable_word, len_dictionaries_[len_idx].get_value(*suitable_word).value_or(0)));
     }
 
     if (frequency.empty())
@@ -273,9 +269,7 @@ std::string Typo_corrector::find_replacement_word_(const std::string& token) con
         return token;
     }
 
-    std::string similar_word = std::get<0>(frequency.front());
-
-    return similar_word;
+    return std::get<0>(frequency.front());
 }
 
 size_t Typo_corrector::get_number_dictionaries_for_iterations(size_t word_len)
@@ -291,12 +285,12 @@ size_t Typo_corrector::get_number_dictionaries_for_iterations(size_t word_len)
     return max_dict_idx;
 }
 
-bool Typo_corrector::pair_comparator(std::pair<std::string, size_t> lhs, std::pair<std::string, size_t> rhs)
+bool Typo_corrector::pair_comparator(std::pair<std::string*, size_t> lhs, std::pair<std::string*, size_t> rhs)
 {
     return (std::get<1>(lhs) > std::get<1>(rhs));
 }
 
-bool Typo_corrector::is_need_replace_()
+bool Typo_corrector::is_need_replace()
 {
     std::string answer;
     std::cin >> answer;
@@ -304,7 +298,7 @@ bool Typo_corrector::is_need_replace_()
     return strcmp("y", answer.c_str()) == 0 || strcmp("yes", answer.c_str()) == 0;
 }
 
-void Typo_corrector::read_file_(const std::string& input_filename, std::string* buffer)
+void Typo_corrector::read_file(const std::string& input_filename, std::string* buffer)
 {
     std::ifstream file(input_filename);
     if (!file.is_open())

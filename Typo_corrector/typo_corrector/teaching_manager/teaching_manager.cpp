@@ -9,7 +9,7 @@
 namespace s1ky {
 bool Teaching_manager::get_tokens_for_teaching(std::vector<std::string>* words_for_learning)
 {
-    int answer = choosing_teaching_mode_();
+    int answer = USE_TEACHED;//choosing_teaching_mode_();
 
     if (answer == EXIT)
         return false;
