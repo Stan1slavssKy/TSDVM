@@ -237,18 +237,11 @@ void Typo_corrector::replacing_words(std::string* file_buffer, replacement_type 
 std::string Typo_corrector::find_replacement_word_(const std::string& token) const
 {
     size_t len = std::strlen(token.c_str());
+    if (len < 2) return token;
 
     std::vector<std::pair<std::string, size_t>> frequency;
 
-    size_t max_dict_idx = 0;
-
-    if (len < 2)
-        return token;
-
-    if (len > 2)
-        max_dict_idx = 2 * ACCEPTABLE_LEV_DIST + 1;
-    else if (len == 2)
-        max_dict_idx = ACCEPTABLE_LEV_DIST + 1;
+    size_t max_dict_idx = get_number_dictionaries_for_iterations(len);
 
     for (size_t i = 0; i < max_dict_idx; ++i)
     {
@@ -283,6 +276,19 @@ std::string Typo_corrector::find_replacement_word_(const std::string& token) con
     std::string similar_word = std::get<0>(frequency.front());
 
     return similar_word;
+}
+
+size_t Typo_corrector::get_number_dictionaries_for_iterations(size_t word_len)
+{
+    size_t max_dict_idx = 0;
+
+    if (word_len > 2)
+        max_dict_idx = 2 * ACCEPTABLE_LEV_DIST + 1;
+
+    else if (word_len == 2)
+        max_dict_idx = ACCEPTABLE_LEV_DIST + 1;
+
+    return max_dict_idx;
 }
 
 bool Typo_corrector::pair_comparator(std::pair<std::string, size_t> lhs, std::pair<std::string, size_t> rhs)

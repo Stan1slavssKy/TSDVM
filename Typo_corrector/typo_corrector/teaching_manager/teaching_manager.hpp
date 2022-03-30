@@ -16,7 +16,7 @@ public:
     {
         TEACH       = 1,
         USE_TEACHED = 2,
-        EXIT = 3
+        EXIT        = 3
     };
 
     bool get_tokens_for_teaching(std::vector<std::string>* words_for_learning);

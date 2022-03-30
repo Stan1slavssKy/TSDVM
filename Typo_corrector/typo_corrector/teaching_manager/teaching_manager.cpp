@@ -9,7 +9,7 @@
 namespace s1ky {
 bool Teaching_manager::get_tokens_for_teaching(std::vector<std::string>* words_for_learning)
 {
-    int answer = USE_TEACHED;//choosing_teaching_mode_();
+    int answer = choosing_teaching_mode_();
 
     if (answer == EXIT)
         return false;
@@ -70,7 +70,7 @@ int Teaching_manager::choosing_teaching_mode_()
 
         if (answer == EXIT)
             return EXIT;
-        
+
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
@@ -185,8 +185,7 @@ void Teaching_manager::parse_string_to_tokens_()
 
     while (true)
     {
-        while (!isalpha(*beg_ptr) && *beg_ptr != '\0')
-            ++beg_ptr;
+        while (!isalpha(*beg_ptr) && *beg_ptr != '\0') ++beg_ptr;
 
         if (*beg_ptr == '\0')
             break;

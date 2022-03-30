@@ -45,7 +45,7 @@ private:
 
     Dictionary* len_dictionaries_ = nullptr;
 
-    size_t nmb_dictionaries_   = 0;
+    size_t nmb_dictionaries_ = 0;
 
     size_t dictionary_max_len_ = 0;
 
@@ -56,6 +56,8 @@ private:
     void dictionaries_input_();
 
     std::string find_replacement_word_(const std::string& token) const;
+
+    static size_t get_number_dictionaries_for_iterations(size_t word_len);
 
     static bool pair_comparator(std::pair<std::string, size_t> lhs, std::pair<std::string, size_t> rhs);
 
