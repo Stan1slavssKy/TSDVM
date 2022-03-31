@@ -262,14 +262,12 @@ std::string* Typo_corrector::find_replacement_word(std::string* token) const
     if (frequency.empty())
         return token;
 
-    std::sort(frequency.begin(), frequency.end(), pair_comparator);
+    std::string* best_word = Dictionary::find_best_word(&frequency);
 
-    if (std::get<1>(frequency.front()) < MIN_WORD_REPLACE_FREQ)
-    {
+    if (!best_word)
         return token;
-    }
 
-    return std::get<0>(frequency.front());
+    return best_word;
 }
 
 size_t Typo_corrector::get_number_dictionaries_for_iterations(size_t word_len)
@@ -283,11 +281,6 @@ size_t Typo_corrector::get_number_dictionaries_for_iterations(size_t word_len)
         max_dict_idx = ACCEPTABLE_LEV_DIST + 1;
 
     return max_dict_idx;
-}
-
-bool Typo_corrector::pair_comparator(std::pair<std::string*, size_t> lhs, std::pair<std::string*, size_t> rhs)
-{
-    return (std::get<1>(lhs) > std::get<1>(rhs));
 }
 
 bool Typo_corrector::is_need_replace()

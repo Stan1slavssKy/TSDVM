@@ -13,7 +13,6 @@ public:
     constexpr static size_t ACCEPTABLE_LEV_DIST   = 1;
     constexpr static size_t MIN_LEN_DICTIONARY    = 2;
     constexpr static size_t MAX_LEN_DICTIONARY    = 30;
-    constexpr static size_t MIN_WORD_REPLACE_FREQ = 10;
 
     enum replacement_type
     {
@@ -39,6 +38,11 @@ public:
     
     std::string* find_replacement_word(std::string* token) const;
 
+    static size_t get_number_dictionaries_for_iterations(size_t word_len);
+    static bool is_need_replace();
+    static void read_file(const std::string& input_filename, std::string* buffer);
+    static int choosing_replace_mode();
+
 private:
     Teaching_manager teaching_manager_;
 
@@ -49,12 +53,6 @@ private:
     size_t nmb_dictionaries_ = 0;
     size_t dictionary_max_len_ = 0;
     bool is_valid_ = false;
-
-    static size_t get_number_dictionaries_for_iterations(size_t word_len);
-    static bool pair_comparator(std::pair<std::string*, size_t> lhs, std::pair<std::string*, size_t> rhs);
-    static bool is_need_replace();
-    static void read_file(const std::string& input_filename, std::string* buffer);
-    static int choosing_replace_mode();
 };
 } // namespace s1ky
 
