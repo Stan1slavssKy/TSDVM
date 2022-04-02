@@ -6,42 +6,34 @@
 #include <filesystem>
 #include <fstream>
 #include <iterator>
+#include <memory>
 #include <optional>
 #include <string>
-#include <memory>
 
 namespace s1ky {
 Typo_corrector::Typo_corrector()
 {
-    is_valid_ = teaching_manager_.get_tokens_for_teaching(&words_for_learning_);
     dictionary_max_len_ = MAX_LEN_DICTIONARY;
 
     if (teaching_manager_.get_token_max_len() < MAX_LEN_DICTIONARY)
     {
         dictionary_max_len_ = teaching_manager_.get_token_max_len();
     }
-        
+
     nmb_dictionaries_ = dictionary_max_len_ - MIN_LEN_DICTIONARY;
     len_dictionaries_ = dict_alloc_.allocate(nmb_dictionaries_);
-    
-    for (size_t i = 0; i < nmb_dictionaries_; ++i)
-    {
-        dict_alloc_.construct(len_dictionaries_ + i);
-    }
+
+    for (size_t i = 0; i < nmb_dictionaries_; ++i) { dict_alloc_.construct(len_dictionaries_ + i); }
 }
 
 Typo_corrector::~Typo_corrector()
 {
-    for (size_t i = 0; i < nmb_dictionaries_; ++i)
-    {
-        dict_alloc_.destroy(len_dictionaries_ + i);
-    }
+    for (size_t i = 0; i < nmb_dictionaries_; ++i) { dict_alloc_.destroy(len_dictionaries_ + i); }
     dict_alloc_.deallocate(len_dictionaries_, nmb_dictionaries_);
 }
 
 Typo_corrector::Typo_corrector(size_t threads_number)
 {
-    is_valid_ = teaching_manager_.get_tokens_for_teaching(&words_for_learning_);
     dictionary_max_len_ = MAX_LEN_DICTIONARY;
 
     if (teaching_manager_.get_token_max_len() < MAX_LEN_DICTIONARY)
@@ -52,10 +44,7 @@ Typo_corrector::Typo_corrector(size_t threads_number)
     nmb_dictionaries_ = dictionary_max_len_ - MIN_LEN_DICTIONARY;
     len_dictionaries_ = dict_alloc_.allocate(nmb_dictionaries_);
 
-    for (size_t i = 0; i < nmb_dictionaries_; ++i)
-    {
-        dict_alloc_.construct(len_dictionaries_ + i, threads_number);
-    }
+    for (size_t i = 0; i < nmb_dictionaries_; ++i) { dict_alloc_.construct(len_dictionaries_ + i, threads_number); }
 }
 
 Typo_corrector::Typo_corrector(Typo_corrector&& other) noexcept :
@@ -116,8 +105,11 @@ size_t Typo_corrector::find_dictionary(size_t word_len) const
     return 0;
 }
 
-void Typo_corrector::start_correcting(const std::string& input_text_path, replacement_type replacement_type)
+void Typo_corrector::start_correcting(const std::string& input_text_path, replacement_type replacement_type,
+                                      teaching_mode teaching_mode)
 {
+    is_valid_ = teaching_manager_.get_tokens_for_teaching(&words_for_learning_, teaching_mode);
+
     if (!is_valid_)
         return;
 
@@ -130,11 +122,11 @@ void Typo_corrector::start_correcting(const std::string& input_text_path, replac
     std::string file_buffer;
     read_file(input_text_path, &file_buffer);
 
-    if (replacement_type == NOT_SELECTED)
+    if (replacement_type == replacement_type::NOT_SELECTED)
     {
         replacement_type = static_cast<enum replacement_type>(choosing_replace_mode());
 
-        if (replacement_type == EXIT)
+        if (replacement_type == replacement_type::EXIT)
             return;
     }
 
@@ -155,7 +147,7 @@ int Typo_corrector::choosing_replace_mode()
                   << "1 - replace all typos at once\n"
                   << "2 - replace typos selectively\n"
                   << "3 - to exit\n";
-        
+
         std::cin >> answer;
 
         if (answer == REPLACE_SELECTIVELY || answer == REPLACE_ALL)
@@ -209,7 +201,7 @@ void Typo_corrector::replacing_words(std::string* file_buffer, replacement_type 
             if (len < MIN_LEN_DICTIONARY || len > MAX_LEN_DICTIONARY)
                 continue;
 
-            if(len_dictionaries_[len - MIN_LEN_DICTIONARY].get_value(token).value_or(0) != 0U)
+            if (len_dictionaries_[len - MIN_LEN_DICTIONARY].get_value(token).value_or(0) != 0U)
                 continue;
 
             std::string* sim_word = find_replacement_word(&token);
@@ -234,8 +226,8 @@ void Typo_corrector::replacing_words(std::string* file_buffer, replacement_type 
 std::string* Typo_corrector::find_replacement_word(std::string* token) const
 {
     size_t len = std::strlen(token->c_str());
-    
-    if (len < 2) 
+
+    if (len < MIN_LEN_DICTIONARY)
         return token;
 
     std::vector<std::pair<std::string*, size_t>> frequency;
@@ -246,9 +238,9 @@ std::string* Typo_corrector::find_replacement_word(std::string* token) const
     {
         size_t len_idx = 0;
 
-        if (len > 2)
+        if (len > MIN_LEN_DICTIONARY)
             len_idx = len - MIN_LEN_DICTIONARY - ACCEPTABLE_LEV_DIST + i;
-        else if (len == 2)
+        else if (len == MIN_LEN_DICTIONARY)
             len_idx = len - MIN_LEN_DICTIONARY + i;
 
         std::string* suitable_word = len_dictionaries_[len_idx].get_similar_word_thread(*token);
@@ -256,7 +248,8 @@ std::string* Typo_corrector::find_replacement_word(std::string* token) const
         if (suitable_word == nullptr)
             continue;
 
-        frequency.emplace_back(std::make_pair(suitable_word, len_dictionaries_[len_idx].get_value(*suitable_word).value_or(0)));
+        frequency.emplace_back(
+            std::make_pair(suitable_word, len_dictionaries_[len_idx].get_value(*suitable_word).value_or(0)));
     }
 
     if (frequency.empty())
@@ -274,10 +267,10 @@ size_t Typo_corrector::get_number_dictionaries_for_iterations(size_t word_len)
 {
     size_t max_dict_idx = 0;
 
-    if (word_len > 2)
-        max_dict_idx = 2 * ACCEPTABLE_LEV_DIST + 1;
+    if (word_len > MIN_LEN_DICTIONARY)
+        max_dict_idx = MIN_LEN_DICTIONARY * ACCEPTABLE_LEV_DIST + 1;
 
-    else if (word_len == 2)
+    else if (word_len == MIN_LEN_DICTIONARY)
         max_dict_idx = ACCEPTABLE_LEV_DIST + 1;
 
     return max_dict_idx;
