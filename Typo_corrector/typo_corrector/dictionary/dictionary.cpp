@@ -2,22 +2,21 @@
 
 #include <algorithm>
 #include <cstring>
+#include <functional>
 #include <iostream>
 #include <vector>
-#include <functional>
 
 namespace s1ky {
 Dictionary::Dictionary()
 {
-    threads_number_ = std::thread::hardware_concurrency();
+    threads_number = std::thread::hardware_concurrency();
 }
 
-Dictionary::Dictionary(size_t threads_number) : threads_number_(threads_number)
-{}
+Dictionary::Dictionary(size_t threads_number) : threads_number(threads_number) {}
 
 Dictionary::Dictionary(Dictionary&& other) noexcept :
-    threads_number_(other.threads_number_), nmb_iterations_per_thread_(other.nmb_iterations_per_thread_),
-    nmb_iterations_for_last_thread_(other.nmb_iterations_for_last_thread_)
+    threads_number(other.threads_number), nmb_iterations_per_thread(other.nmb_iterations_per_thread),
+    nmb_iterations_for_last_thread(other.nmb_iterations_for_last_thread)
 {
     std::swap(threads_, other.threads_);
 }
@@ -29,9 +28,9 @@ Dictionary& Dictionary::operator=(Dictionary&& other) noexcept
 
     std::swap(threads_, other.threads_);
 
-    threads_number_                 = other.threads_number_;
-    nmb_iterations_per_thread_      = other.nmb_iterations_per_thread_;
-    nmb_iterations_for_last_thread_ = other.nmb_iterations_for_last_thread_;
+    threads_number                 = other.threads_number;
+    nmb_iterations_per_thread      = other.nmb_iterations_per_thread;
+    nmb_iterations_for_last_thread = other.nmb_iterations_for_last_thread;
 
     return *this;
 }
@@ -40,19 +39,21 @@ Dictionary& Dictionary::operator=(Dictionary&& other) noexcept
 
 std::string* Dictionary::get_similar_word_thread(const std::string& token)
 {
-    if (threads_number_ <= 1)
+    if (threads_number <= 1)
         return find_similar_word(token);
 
-    nmb_iterations_per_thread_ = valid_nodes_.size() / threads_number_;
-    nmb_iterations_for_last_thread_ = nmb_iterations_per_thread_ + valid_nodes_.size() % threads_number_;
+    nmb_iterations_per_thread      = valid_nodes_.size() / threads_number;
+    nmb_iterations_for_last_thread = nmb_iterations_per_thread + valid_nodes_.size() % threads_number;
 
-    auto* suitable_words = new std::vector<std::pair<std::string*, size_t>>[threads_number_];
+    auto* suitable_words = new std::vector<std::pair<std::string*, size_t>>[threads_number];
 
     std::vector<std::pair<std::string*, size_t>> out_pair;
 
     call_threads(token, suitable_words);
     join_threads(suitable_words, &out_pair);
     threads_.clear();
+
+    delete[] suitable_words;
 
     if (out_pair.empty())
         return nullptr;
@@ -62,34 +63,31 @@ std::string* Dictionary::get_similar_word_thread(const std::string& token)
 
 void Dictionary::call_threads(const std::string& token, std::vector<std::pair<std::string*, size_t>>* suitable_words)
 {
-    for (size_t i = 0; i < threads_number_; ++i)
+    for (size_t i = 0; i < threads_number; ++i)
     {
-        size_t beg_pos = nmb_iterations_per_thread_ * i;
-        size_t end_pos = beg_pos + nmb_iterations_per_thread_;
+        size_t beg_pos = nmb_iterations_per_thread * i;
+        size_t end_pos = beg_pos + nmb_iterations_per_thread;
 
-        if (i == (threads_number_ - 1))
+        if (i == (threads_number - 1))
         {
-            end_pos = beg_pos + nmb_iterations_for_last_thread_;
+            end_pos = beg_pos + nmb_iterations_for_last_thread;
         }
 
-        threads_.emplace_back(
-            std::thread(&Dictionary::find_similar_word_thread, this, &suitable_words[i], std::ref(token), beg_pos, end_pos));
+        threads_.emplace_back(std::thread(&Dictionary::find_similar_word_thread, this, &suitable_words[i],
+                                          std::ref(token), beg_pos, end_pos));
     }
 }
 
-void Dictionary::join_threads(std::vector<std::pair<std::string*, size_t>>* suitable_words, 
-                              std::vector<std::pair<std::string*, size_t>>* out_pair)
+void Dictionary::join_threads(std::vector<std::pair<std::string*, size_t>>* suitable_words, // NOLINT
+                              std::vector<std::pair<std::string*, size_t>>* out_pair)       // NOLINT
 {
-    for (size_t i = 0; i < threads_number_; ++i) 
+    for (size_t i = 0; i < threads_number; ++i)
     {
         if (threads_[i].joinable())
         {
             threads_[i].join();
         }
-        for (auto& vec_it : suitable_words[i])
-        {
-            out_pair->emplace_back(vec_it);
-        }
+        for (auto& vec_it : suitable_words[i]) { out_pair->emplace_back(vec_it); }
     }
 }
 
@@ -104,10 +102,11 @@ void Dictionary::find_similar_word_thread(std::vector<std::pair<std::string*, si
 
         if (lev_dist <= Dictionary::ACCEPTABLE_LEV_DIST)
         {
-            suitable_words.emplace_back(std::make_pair(&(valid_nodes_[i]->key_), get_value(valid_nodes_[i]->key_).value_or(0)));
+            suitable_words.emplace_back(
+                std::make_pair(&(valid_nodes_[i]->key_), get_value(valid_nodes_[i]->key_).value_or(0)));
         }
     }
-    
+
     std::string* best_word = find_best_word(&suitable_words);
     if (best_word != nullptr)
         out_pairs->emplace_back(std::make_pair(best_word, get_value(*best_word).value_or(0)));
@@ -124,7 +123,7 @@ std::string* Dictionary::find_best_word(std::vector<std::pair<std::string*, size
     {
         cur_freq = std::get<1>(it);
         if (cur_freq > prev_freq && cur_freq >= MIN_WORD_REPLACE_FREQ)
-            best_word =  std::get<0>(it);
+            best_word = std::get<0>(it);
 
         prev_freq = cur_freq;
     }
@@ -148,7 +147,7 @@ std::string* Dictionary::find_similar_word(const std::string& word) const
         }
     }
 
-    if(suitable_words.empty())
+    if (suitable_words.empty())
         return nullptr;
 
     return find_best_word(&suitable_words);
