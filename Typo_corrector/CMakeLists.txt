@@ -43,4 +43,8 @@ if(ADD_CLANG_TIDY)
     message("-- [Build with clang tidy]")
 endif()
 
+if(ADD_BENCH)
+    add_subdirectory(benchmarks)
+endif()
+
 add_subdirectory(test)
