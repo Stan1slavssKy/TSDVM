@@ -29,7 +29,7 @@ public:
     ~Typo_corrector();
 
     Typo_corrector& operator=(const Typo_corrector& other) = delete;
-    Typo_corrector& operator                               =(Typo_corrector&& other) noexcept;
+    Typo_corrector& operator=(Typo_corrector&& other) noexcept;
 
     void start_correcting(const std::string& input_text_path,
                           replacement_type   replacement_type = replacement_type::NOT_SELECTED,

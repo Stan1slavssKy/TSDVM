@@ -16,7 +16,7 @@ Dictionary::Dictionary(size_t threads_number) : threads_number(threads_number) {
 
 Dictionary::Dictionary(Dictionary&& other) noexcept :
     threads_number(other.threads_number), nmb_iterations_per_thread(other.nmb_iterations_per_thread),
-    nmb_iterations_for_last_thread(other.nmb_iterations_for_last_thread)
+    nmb_iterations_for_last_thread(other.nmb_iterations_for_last_thread), word_len(other.word_len)
 {
     std::swap(threads_, other.threads_);
 }
@@ -28,6 +28,7 @@ Dictionary& Dictionary::operator=(Dictionary&& other) noexcept
 
     std::swap(threads_, other.threads_);
 
+    word_len                       = other.word_len;
     threads_number                 = other.threads_number;
     nmb_iterations_per_thread      = other.nmb_iterations_per_thread;
     nmb_iterations_for_last_thread = other.nmb_iterations_for_last_thread;

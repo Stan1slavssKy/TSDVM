@@ -7,51 +7,77 @@
 #include <iterator>
 
 namespace s1ky {
-bool Teaching_manager::get_tokens_for_teaching(std::vector<std::string>* words_for_learning)
-{
-    int answer = USE_TEACHED;//choosing_teaching_mode_();
+Teaching_manager::Teaching_manager(Teaching_manager&& other) noexcept : 
+    token_max_length_(other.token_max_length_),
+    learn_file_path_(std::move(other.learn_file_path_)),
+    file_buffer_    (std::move(other.file_buffer_)),
+    tokens_         (std::move(other.tokens_))
+{}
 
-    if (answer == EXIT)
-        return false;
+Teaching_manager& Teaching_manager::operator=(Teaching_manager&& other) noexcept
+{
+    if (this == &other)
+        return *this;
+
+    std::swap(learn_file_path_, other.learn_file_path_);
+    std::swap(file_buffer_, other.file_buffer_);
+    std::swap(tokens_, other.tokens_);
+
+    token_max_length_ = other.token_max_length_;
+
+    return *this;
+}
+
+//===========================================================================================================
+
+bool Teaching_manager::get_tokens_for_teaching(std::vector<std::string>* words_for_learning,
+                                               teaching_mode             teaching_mode)
+{
+    if (teaching_mode == NOT_SELECTED)
+    {
+        teaching_mode = static_cast<enum teaching_mode>(choosing_teaching_mode());
+        if (teaching_mode == EXIT)
+            return false;
+    }
 
     size_t beg_dump_idx = 0;
 
-    if (is_file_empty_(DUMP_NAME_PATH))
+    if (is_file_empty(DUMP_NAME_PATH))
     {
         learn_file_path_ = LEARN_FILE_PATH;
-        read_file_();
-        parse_string_to_tokens_();
+        read_file();
+        parse_string_to_tokens();
 
-        if (answer == USE_TEACHED)
-            make_dump_();
+        if (teaching_mode == USE_TEACHED)
+            make_dump();
     }
     else
     {
         learn_file_path_ = DUMP_NAME_PATH;
-        read_file_();
-        fill_tokens_from_dump_();
+        read_file();
+        fill_tokens_from_dump();
         beg_dump_idx = tokens_.size();
     }
 
-    if (answer == TEACH)
+    if (teaching_mode == TEACH)
     {
         std::vector<std::string> texts_for_teaching;
-        get_texts_for_teaching_(&texts_for_teaching);
+        get_texts_for_teaching(&texts_for_teaching);
 
-        learn_file_path_ = choosing_teaching_text_(&texts_for_teaching);
+        learn_file_path_ = choosing_teaching_text(&texts_for_teaching);
 
         learn_file_path_ = "../../texts_for_teaching/" + learn_file_path_;
-        read_file_();
+        read_file();
 
-        parse_string_to_tokens_();
-        make_dump_(beg_dump_idx);
+        parse_string_to_tokens();
+        make_dump(beg_dump_idx);
     }
 
     *words_for_learning = tokens_;
     return true;
 }
 
-int Teaching_manager::choosing_teaching_mode_()
+int Teaching_manager::choosing_teaching_mode()
 {
     int answer = 0;
 
@@ -73,12 +99,11 @@ int Teaching_manager::choosing_teaching_mode_()
 
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
         std::cout << "You have entered an incorrect character. Try again." << std::endl;
     }
 }
 
-void Teaching_manager::get_texts_for_teaching_(std::vector<std::string>* texts_names)
+void Teaching_manager::get_texts_for_teaching(std::vector<std::string>* texts_names)
 {
     std::string path = TEXTS_FOR_TEACHING_PATH;
 
@@ -88,7 +113,7 @@ void Teaching_manager::get_texts_for_teaching_(std::vector<std::string>* texts_n
     }
 }
 
-const std::string& Teaching_manager::choosing_teaching_text_(std::vector<std::string>* texts_names)
+std::string Teaching_manager::choosing_teaching_text(std::vector<std::string>* texts_names)
 {
     std::string answer;
 
@@ -119,12 +144,11 @@ const std::string& Teaching_manager::choosing_teaching_text_(std::vector<std::st
 
         std::cin.clear();
         std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
         std::cout << "You have entered an incorrect character. Try again.\n";
     }
 }
 
-void Teaching_manager::read_file_()
+void Teaching_manager::read_file()
 {
     std::ifstream file;
     file.open(learn_file_path_);
@@ -136,11 +160,10 @@ void Teaching_manager::read_file_()
     }
 
     std::getline(file, file_buffer_, '\0');
-
     file.close();
 }
 
-void Teaching_manager::make_dump_(size_t begin_dump_idx)
+void Teaching_manager::make_dump(size_t begin_dump_idx)
 {
     std::ofstream file;
     file.open(DUMP_NAME_PATH, std::ios_base::app);
@@ -160,7 +183,7 @@ void Teaching_manager::make_dump_(size_t begin_dump_idx)
     file.close();
 }
 
-void Teaching_manager::fill_tokens_from_dump_()
+void Teaching_manager::fill_tokens_from_dump()
 {
     std::ifstream file(DUMP_NAME_PATH);
 
@@ -170,12 +193,11 @@ void Teaching_manager::fill_tokens_from_dump_()
         return;
     }
 
-    parse_string_to_tokens_();
-
+    parse_string_to_tokens();
     file.close();
 }
 
-void Teaching_manager::parse_string_to_tokens_()
+void Teaching_manager::parse_string_to_tokens()
 {
     char*  beg_ptr = file_buffer_.data();
     char*  end_ptr = nullptr;
@@ -201,7 +223,6 @@ void Teaching_manager::parse_string_to_tokens_()
             continue;
 
         token = file_buffer_.substr(beg_pos, end_pos);
-
         tokens_.push_back(token);
 
         if ((cur_len = strlen(token.c_str())) > token_max_length_)
@@ -214,7 +235,7 @@ void Teaching_manager::parse_string_to_tokens_()
     }
 }
 
-bool Teaching_manager::is_file_empty_(const std::string& file_path)
+bool Teaching_manager::is_file_empty(const std::string& file_path)
 {
     std::ifstream file(file_path);
 

@@ -14,14 +14,8 @@ namespace s1ky {
 Typo_corrector::Typo_corrector()
 {
     dictionary_max_len_ = MAX_LEN_DICTIONARY;
-
-    if (teaching_manager_.get_token_max_len() < MAX_LEN_DICTIONARY)
-    {
-        dictionary_max_len_ = teaching_manager_.get_token_max_len();
-    }
-
-    nmb_dictionaries_ = dictionary_max_len_ - MIN_LEN_DICTIONARY;
-    len_dictionaries_ = dict_alloc_.allocate(nmb_dictionaries_);
+    nmb_dictionaries_   = dictionary_max_len_ - MIN_LEN_DICTIONARY;
+    len_dictionaries_   = dict_alloc_.allocate(nmb_dictionaries_);
 
     for (size_t i = 0; i < nmb_dictionaries_; ++i) { dict_alloc_.construct(len_dictionaries_ + i); }
 }
@@ -35,22 +29,22 @@ Typo_corrector::~Typo_corrector()
 Typo_corrector::Typo_corrector(size_t threads_number)
 {
     dictionary_max_len_ = MAX_LEN_DICTIONARY;
-
-    if (teaching_manager_.get_token_max_len() < MAX_LEN_DICTIONARY)
-    {
-        dictionary_max_len_ = teaching_manager_.get_token_max_len();
-    }
-
-    nmb_dictionaries_ = dictionary_max_len_ - MIN_LEN_DICTIONARY;
-    len_dictionaries_ = dict_alloc_.allocate(nmb_dictionaries_);
+    nmb_dictionaries_   = dictionary_max_len_ - MIN_LEN_DICTIONARY;
+    len_dictionaries_   = dict_alloc_.allocate(nmb_dictionaries_);
 
     for (size_t i = 0; i < nmb_dictionaries_; ++i) { dict_alloc_.construct(len_dictionaries_ + i, threads_number); }
 }
 
 Typo_corrector::Typo_corrector(Typo_corrector&& other) noexcept :
-    nmb_dictionaries_(other.nmb_dictionaries_), dictionary_max_len_(other.dictionary_max_len_)
+    is_valid_(other.is_valid_), 
+    teaching_manager_  (std::move(other.teaching_manager_)),
+    words_for_learning_(std::move(other.words_for_learning_)),
+    dict_alloc_        (std::move(other.dict_alloc_)),
+    len_dictionaries_  (other.len_dictionaries_),
+    nmb_dictionaries_  (other.nmb_dictionaries_), 
+    dictionary_max_len_(other.dictionary_max_len_)
 {
-    std::swap(len_dictionaries_, other.len_dictionaries_);
+    other.len_dictionaries_ = nullptr;
 }
 
 //=============================================================================================
@@ -58,13 +52,15 @@ Typo_corrector::Typo_corrector(Typo_corrector&& other) noexcept :
 Typo_corrector& Typo_corrector::operator=(Typo_corrector&& other) noexcept
 {
     if (this == &other)
-    {
         return *this;
-    }
-
-    std::swap(len_dictionaries_, other.len_dictionaries_);
-
-    nmb_dictionaries_   = other.nmb_dictionaries_;
+    
+    std::swap(teaching_manager_, other.teaching_manager_);
+    std::swap(words_for_learning_, other.words_for_learning_);
+    std::swap(dict_alloc_, other.dict_alloc_),
+    
+    is_valid_           = other.is_valid_;
+    len_dictionaries_   = other.len_dictionaries_;
+    nmb_dictionaries_   = other.nmb_dictionaries_; 
     dictionary_max_len_ = other.dictionary_max_len_;
 
     return *this;
