@@ -27,4 +27,4 @@ If you want to build with all possible targets you may build cmake like that:
 ## Speed of correction
 In the code I use threads to understand at what number of threads does my program work optimally. So I used google benchmarks to find out this.
 
-![Benchmanrks for finding word in dictionary](/images/find_bench.png)
+![Benchmanrks for finding word in dictionary](./images/find_bench.png)
