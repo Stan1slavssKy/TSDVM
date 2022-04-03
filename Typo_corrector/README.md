@@ -25,6 +25,9 @@ If you want to build with all possible targets you may build cmake like that:
     cmake .. -DADD_SANITIZERS=ON -DADD_CLANG_TIDY=ON -DADD_TYPO_CORRECTOR_TESTING=ON -DADD_BENCH=ON -DCMAKE_BUILD_TYPE=Release
 
 ## Speed of correction
-In the code I use threads to understand at what number of threads does my program work optimally. So I used google benchmarks to find out this.
-
+In the code I use threads. So to understand at what number of threads does my program work optimally I used google benchmarks to find out this.
+This is benchmarks for finding word in dictionary
 ![Benchmanrks for finding word in dictionary](./images/find_bench.png)
+
+This is benchmarks for file correction
+![Benchmanrks for finding word in dictionary](./images/correcting_bench.png)
