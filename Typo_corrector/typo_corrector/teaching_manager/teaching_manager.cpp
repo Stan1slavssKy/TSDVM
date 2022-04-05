@@ -250,4 +250,14 @@ size_t Teaching_manager::get_token_max_len() const
 {
     return token_max_length_;
 }
+
+std::vector<std::string> Teaching_manager::get_tokens() const
+{
+    return tokens_;
+}
+
+void Teaching_manager::set_filename(const std::string& filename)
+{
+    learn_file_path_ = filename;
+}
 } // namespace s1ky

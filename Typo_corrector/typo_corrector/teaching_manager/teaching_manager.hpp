@@ -30,6 +30,8 @@ public:
 
     bool   get_tokens_for_teaching(std::vector<std::string>* words_for_learning, teaching_mode eaching_mode = NOT_SELECTED);
     size_t get_token_max_len() const;
+    std::vector<std::string> get_tokens() const;
+    void set_filename(const std::string& filename);
 
     void read_file();
     void parse_string_to_tokens();
