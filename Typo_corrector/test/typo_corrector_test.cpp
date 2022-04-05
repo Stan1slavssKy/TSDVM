@@ -28,6 +28,22 @@ TEST(ClassDictionaryTest, LevDistanceCalculation)
     ASSERT_EQ(0, dict.lev_distance_calculation(fir_w, sec_w));
 }
 
+TEST(ClassTeachingDictionary, Parser)
+{
+    const char* test_arr[] = {"Elementary", "my", "dear", "Watson"};
+    Teaching_manager test;
+
+    test.set_filename("../../test/test_parser.txt");
+    test.read_file();
+    test.parse_string_to_tokens();
+    std::vector<std::string> tokens = test.get_tokens();
+    
+    for (size_t i = 0; i < tokens.size(); ++i)
+    {
+        ASSERT_STREQ(tokens[i].c_str(), test_arr[i]);
+    }
+}
+
 int main(int argc, char** argv)
 {
     testing::InitGoogleTest(&argc, argv); // NOLINT
