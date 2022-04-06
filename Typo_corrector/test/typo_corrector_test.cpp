@@ -4,12 +4,6 @@
 
 using namespace s1ky; // NOLINT
 
-TEST(ClassTypoCorrector, IntegrationTest)
-{
-    Typo_corrector test;
-    test.start_correcting("../../my.txt");
-}
-
 TEST(ClassDictionaryTest, LevDistanceCalculation)
 {
     Dictionary  dict;
