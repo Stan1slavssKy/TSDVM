@@ -60,24 +60,4 @@ static void Paralleling(benchmark::State& state)
 }
 BENCHMARK(Paralleling)->DenseRange(2, kMaxThreadsNum, 1)->Unit(benchmark::kMillisecond);
 
-void multithreaded_fix_end_to_end(size_t threads_nmb)
-{
-    Typo_corrector test_corrector(threads_nmb);
-    test_corrector.start_correcting("../../benchmarks/war_and_peace_bench.txt", test_corrector.REPLACE_ALL,
-                                    USE_TEACHED);
-    std::remove("../../benchmarks/war_and_peace_bench_output.txt");
-}
-
-static void BM_multithreaded_fix_end_to_end(benchmark::State& state) // NOLINT
-{
-    for (auto _ : state) // NOLINT
-    {
-        multithreaded_fix_end_to_end(static_cast<size_t>(state.range(0)));
-    }
-}
-BENCHMARK(BM_multithreaded_fix_end_to_end)
-    ->RangeMultiplier(2)
-    ->DenseRange(1, 20, 1)
-    ->Unit(benchmark::kMillisecond); // NOLINT
-
 BENCHMARK_MAIN(); // NOLINT
