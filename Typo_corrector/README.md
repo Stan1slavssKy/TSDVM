@@ -18,11 +18,12 @@ To use you need to download the folder with the code. Then go to the Typo_correc
     mkdir build
     cd build
     cmake .. -DCMAKE_BUILD_TYPE=Release
-    make
+    make corrector
+    ./corrector "your_file_name"
 
 If you want to build with all possible targets you may build cmake like that:
 
-    cmake .. -DADD_SANITIZERS=ON -DADD_CLANG_TIDY=ON -DADD_TYPO_CORRECTOR_TESTING=ON -DADD_BENCH=ON -DCMAKE_BUILD_TYPE=Release
+    cmake .. -DADD_SANITIZERS=ON -DADD_CLANG_TIDY=ON -DADD_BENCH=ON -DCMAKE_BUILD_TYPE=Release
 
 ## Speed of correction
 In the code I use threads. So to understand at what number of threads does my program work optimally I used google benchmarks to find out this.
