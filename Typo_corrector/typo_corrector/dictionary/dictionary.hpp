@@ -1,7 +1,7 @@
 #ifndef TYPO_CORRECTOR_TYPO_CORRECTOR_DICTIONARY_HPP_INCLUDED_
 #define TYPO_CORRECTOR_TYPO_CORRECTOR_DICTIONARY_HPP_INCLUDED_
 
-#include "../../hash_table/hash_table_impl.hpp"
+#include "hash_table_impl.hpp"
 
 #include <thread>
 #include <vector>

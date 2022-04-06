@@ -38,13 +38,18 @@ if(ADD_CLANG_TIDY)
         clang-tidy;
         --format-style=file;
         --header-filter=*.hpp;
-        --extra-arg=-std=c++17;
     )
     message("-- [Build with clang tidy]")
 endif()
 
 if(ADD_BENCH)
+    set(RUNBENCH_OUT ${CMAKE_CURRENT_BINARY_DIR})
     add_subdirectory(benchmarks)
 endif()
 
+add_executable(corrector main.cpp)
+target_include_directories(corrector PUBLIC typo_corrector)
+target_link_libraries(corrector typo_corrector)
+
+add_subdirectory(typo_corrector)
 add_subdirectory(test)

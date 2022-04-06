@@ -66,7 +66,7 @@ bool Teaching_manager::get_tokens_for_teaching(std::vector<std::string>* words_f
 
         learn_file_path_ = choosing_teaching_text(&texts_for_teaching);
 
-        learn_file_path_ = "../../texts_for_teaching/" + learn_file_path_;
+        learn_file_path_ = "../texts_for_teaching/" + learn_file_path_;
         read_file();
 
         parse_string_to_tokens();

@@ -16,9 +16,9 @@ enum teaching_mode
 class Teaching_manager
 {
 public:
-    constexpr static const char* LEARN_FILE_PATH         = "../../texts_for_teaching/Night_shift.txt";
-    constexpr static const char* DUMP_NAME_PATH          = "../../typo_corrector/teaching_manager/TOKENS_DUMP.txt";
-    constexpr static const char* TEXTS_FOR_TEACHING_PATH = "../../texts_for_teaching";
+    constexpr static const char* LEARN_FILE_PATH         = "../texts_for_teaching/Night_shift.txt";
+    constexpr static const char* DUMP_NAME_PATH          = "../typo_corrector/teaching_manager/TOKENS_DUMP.txt";
+    constexpr static const char* TEXTS_FOR_TEACHING_PATH = "../texts_for_teaching";
 
     Teaching_manager() = default;
     Teaching_manager(const Teaching_manager& other) = delete;

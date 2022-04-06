@@ -1,8 +1,8 @@
 #ifndef TYPO_CORRECTOR_TYPO_CORRECTOR_TYPO_CORRECTOR_HPP_INCLUDED_
 #define TYPO_CORRECTOR_TYPO_CORRECTOR_TYPO_CORRECTOR_HPP_INCLUDED_
 
-#include "./dictionary/dictionary.hpp"
-#include "./teaching_manager/teaching_manager.hpp"
+#include "dictionary.hpp"
+#include "teaching_manager.hpp"
 
 #include <vector>
 
