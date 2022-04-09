@@ -7,11 +7,11 @@
 #include <iterator>
 
 namespace s1ky {
-Teaching_manager::Teaching_manager(Teaching_manager&& other) noexcept : 
-    token_max_length_(other.token_max_length_),
-    learn_file_path_(std::move(other.learn_file_path_)),
-    file_buffer_    (std::move(other.file_buffer_)),
-    tokens_         (std::move(other.tokens_))
+Teaching_manager::Teaching_manager(Teaching_manager&& other) noexcept :
+    learn_file_path_ (std::move(other.learn_file_path_)),
+    file_buffer_     (std::move(other.file_buffer_)),
+    tokens_          (std::move(other.tokens_)),
+    token_max_length_(other.token_max_length_)
 {}
 
 Teaching_manager& Teaching_manager::operator=(Teaching_manager&& other) noexcept

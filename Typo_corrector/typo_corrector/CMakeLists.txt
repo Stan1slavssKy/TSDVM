@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.16.3)
 project(Typo_corrector)
 set(CMAKE_CXX_STANDART 17)
 
